@@ -1,0 +1,3 @@
+﻿Name:Test Site
+Footer:(C) Copyright 2011, All Right Reserved.
+Template:Default

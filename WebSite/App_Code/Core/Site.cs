@@ -29,11 +29,11 @@ public static class Site
         return data;
     }
 
-    public static void InitModules()
+    private static void InitModules()
     {
         hooks = new List<KeyValuePair<string, Func<object, object, object>>>();
 
-        var filename = HttpContext.Current.Server.MapPath("~/App_Code/Modules/Modules.txt");
+        var filename = HttpContext.Current.Server.MapPath("~/App_Data/Modules.txt");
         modules = File.ReadAllLines(filename).Where(s=>!s.StartsWith("#")).ToList();
 
         modules.ForEach(m=>{

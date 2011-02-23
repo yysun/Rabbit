@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>My ASP.NET Web Page - @Page.Title</title>
+        <title>@Page.Title - @App.Site.Name</title>
         <link href="@Href("Site.css")" rel="stylesheet" />
         <link href="@Href("~/favicon.ico")" rel="shortcut icon" type="image/x-icon" />
          @RenderSection("head", required: false)
@@ -10,7 +10,7 @@
     <body>
         <div id="page">
             <div id="header">
-                <p class="site-title">My ASP.NET Web Page</p>
+                <p class="site-title">@App.Site.Name</p>
                 <div id="login">
                     @if (WebSecurity.IsAuthenticated) {
                         <p>
@@ -35,7 +35,7 @@
                     @RenderBody()
                 </div>
                 <div id="footer">
-                    &copy; @DateTime.Now.Year - My ASP.NET Web Page
+                    @App.Site.Footer
                 </div>
             </div>
         </div>
