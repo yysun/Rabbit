@@ -1,7 +1,5 @@
 ﻿@{  
-    Layout = App.Layout;
-    Page.Title = "Welcome to my Web Site!";
+    var homepage = Site.RunHook("get_homepage") as string;
+    Server.TransferRequest(homepage);
 }
-<p>
-    ASP.NET Web Pages make it easy to build powerful .NET based applications for the web.
-</p>
+

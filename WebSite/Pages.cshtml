@@ -1,0 +1,21 @@
+﻿@inherits Controller
+@{  
+    this.Run();
+}
+
+@RenderPage(Page.View)
+
+@functions{
+[Get("/")]
+public void Default()
+{
+    Page.View = "~/Pages/_Default.cshtml";
+}
+
+[Get("/*")]
+public void GetPage()
+{
+    Page.View = "~/Pages/_" + UrlData[0] + ".cshtml";
+}
+
+}
