@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@Page.Title</title>
+    <link href="@Href("~/favicon.ico")" rel="shortcut icon" type="image/x-icon" />
+    <link rel="stylesheet" href="@Href("blueprint/screen.css")" type="text/css" media="screen, projection" />
+    <link rel="stylesheet" href="@Href("blueprint/print.css")" type="text/css" media="print" />
+    <!--[if lt IE 8]><link rel="stylesheet" href="@Href("blueprint/ie.css")" type="text/css" media="screen, projection"><![endif]-->
+    <link href="@Href("Site.css")" rel="stylesheet" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" type="text/javascript"></script>
+    @RenderSection("head", required: false)
+</head>
+<body>
+    <div id="page" class="container">
+
+        <div id="header" class="span-24 last">
+            <p class="site-title">
+                Git Web Access</p>
+            <div id="login">
+                @if (WebSecurity.IsAuthenticated)
+                {
+                    <ul>
+                        <li><a href="@Href("~/")">Home</a></li>
+                        @if (Roles.IsUserInRole("admin"))
+                        {
+                            <li><a href="@Href("~/Setup")">Setup</a></li>
+                        }
+                        <li><a href="@Href("~/User/")@WebSecurity.CurrentUserName">Dashboard</a></li>
+                        <li><a href="@Href("~/Account/ChangePassword")">Account</a></li>
+                        <li><a href="@Href("~/Account/Logout")">Logout</a></li>
+                    </ul>
+                }
+                else
+                {
+                    <ul>
+                        <li><a href="@Href("~/")">Home</a></li>
+                        <li><a href="@Href("~/Account/Register")">Register</a></li>
+                        <li><a href="@Href("~/Account/Login")">Login</a></li>
+                    </ul>
+                }
+            </div>
+        </div>
+
+        <div id="content" class="span-24 last">
+            <h1>@Page.Title</h1>
+            @RenderBody()
+        </div>            
+        
+        <div class="span-15">
+            @RenderSection("zone1", required: false)    
+        </div>
+
+        <div class="span-9 last">
+            @RenderSection("zone2", required: false)
+        </div>
+
+
+        <div id="footer" class="span-24 last">
+            &copy; @DateTime.Now.Year - Git Web Access (http://gitweb.codeplex.com)
+        </div>
+
+    </div>
+</body>
+</html>
