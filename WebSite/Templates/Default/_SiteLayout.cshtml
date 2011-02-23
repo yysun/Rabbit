@@ -5,8 +5,10 @@
         <title>My ASP.NET Web Page - @Page.Title</title>
         <link href="@Href("Site.css")" rel="stylesheet" />
         <link href="@Href("~/favicon.ico")" rel="shortcut icon" type="image/x-icon" />
+         @RenderSection("head", required: false)
     </head>
     <body>
+        @Site.RunHook("begin_body", this)
         <div id="page">
             <div id="header">
                 <p class="site-title">My ASP.NET Web Page</p>
