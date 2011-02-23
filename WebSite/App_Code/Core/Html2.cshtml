@@ -1,0 +1,17 @@
+﻿@helper TextAndLabel(string label, string name, dynamic page) {
+    
+    @Html.Label(label, name)
+    @Html.TextBox(name, page[name])
+    if (page.Errors != null)
+    {
+        var errors = from e in ((Dictionary<string, string>) page.Errors)
+                     where e.Key.StartsWith(name)
+                     select e.Value;
+
+        if (errors.Count() > 0)
+        { 
+            var message = string.Join(",", errors);
+            <label class="error" for="@name">@message</label>
+        }
+    }
+}
