@@ -6,7 +6,7 @@ using System.Web.WebPages;
 using System.Reflection;
 using System.Dynamic;
 
-public abstract class Controller : BasePage
+public abstract class Controller : WebPage
 {
     static Dictionary<string, IList<RouteAttribute>> cache = new Dictionary<string, IList<RouteAttribute>>();
 

@@ -10,12 +10,12 @@ public static class Pages
 {
 	public static void Init()
 	{
-        Site.AddHook("get_homepage", (sender, data) => 
+        SiteEngine.AddHook("get_homepage", (data) => 
         {            
             return "~/Pages/Default";  
         });
 
-        Site.AddHook("get_menu", (sender, data) => 
+        SiteEngine.AddHook("get_menu", (data) => 
         {
             return new string[] { "Home|~/Pages/Default", "About|~/Pages/About" };
         });

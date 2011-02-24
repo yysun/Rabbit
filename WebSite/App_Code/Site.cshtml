@@ -1,9 +1,17 @@
-﻿@helper GetMainMenu()
+﻿@helper Name()
+{
+    <text>@App.Site.Name</text>
+}
+@helper Author()
+{
+    <text>@App.Site.Author</text>
+}
+@helper MainMenu()
 {
     var menu = new List<string>();
     
     <ul id="menu">
-        @foreach (var s in Site.RunHook("get_menu", null, menu) as IEnumerable<string>)
+        @foreach (var s in SiteEngine.RunHook("get_menu", menu) as IEnumerable<string>)
         {
             var ss = s.Split('|');
 

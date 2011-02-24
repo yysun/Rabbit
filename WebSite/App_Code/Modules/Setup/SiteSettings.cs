@@ -27,7 +27,7 @@ public class SiteSettings : Model
         {
             var lines = File.ReadAllLines(FileName).Where(s => !s.StartsWith("#"));
             dynamic value = lines.ToDynamic();
-            value = Site.RunHook("get_site_settings", null, value);
+            value = SiteEngine.RunHook("get_site_settings", value);
             settings.Value = value;
         }
         return settings;
@@ -38,7 +38,7 @@ public class SiteSettings : Model
         dynamic value = new ExpandoObject();
         value.Name = "[New Site]";
         value.Author = "";
-        value = Site.RunHook("get_site_settings", null, value);
+        value = SiteEngine.RunHook("get_site_settings", value);
         return new SiteSettings { Value = value };
     }
 

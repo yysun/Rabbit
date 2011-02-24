@@ -9,7 +9,7 @@ public static class Setup
 {
 	public static void Init()
 	{
-        Site.AddHook("get_homepage", (sender, data) => 
+        SiteEngine.AddHook("get_homepage", (data) => 
         {
             return SiteSettings.Load()[0] == null ? "/Setup" : data;
         });

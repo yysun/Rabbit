@@ -1,4 +1,4 @@
 ﻿@{  
-    var homepage = Site.RunHook("get_homepage") as string;
+    var homepage = SiteEngine.RunHook("get_homepage") as string;
     Server.TransferRequest(homepage);
 }

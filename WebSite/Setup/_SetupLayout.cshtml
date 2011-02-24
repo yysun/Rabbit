@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>@Page.Title - @App.Site.Name</title>
+        <title>@Page.Title - @Site.Name()</title>
         <link href="@Href("Site.css")" rel="stylesheet" />
         <link href="@Href("~/favicon.ico")" rel="shortcut icon" type="image/x-icon" />
          @RenderSection("head", required: false)
@@ -10,7 +10,7 @@
     <body>
         <div id="page">
             <div id="header">
-                <p class="site-title">@App.Site.Name</p>
+                <p class="site-title">@Site.Name()</p>
                  <div id="login">
                     @if (WebSecurity.IsAuthenticated) {
                         <p>
@@ -34,7 +34,7 @@
                     @RenderBody()
                 </div>
                 <div id="footer">
-                    &copy; Copyright @DateTime.Now.Year, @App.Site.Author All Right Reserved.
+                    &copy; Copyright @DateTime.Now.Year, @Site.Author() All Right Reserved.
                 </div>
             </div>
         </div>
