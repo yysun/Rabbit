@@ -14,5 +14,11 @@ public static class Pages
         {            
             return "~/Pages/Default";  
         });
+
+        Site.AddHook("get_menu", (sender, data) => 
+        {
+            return new string[] { "Home|~/Pages/Default", "About|~/Pages/About" };
+        });
+
 	}
 }

@@ -59,8 +59,7 @@ h5, h6
 #page
 {
     background-color:#fff;
-    padding: 0px 20px;
-    min-height:550px;
+    padding: 0px 20px; 
 }
 #header
 {
@@ -70,6 +69,7 @@ h5, h6
 {   
     border-top:1px solid #999;
     padding-top:10px;
+    min-height:480px;
 }
 #footer
 {
@@ -119,7 +119,6 @@ h5, h6
 ul#menu
 {
     clear: both;
-    border-bottom: 1px #5c87b2 solid;
     padding: 0 0 2px;
     position: relative;
     margin: 0;
@@ -138,7 +137,7 @@ ul#menu li a
     text-decoration: none;
     line-height: 2.8em;
     background-color: #fff;
-    color: #034af3; /*CSS3 properties*/
+    color: #666; /*CSS3 properties*/
     border-radius: 4px 4px 0 0;
     -webkit-border-radius: 4px 4px 0 0;
     -moz-border-radius: 4px 4px 0 0;
@@ -146,20 +145,21 @@ ul#menu li a
 
 ul#menu li a:hover
 {
-    background-color: #e8eef4;
+    background-color: #eee;
     text-decoration: none;
 }
 
 ul#menu li a:active
 {
-    background-color: #a6e2a6;
+    background-color: #999;
     text-decoration: none;
+    color: #fff;
 }
 
 ul#menu li.selected a
 {
-    background-color: #fff;
-    color: #000;
+    background-color: #999;
+    color: #fff;
 }
 
 /* forms   

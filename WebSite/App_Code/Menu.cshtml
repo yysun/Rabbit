@@ -1,0 +1,20 @@
+﻿@helper GetMainMenu()
+{
+    var menu = new List<string>();
+    
+    <ul id="menu">
+        @foreach (var s in Site.RunHook("get_menu", null, menu) as IEnumerable<string>)
+        {
+            var ss = s.Split('|');
+
+            if (Request.AppRelativeCurrentExecutionFilePath == ss[1])
+            { 
+                <li class="selected"><a href="@Href(ss[1])">@ss[0]</a></li>
+            }
+            else 
+            { 
+                <li><a href="@Href(ss[1])">@ss[0]</a></li>
+            }
+        }
+    </ul>
+} 

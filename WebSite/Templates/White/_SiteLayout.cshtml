@@ -39,6 +39,7 @@
                     </ul>
                 }
             </div>
+            @Menu.GetMainMenu()          
         </div>
 
         <div id="content" class="span-24 last">
@@ -53,7 +54,6 @@
         <div class="span-9 last">
             @RenderSection("zone2", required: false)
         </div>
-
 
         <div id="footer" class="span-24 last">
             &copy; Copyright @DateTime.Now.Year, @App.Site.Author All Right Reserved.
