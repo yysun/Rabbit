@@ -50,10 +50,10 @@ public abstract class Controller : BasePage
                 routes.Where(r => r.Action == "/") :
                 routes.Where(r => r.Action == "/*");
         }
-
+        
         var route = rs.Where(r => r.IsPost == this.IsPost).FirstOrDefault();
 
-        if (route == null) route = rs.Where(r => r.Action == "*").FirstOrDefault();
+        //if (route == null) route = routes.Where(r => r.Action == "*").FirstOrDefault();
 
         if (route != null && route.Method != null)
         {

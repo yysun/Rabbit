@@ -1,4 +1,4 @@
 ﻿# Modules
-Setup
 Templates
 Pages
+Setup

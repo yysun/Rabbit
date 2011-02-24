@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 /// <summary>
 /// Summary description for Test
@@ -12,13 +11,7 @@ public static class Setup
 	{
         Site.AddHook("get_homepage", (sender, data) => 
         {
-            //var page = ((dynamic)sender);
-            //page.Write(page.RenderPage("~/Admin/Default.cshtml"));
-            
-            //return "~/Admin/Default.cshtml"; 
-
-            return data;
-
+            return SiteSettings.Load()[0] == null ? "/Setup" : data;
         });
 	}
 }

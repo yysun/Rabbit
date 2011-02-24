@@ -11,7 +11,7 @@
         <div id="page">
             <div id="header">
                 <p class="site-title">@App.Site.Name</p>
-                <div id="login">
+                 <div id="login">
                     @if (WebSecurity.IsAuthenticated) {
                         <p>
                             Welcome <a href="@Href("~/Account/ChangePassword")" title="Change password">@WebSecurity.CurrentUserName</a>!
@@ -24,7 +24,7 @@
                         </ul>
                     }
                 </div>
-                <ul id="menu">
+               <ul id="menu">
                     <li><a href="@Href("~/")">Home</a></li>
                     <li><a href="@Href("~/Pages/About")">About</a></li>
                 </ul>

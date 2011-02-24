@@ -6,6 +6,5 @@
     // WebMail.Password = "your-password";
     // WebMail.From = "your-name-here@example.com";
 
-    App.Site = SetupModel.Load()[0];
-    App.Layout = Site.RunHook("get_layout", this, App.Site) as string;    
+    App.Site = SiteSettings.Load()[0];
 }

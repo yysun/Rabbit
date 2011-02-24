@@ -1,0 +1,23 @@
+﻿@inherits Controller
+@{  
+    Page.View = "~/Setup/_Default.cshtml";
+   
+    if (App.Site == null) {
+        App.Site = SiteSettings.New()[0];
+    }
+
+    this.Run();
+}
+
+@RenderPage(Page.View, App.Site)
+
+@functions{
+
+[Post("/")]
+public void Default()
+{
+    App.Site = SiteSettings.New(Request.Form).Save()[0];
+}
+
+}      
+      
