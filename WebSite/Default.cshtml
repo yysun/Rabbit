@@ -1,4 +1,7 @@
 ﻿@{  
     var homepage = SiteEngine.RunHook("get_homepage") as string;
-    Server.TransferRequest(homepage);
+    if (!homepage.IsEmpty())
+    {
+        Server.TransferRequest(homepage);
+    }
 }

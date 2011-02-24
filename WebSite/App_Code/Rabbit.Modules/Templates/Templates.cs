@@ -10,6 +10,11 @@ public static class Templates
 {
     public static void Init()
     {
+        SiteEngine.AddHook("get_homepage", (data) =>
+        {
+            return SiteSettings.Load()[0] == null ? "/Setup" : data;
+        });
+
         SiteEngine.AddHook("get_site_settings", (data) =>
         {
             ((IDictionary<string, object>) data).EnsureProperty("Template", "Default");

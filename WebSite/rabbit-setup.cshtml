@@ -1,26 +1,41 @@
 ﻿@{
-    var txt = IsPost ? 
-        SiteEngine.SetModules(Request.Form["txt"]) : 
+    var modules = IsPost ?
+        SiteEngine.SetModules(Request.Form["modules"]) :
         SiteEngine.GetModules();
+    
+    //maybe somebody can provide a prettier view?
+    var view = SiteEngine.RunHook("get_rabbit_setup_view", "") as string;
 }
+
+@if (!view.IsEmpty())
+{
+    @RenderPage(Page.View, modules)
+}
+else
+{ 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Rabbit Setup</title>
+<title>Rabbit Setup</title>
+<style type="text/css">
+body {
+    font-size: 14px;
+    font-family: "Trebuchet MS", Verdana, Helvetica, Sans-Serif;
+    color: #696969;
+    padding:10px 50px;
+}        
+</style>
 </head>
 <body>
-    <p>
-        Use this form to setup the Rabbit framework.</p>
+<h2>Setup Rabbit Framework</h2>
+<p>Listed below are all available Rabbit modules. To disable a module, put a # in front of it.<br />
+The modules will be loaded using the order they are in the list.</p>
     <form method="post" action="">
-    <fieldset>
-        <legend>Manage Rabbit Modules</legend>
-        <ol>
-        <textarea name="txt" rows="20" cols="80">@txt</textarea>
-        </ol>
+        <textarea name="modules" rows="20" cols="80">@modules</textarea>
         <p class="form-actions">
             <input type="submit" value="Save" />
         </p>
-    </fieldset>
     </form>
 </body>
 </html>
+}
