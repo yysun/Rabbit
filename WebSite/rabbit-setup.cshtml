@@ -1,0 +1,26 @@
+﻿@{
+    var txt = IsPost ? 
+        SiteEngine.SetModules(Request.Form["txt"]) : 
+        SiteEngine.GetModules();
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rabbit Setup</title>
+</head>
+<body>
+    <p>
+        Use this form to setup the Rabbit framework.</p>
+    <form method="post" action="">
+    <fieldset>
+        <legend>Manage Rabbit Modules</legend>
+        <ol>
+        <textarea name="txt" rows="20" cols="80">@txt</textarea>
+        </ol>
+        <p class="form-actions">
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+    </form>
+</body>
+</html>
