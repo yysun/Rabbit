@@ -17,7 +17,7 @@ public class SiteSettings : Model
 
     private static string FileName
     {
-        get { return HttpContext.Current.Server.MapPath("~/App_Data/Site.txt"); }
+        get { return HttpContext.Current.Server.MapPath("~/App_Data/Rabbit.Site.txt"); }
     }
 
     public static SiteSettings Load()
@@ -26,25 +26,29 @@ public class SiteSettings : Model
         if (File.Exists(FileName))
         {
             var lines = File.ReadAllLines(FileName).Where(s => !s.StartsWith("#"));
-            dynamic value = lines.ToDynamic();
-            value = SiteEngine.RunHook("get_site_settings", value);
-            settings.Value = value;
+            settings.Value = lines.ToDynamic();
         }
+        else
+        {
+            settings.Value = new ExpandoObject();
+        }
+
+        settings.Value = SiteEngine.RunHook("get_site_settings", settings.Value);
         return settings;
     }
 
     public static SiteSettings New()
     {
         dynamic value = new ExpandoObject();
-        value.Name = "[New Site]";
-        value.Author = "";
         value = SiteEngine.RunHook("get_site_settings", value);
         return new SiteSettings { Value = value };
     }
 
     public static SiteSettings New(NameValueCollection form)
     {
-        return new SiteSettings { Value = form.ToDynamic() };
+        var value = form.ToDynamic();
+        ((IDictionary<string, object>)value).Remove("modules"); //maybe remove keys start with lowercase letters
+        return new SiteSettings { Value = value };
     }
 
     public SiteSettings Save()

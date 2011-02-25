@@ -56,7 +56,7 @@ public static class SiteEngine
 
     private static IEnumerable<string> GetGetDeployedModules()
     {
-        var deployPath = HttpContext.Current.Server.MapPath("~/App_Code/Rabbit.Modules");
+        var deployPath = HttpContext.Current.Server.MapPath("~/App_Code/Rabbit/Modules");
         return Directory.Exists(deployPath) ?
                from d in Directory.EnumerateDirectories(deployPath)
                select Path.GetFileName(d)
@@ -69,8 +69,12 @@ public static class SiteEngine
         modules = GetActivatedModules().ToList();
         modules.ForEach(m =>
         {
-            Type module = Type.GetType(m);
-            module.InvokeMember("Init", BindingFlags.InvokeMethod, null, module, new object[0]);
+            try
+            {
+                Type module = Type.GetType(m);
+                module.InvokeMember("Init", BindingFlags.InvokeMethod, null, module, new object[0]);
+            }
+            catch { }
         });
     }
     

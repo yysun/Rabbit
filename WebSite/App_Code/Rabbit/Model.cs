@@ -11,14 +11,7 @@ using System.Text.RegularExpressions;
 /// </summary>
 public abstract class Model
 {
-    protected dynamic Value { get; set; }
-    public dynamic this[int index]
-    {
-        get
-        {
-            return Value is ICollection<dynamic> ? Value[index] : Value;
-        }
-    }
+    public dynamic Value { get; protected set; }
 
     protected void ValidateValue(Dictionary<string, string[]> rules)
     {

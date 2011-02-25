@@ -1,18 +1,26 @@
 ﻿@{
-    var modules = IsPost ?
+    Page.Modules = IsPost ?
         SiteEngine.SetModules(Request.Form["modules"]) :
         SiteEngine.GetModules();
     
+    Page.Settings = IsPost ?
+        SiteSettings.New(Request.Form).Save().Value :
+        SiteSettings.Load().Value;     
+        
     //maybe somebody can provide a prettier view?
     var view = SiteEngine.RunHook("get_rabbit_setup_view", "") as string;
 }
 
 @if (!view.IsEmpty())
 {
-    @RenderPage(Page.View, modules)
+    @RenderPage(Page.View, Page)
 }
 else
-{ 
+{
+    if (IsPost)
+    {
+        Response.Redirect("~/");
+    }
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,18 +31,57 @@ body {
     font-family: "Trebuchet MS", Verdana, Helvetica, Sans-Serif;
     color: #696969;
     padding:10px 50px;
-}        
+} 
+h1, h2
+{
+    margin-bottom: -12px;
+}    
+ol
+{
+    padding: 0;
+    list-style: none;
+}
+
+ol li
+{
+    padding-bottom: 5px;
+}
+label 
+{
+    display:block;
+    margin:8px 0px 2px 0px;
+}
+input[type=text]
+{
+    width:300px;
+}   
+select
+{
+    width:310px;
+    height:26px;
+}
 </style>
 </head>
 <body>
-<h2>Setup Rabbit Framework</h2>
+<h1>Setup Your Rabbit Site</h1>
+<p>A rabbit site is a web site that supports modules, plug-ins and templates. <br />
+For more information, please visit <a href="http://rabbit.codeplex.com">Rabbit Framework</a>.</p>
+
+<h2>Site Information</h2>
+<p>Please enter the site name, author and select a template.</p>
+<form method="post" action="">
+    <ol>
+       <li>@Html.Label("Site Name") @Html.TextBox("Name", Page.Settings.Name)</li>
+       <li>@Html.Label("Author")    @Html.TextBox("Author", Page.Settings.Author)</li>
+       <li>@Html.Label("Template") @Site.Templates(Page.Settings.Template)</li>
+    </ol>
+<h2>Modules</h2>
 <p>Listed below are all available Rabbit modules. To disable a module, put a # in front of it.<br />
-The modules will be loaded using the order they are in the list.</p>
-    <form method="post" action="">
-        <textarea name="modules" rows="20" cols="80">@modules</textarea>
-        <p class="form-actions">
-            <input type="submit" value="Save" />
-        </p>
+The modules will be loaded using the order they appear in the list.</p>
+        <textarea name="modules" rows="6" cols="50">@Page.Modules</textarea>
+<p>Note: To use the Pages module, move your Default.cshtml file to the Pages folder and <br />
+rename _Pages_Default.cshtml to Default.cshtml.</p>
+        <p><input type="submit" value="Save" /></p>
     </form>
 </body>
 </html>

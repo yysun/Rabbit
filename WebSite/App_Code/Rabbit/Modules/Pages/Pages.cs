@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.IO;
 
 /// <summary>
 /// Summary description for Test
@@ -12,12 +13,13 @@ public static class Pages
 	{
         SiteEngine.AddHook("get_homepage", (data) => 
         {            
-            return "~/Pages/Default";  
+            return "~/Pages";  
         });
 
         SiteEngine.AddHook("get_menu", (data) => 
         {
-            return new string[] { "Home|~/Pages/Default", "About|~/Pages/About" };
+            var filename = HttpContext.Current.Server.MapPath("~/Pages/Menu.txt");
+            return File.Exists(filename) ? File.ReadAllLines(filename) : data;
         });
 
 	}
