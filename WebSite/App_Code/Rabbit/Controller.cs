@@ -25,13 +25,13 @@ public abstract class Controller : WebPage
             var methods = this.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance);
             foreach (var method in methods)
             {
-                foreach (var attr in method.GetCustomAttributes(typeof(RouteAttribute), false))
+                foreach (var attr in method.GetCustomAttributes(typeof(RouteAttribute), true))
                 {
                     ((RouteAttribute)attr).Method = method;
                     routes.Add((RouteAttribute)attr);
                 }
             }
-#if(!DEBUG)
+#if (!DEBUG)
             //cache[cacheKey] = routes;
 #endif
         }

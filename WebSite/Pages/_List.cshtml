@@ -1,0 +1,26 @@
+﻿@{  
+    Page.Title = "Manage Pages";
+    //Layout = SiteEngine.RunHook("get_layout") as string;
+}
+<p>
+Pages    
+</p>
+@if (Page.Model.List == null)
+{ 
+    <div>No pages found</div>
+}
+else
+{ 
+    <table>
+    <tr></tr>
+    @foreach (var page in Page.Model.List)
+    {
+        <tr>
+        <td><a href="/Pages/@page.Name">@page.Name</a></td>
+        <td><a href="/Pages/Edit/@page.Name">Edit</a></td>
+        <td><a href="/Pages/Delete/@page.Name">Delete</a></td>
+        </tr>
+    }
+    </table>
+    @Page.Model.Start
+}

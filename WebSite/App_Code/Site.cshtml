@@ -1,4 +1,12 @@
-﻿@helper Name() {
+﻿@helper RenderHook(WebPage webPage, string hookName) {  
+    var view = SiteEngine.RunHook(hookName, webPage.Page) as string;
+    if (view != null)
+    {
+        @webPage.RenderPage(view, webPage.Page);
+    }      
+} 
+
+@helper Name() {
     if (App.Site == null) { App.Site = SiteSettings.Load().Value; }
     <text>@App.Site.Name</text>
 }
@@ -25,8 +33,7 @@
     </select>
 }
 
-@helper MainMenu()
-    {
+@helper MainMenu() {
     var menu = new List<string>{"Home|~/"};  
     <ul id="menu">
         @foreach (var s in SiteEngine.RunHook("get_menu", menu) as IEnumerable<string>)
@@ -43,4 +50,5 @@
             }
         }
     </ul>
-} 
+}
+

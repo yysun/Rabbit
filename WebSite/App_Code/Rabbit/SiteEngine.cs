@@ -31,7 +31,7 @@ public static class SiteEngine
 
     public static object RunHook(string name, object data = null)
     {
-        hooks.Where(a => a.Key == name)
+        hooks.Where(a => string.Compare(a.Key, name, true) == 0)
                .Select(a => a.Value)
                .ToList()
                .ForEach(f => data = f(data));

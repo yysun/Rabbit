@@ -1,0 +1,10 @@
+﻿@inherits CrudController
+@{  
+    Layout = SiteEngine.RunHook("get_layout") as string;
+    this.ModuleName = "Pages";
+    this.ContentTypeName = "Page";
+    this.Run();
+}
+
+@RenderPage(Page.View, Page.Model)
+
