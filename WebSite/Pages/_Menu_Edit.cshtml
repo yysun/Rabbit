@@ -1,0 +1,14 @@
+﻿@{  
+    
+}
+<form method="post" action="/Pages/SaveMenu">
+<fieldset>
+    <legend>Edit Menu</legend>
+    <ol>
+        <li>
+            @Html.Label("Menu")
+            <textarea name="Menu" rows="10" cols="60">@Page.Menu</textarea></li>
+    </ol>
+    <p><input type="submit" value="Save" /></p>
+</fieldset>
+</form>

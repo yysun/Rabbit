@@ -1,4 +1,5 @@
-﻿@helper RenderHook(WebPage webPage, string hookName) {  
+﻿@helper RenderHook(WebPage webPage, string hookName)
+    {  
     var view = SiteEngine.RunHook(hookName, webPage.Page) as string;
     if (view != null)
     {
@@ -6,22 +7,25 @@
     }      
 } 
 
-@helper Name() {
+@helper Name()
+    {
     if (App.Site == null) { App.Site = SiteSettings.Load().Value; }
     <text>@App.Site.Name</text>
 }
 
-@helper Author() {
+@helper Author()
+    {
     if (App.Site == null) { App.Site = SiteSettings.Load().Value; }
     <text>@App.Site.Author</text>
 }
 
-@helper Templates(string current) {
-    var menu = new List<string>{"Default"};
+@helper Templates(string current)
+    {
+    var tmpls = new List<string> { "Default" };
     <select name="Template">
-        @foreach (var s in SiteEngine.RunHook("get_templates", menu) as IEnumerable<string>)
+        @foreach (var s in SiteEngine.RunHook("get_templates", tmpls) as IEnumerable<string>)
         {
-            if (s == current) 
+            if (s == current)
             {
                 <option selected="selected" value="@s">@s</option>
             }
@@ -34,19 +38,25 @@
 }
 
 @helper MainMenu() {
-    var menu = new List<string>{"Home|~/"};  
+    var menutext = SiteEngine.RunHook("get_menu", "Home|~/") as string;
+    var menus = menutext == null ? new string[] { } : menutext.Split('\n');
     <ul id="menu">
-        @foreach (var s in SiteEngine.RunHook("get_menu", menu) as IEnumerable<string>)
+        @foreach (var s in menus)
         {
-            var ss = s.Split('|');
+            var ss = s.Trim().Split('|');
+            var href = ss[1];
+            if (href.StartsWith("~"))
+            {
+                href = Href(href);
+            }
 
             if (Request.AppRelativeCurrentExecutionFilePath == ss[1])
             { 
-                <li class="selected"><a href="@Href(ss[1])">@ss[0]</a></li>
+                <li class="selected"><a href="@href">@ss[0]</a></li>
             }
             else
             { 
-                <li><a href="@Href(ss[1])">@ss[0]</a></li>
+                <li><a href="@href">@ss[0]</a></li>
             }
         }
     </ul>

@@ -1,7 +1,7 @@
-﻿@helper TextAndLabel(string label, string name, dynamic page) {
+﻿@helper TextAndLabel(string label, string name, dynamic page, object htmlAttributes=null) {
     
     @Html.Label(label, name)
-    @Html.TextBox(name, page[name])
+    @Html.TextBox(name, page[name], htmlAttributes)
     if (page.Errors != null)
     {
         var errors = from e in ((Dictionary<string, string>) page.Errors)

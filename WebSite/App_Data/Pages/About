@@ -1,6 +1,4 @@
-﻿@{
-    Page.Title = "About My Site";
-}
+About My Site
 <p>
     This web page was built using ASP.NET Web Pages and Rabbit Framework. For more information, visit the 
     <a href="http://rabbit.codeplex.com">Rabbit Framework homepage</a>.

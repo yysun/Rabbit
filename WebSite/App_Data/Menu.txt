@@ -1,2 +1,2 @@
-﻿Home|~/Pages
+Home|~/Pages
 About|~/Pages/About

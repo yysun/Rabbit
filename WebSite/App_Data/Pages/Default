@@ -1,6 +1,4 @@
-﻿@{  
-    Page.Title = "Welcome to my Web Site!";
-}
+﻿Welcome to my Web Site!
 <p>
     ASP.NET Web Pages with <a href="http://rabbit.codeplex.com">Rabbit Framework</a> make it easy to build powerful .NET based applications for the web.
 </p>

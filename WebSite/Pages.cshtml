@@ -1,10 +1,45 @@
 ﻿@inherits CrudController
 @{  
     Layout = SiteEngine.RunHook("get_layout") as string;
-    this.ModuleName = "Pages";
-    this.ContentTypeName = "Page";
-    this.Run();
+    this.Run("Pages", "Page");
+    if (((IDictionary<string, object>)Page.Model).ContainsKey("Title")) {
+        Page.Title = Page.Model.Title;
+    }
+
 }
 
 @RenderPage(Page.View, Page.Model)
 
+@functions {
+
+    [Get("EditMenu")]
+    public void EditMenu()
+    {
+        Page.Model = new System.Dynamic.ExpandoObject();
+        Page.Model.Menu = SiteEngine.RunHook("get_menu", "");
+        Page.View = SiteEngine.RunHook("get_menu_view", "~/Pages/_Menu_Edit.cshtml") as string;
+    }
+    
+    [Post("SaveMenu")]
+    public void SaveMenu()
+    {
+        Page.Model = new System.Dynamic.ExpandoObject();
+        Page.Model.Menu = Request.Form["Menu"];
+        Page.Model = SiteEngine.RunHook("save_menu", Page.Model);
+        Page.View = SiteEngine.RunHook("get_menu_view", "~/Pages/_Menu_Edit.cshtml") as string;
+    }
+
+    protected override dynamic GetItemFromRequest(System.Collections.Specialized.NameValueCollection form)
+    {
+        dynamic item = new System.Dynamic.ExpandoObject();
+        item.Id = Request["Id"];
+        item.Title = Request["Title"];
+        item.Content = Request.Unvalidated("Content");
+
+        if (string.IsNullOrWhiteSpace(item.Id))
+        {
+            item.Id = item.Title.Replace(" ", "-");
+        }
+        return item;
+    }
+}

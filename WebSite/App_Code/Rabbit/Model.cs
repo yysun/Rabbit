@@ -17,18 +17,24 @@ public abstract class Model
     {
         var errors = new Dictionary<string, string>();
 
-        foreach (var key in rules.Keys)
+        if (Value == null)
         {
-            if (!((IDictionary<string, Object>)Value).Keys.Contains(key))
+            errors.Add("_self", "Object to be validated is null.");
+        }
+        else
+        {
+            foreach (var key in rules.Keys)
             {
-                throw new InvalidOperationException(key + " is not a property and cannot be validated");
-            }
-            else
-            {
-                rules[key].ToList().ForEach(r => ValidateProperty(key, r, errors));
+                if (!((IDictionary<string, Object>)Value).Keys.Contains(key))
+                {
+                    throw new InvalidOperationException(key + " is not a property and cannot be validated");
+                }
+                else
+                {
+                    rules[key].ToList().ForEach(r => ValidateProperty(key, r, errors));
+                }
             }
         }
-
         Value.HasError = errors.Count() > 0;
         Value.Errors = errors;
     }
@@ -36,7 +42,7 @@ public abstract class Model
     private void ValidateProperty(string key, string rule, Dictionary<string, string> errors)
     {
         if (string.IsNullOrWhiteSpace(rule)) return;
-        var message = "Please fix this field.";
+        var message = rule;
         var target = "";
 
         if (rule.IndexOf("|") > 0)
@@ -54,6 +60,8 @@ public abstract class Model
             rule = ss[0].ToLower().Trim();
             target = ss[1];
         }
+
+        if (!RULES.ContainsKey(rule)) throw new ArgumentOutOfRangeException(rule + ": is not a valid validation rule.");
 
         var val = ((IDictionary<string, Object>)Value)[key];
 
