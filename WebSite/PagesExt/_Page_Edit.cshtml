@@ -1,0 +1,17 @@
+﻿@{  
+    
+}
+<form method="post" action="/Pages/Save">
+<fieldset>
+    <legend>Edit Page</legend>
+    <ol>
+        <li>@HtmlExt.TextAndLabel("Title", "Title", Page, new { style="width:100%" })</li>
+        <li>
+            @Html.Label("Content")
+            <textarea name="Content" rows="10" cols="60" style="width:100%">@Page.Content</textarea></li>
+    </ol>
+    @Html.Hidden("Id", @Page.Id)
+    <p><input type="submit" value="Save" /></p>
+</fieldset>
+</form>
+ext

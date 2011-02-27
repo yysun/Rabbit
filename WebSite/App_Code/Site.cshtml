@@ -49,4 +49,13 @@
         }
     </ul>
 }
-
+@helper RenderPagePart(WebPage parent, string zoneName, dynamic data)
+{  
+    data.ZoneName = zoneName;
+    data.Parts = new List<KeyValuePair<string, dynamic>> { };
+    var views = (List<KeyValuePair<string, dynamic>>) SiteEngine.RunHook("Get_PagePart", data).Parts;
+    foreach(var view in views)
+    {
+        @parent.RenderPage(view.Key, view.Value);
+    }      
+} 

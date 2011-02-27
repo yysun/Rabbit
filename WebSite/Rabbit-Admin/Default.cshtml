@@ -22,7 +22,7 @@ else
     if (IsPost)
     {
         App.Site = SiteSettings.Load().Value;
-        Response.Redirect("~/");
+        //Response.Redirect("~/");
     }
 <!DOCTYPE html>
 <html>
@@ -35,9 +35,20 @@ body {
     color: #696969;
     padding:10px 50px;
 } 
+a:link, a:visited
+{
+    color: #333;
+    text-decoration: none;
+}
+
+a:hover
+{
+    color: #333;
+    text-decoration: underline;
+}
 h1, h2
 {
-    margin-bottom: -12px;
+    margin-bottom: -5px;
 }    
 ol
 {
@@ -63,6 +74,9 @@ select
     width:310px;
     height:26px;
 }
+.admin-menu:before {
+        content: "» ";
+    }
 </style>
 </head>
 <body>
@@ -86,6 +100,7 @@ The modules will be loaded using the order they appear in the list.</p>
 <p>Note: In order to use modules, backup your root Default.cshtml file and <br />
 copy _Home_Default.cshtml to the root folder.</p>
 </form>
+<a href="/">Back to Home Page</a>
 </div>
 
 @if (adminmenu.Count() > 0)
@@ -98,7 +113,7 @@ copy _Home_Default.cshtml to the root folder.</p>
     if(menu.Contains('|'))
     {
         var ss = menu.Split('|');
-        <li><a href="@Href(ss[1])">@ss[0]</a></li>
+        <li class="admin-menu"><a href="@Href(ss[1])">@ss[0]</a></li>
     }
 }
 </ol>   

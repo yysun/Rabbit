@@ -1,0 +1,14 @@
+﻿@{  
+    
+}
+<form method="post" action="/PagesExt/SaveMenuTree">
+<fieldset>
+    <legend>Edit Menu Tree</legend>
+    <ol>
+        <li>
+            @Html.Label("Menu")
+            <textarea name="Menu" rows="10" cols="60">@Page.Menu</textarea></li>
+    </ol>
+    <p><input type="submit" value="Save" /></p>
+</fieldset>
+</form>

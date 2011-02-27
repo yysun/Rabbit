@@ -27,7 +27,7 @@ public static class Pages
         SiteEngine.AddHook("save_menu", (data) =>
         {
             var filename = HttpContext.Current.Server.MapPath("~/App_Data/Rabbit/Menu.txt");
-            File.WriteAllText(filename, ((dynamic) data).Menu);
+            File.WriteAllText(filename, data.Menu);
             return data;
         });
 
