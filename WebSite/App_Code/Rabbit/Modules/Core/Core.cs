@@ -22,7 +22,7 @@ public static class Core
 
         SiteEngine.AddHook("get_layout", (data) =>
         {
-            dynamic settings = SiteSettings.Load().Value;
+            dynamic settings = SiteSettings.Load().Value;   //TODO: cache it
             return settings == null ? "Default" :
                 string.Format("~/Templates/{0}/_SiteLayout.cshtml", settings.Template ?? "Default");
         });

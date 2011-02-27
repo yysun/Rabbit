@@ -57,7 +57,13 @@ public abstract class Controller : WebPage
 
         if (route != null && route.Method != null)
         {
+            Log.Write("Controller: Run Action {0} -> {1}", action, route.Action);
+
             route.Method.Invoke(this, null);
+        }
+        else
+        {
+            Log.Write("Controller: Cannot Run Action {0}", action);
         }
     }
 }

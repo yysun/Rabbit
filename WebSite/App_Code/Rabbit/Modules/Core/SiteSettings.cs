@@ -17,7 +17,7 @@ public class SiteSettings : Model
 
     private static string FileName
     {
-        get { return HttpContext.Current.Server.MapPath("~/App_Data/Rabbit.Site.txt"); }
+        get { return HttpContext.Current.Server.MapPath("~/App_Data/Rabbit/Site.txt"); }
     }
 
     public static SiteSettings Load()
@@ -48,6 +48,8 @@ public class SiteSettings : Model
     {
         var value = form.ToDynamic();
         ((IDictionary<string, object>)value).Remove("modules"); //maybe remove keys start with lowercase letters
+
+        Log.Enabled = form.AllKeys.Contains("enableLog");
         return new SiteSettings { Value = value };
     }
 

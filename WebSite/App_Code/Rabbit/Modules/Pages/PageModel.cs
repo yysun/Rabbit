@@ -16,10 +16,13 @@ public class PageModel : Model
     {
     }
 
+    private static string BaseFolder { get { return HttpContext.Current.Server.MapPath("~/App_Data/Rabbit/Pages/"); } }
+    private string PageFileName { get { return Path.Combine(BaseFolder + Value.Id as string); } }
+
     public static PageModel List(dynamic data)
     {
         var model = new PageModel();
-        var filepath = HttpContext.Current.Server.MapPath("~/App_Data/Pages");
+        var filepath = BaseFolder;
         if (Directory.Exists(filepath))
         {
             data.List = Directory.EnumerateFiles(filepath, "*.*") //Sorting and Paging?
@@ -39,8 +42,7 @@ public class PageModel : Model
     public static PageModel Load(dynamic item)
     {
         var model = new PageModel();
-        var filename = HttpContext.Current.Server.MapPath("~/App_Data/Pages/" + item.Id as string);
-
+        var filename = Path.Combine(BaseFolder + item.Id as string);
         if (File.Exists(filename))
         {
             var lines = File.ReadAllLines(filename);
@@ -86,8 +88,7 @@ public class PageModel : Model
         Validate();
         if (Value != null && !Value.HasError)
         {
-            var filename = HttpContext.Current.Server.MapPath("~/App_Data/Pages/" + Value.Id as string);
-            using (var file = new StreamWriter(filename))
+            using (var file = new StreamWriter(PageFileName))
             {
                 file.WriteLine(Value.Title);
                 file.WriteLine(Value.Content);
@@ -110,8 +111,7 @@ public class PageModel : Model
     {
         if (Value != null && !Value.HasError)
         {
-            var filename = HttpContext.Current.Server.MapPath("~/App_Data/Pages/" + Value.Id as string);
-            if (File.Exists(filename)) File.Delete(filename);
+            if (File.Exists(PageFileName)) File.Delete(PageFileName);
             Value = null;
         }
         return this;

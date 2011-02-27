@@ -20,14 +20,21 @@ public static class Pages
 
         SiteEngine.AddHook("get_menu", (data) => 
         {
-            var filename = HttpContext.Current.Server.MapPath("~/App_Data/Menu.txt");
-            return File.Exists(filename) ? File.ReadAllText(filename) : data;
+            var filename = HttpContext.Current.Server.MapPath("~/App_Data/Rabbit/Menu.txt");
+            return File.Exists(filename) ? File.ReadAllText(filename) : data; //TODO: cache it
         });
         
         SiteEngine.AddHook("save_menu", (data) =>
         {
-            var filename = HttpContext.Current.Server.MapPath("~/App_Data/Menu.txt");
+            var filename = HttpContext.Current.Server.MapPath("~/App_Data/Rabbit/Menu.txt");
             File.WriteAllText(filename, ((dynamic) data).Menu);
+            return data;
+        });
+
+        SiteEngine.AddHook("get_module_admin_menu", (data) =>
+        {
+            ((IList<string>)data).Add("Manage Pages|~/Pages/List");
+            ((IList<string>)data).Add("Manage Menus|~/Pages/EditMenu");
             return data;
         });
 

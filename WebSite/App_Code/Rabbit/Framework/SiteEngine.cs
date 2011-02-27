@@ -26,23 +26,38 @@ public static class SiteEngine
 
     public static void AddHook(string name, Func<object, object> action)
     {
+        Log.Write("SiteEngine: \tAddHook {0}", name);
+
         hooks.Add(new KeyValuePair<string, Func<object, object>>(name, action));
     }
 
     public static object RunHook(string name, object data = null)
-    {
-        hooks.Where(a => string.Compare(a.Key, name, true) == 0)
+    {        
+        var foundhooks = hooks.Where(a => string.Compare(a.Key, name, true) == 0)
                .Select(a => a.Value)
-               .ToList()
-               .ForEach(f => data = f(data));
+               .ToList();
+
+        Log.Write("SiteEngine: RunHook {0} -> {1} Hook", name, foundhooks.Count());
+
+        foundhooks.ForEach(f => data = f(data));
         return data;
+    }
+
+    public static void ClearHook(string name)
+    {
+        var foundhooks = hooks.Where(a => string.Compare(a.Key, name, true) == 0)
+                .ToList();
+
+        Log.Write("SiteEngine: ClearHook {0} -> {1} Hook", name, foundhooks.Count());
+
+        foundhooks.ForEach(h=>hooks.Remove(h));
     }
 
     private static string configFileName
     {
         get
         {
-            return HttpContext.Current.Server.MapPath("~/App_Data/Rabbit.Modules.txt");
+            return HttpContext.Current.Server.MapPath("~/App_Data/Rabbit/Modules.txt");
         }
     }
 
@@ -71,10 +86,17 @@ public static class SiteEngine
         {
             try
             {
+                Log.Write("SiteEngine: Start Loading Module {0}", m);
+
                 Type module = Type.GetType(m);
                 module.InvokeMember("Init", BindingFlags.InvokeMethod, null, module, new object[0]);
+
+                Log.Write("SiteEngine: Done Loading Module {0}\r\n", m);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Log.Write("SiteEngine: Failed Loading Module: {0}: Error: {1}\r\n", m, ex.Message);
+            }
         });
     }
     
