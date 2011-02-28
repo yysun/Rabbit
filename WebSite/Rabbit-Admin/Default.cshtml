@@ -22,7 +22,10 @@ else
     if (IsPost)
     {
         App.Site = SiteSettings.Load().Value;
-        //Response.Redirect("~/");
+        if (!Request.Form["gohome"].IsEmpty())
+        {
+            Response.Redirect("~/");
+        }
     }
 <!DOCTYPE html>
 <html>
@@ -81,8 +84,8 @@ select
 </head>
 <body>
 <h1>Setup Your Rabbit Site</h1>
-<p>A rabbit site is a web site that supports modules, plug-ins and templates. <br />
-For more information, please visit <a href="http://rabbit.codeplex.com">Rabbit Framework</a>.</p>
+<p>A rabbit site is a web site that supports modules, plug-ins and templates. For more information, 
+please visit <a href="http://rabbit.codeplex.com">Rabbit Framework</a>.</p>
 <div style="float:left;width:50%">
 <h2>Site Information</h2>
 <form method="post" action="">
@@ -94,13 +97,12 @@ For more information, please visit <a href="http://rabbit.codeplex.com">Rabbit F
 <p><input type="checkbox" name="enableLog" @Html.Raw(Log.Enabled?"checked=\"checked\"":"") /> Enable Logging</p>
 
 <h2>Modules</h2>
-<p>Listed below are all available Rabbit modules. To disable a module, put a # in front of it.<br />
+<p>Listed below are all available Rabbit modules. To disable a module, put a # in front of it.
 The modules will be loaded using the order they appear in the list.</p>
-        <textarea name="modules" rows="6" cols="40">@Page.Modules</textarea> <input type="submit" value="Save" />
-<p>Note: In order to use modules, backup your root Default.cshtml file and <br />
-copy _Home_Default.cshtml to the root folder.</p>
+        <textarea name="modules" rows="6" cols="40">@Page.Modules</textarea> 
+<p>Note: In order to use modules, backup your root Default.cshtml file and copy _Home_Default.cshtml to the root folder.</p>
+<input type="submit" value="Save" /> <input type="checkbox" name="gohome" /> Go <a href="/"> Home Page</a> when saved.
 </form>
-<a href="/">Back to Home Page</a>
 </div>
 
 @if (adminmenu.Count() > 0)

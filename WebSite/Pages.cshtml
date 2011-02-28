@@ -5,10 +5,14 @@
     if (((IDictionary<string, object>)Page.Model).ContainsKey("Title")) {
         Page.Title = Page.Model.Title;
     }
-
 }
 
 @RenderPage(Page.View, Page.Model)
+
+@section aside
+{
+    @Site.RenderPagePart(this, "aside", Page)
+}
 
 @functions {
 

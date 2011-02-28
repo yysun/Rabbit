@@ -8,13 +8,13 @@
 
 a:link, a:visited
 {
-    color: #33a;
+    color: #258f8c;
     text-decoration: none;
 }
 
 a:hover
 {
-    color: #a33;
+    color: #258f8c;
     text-decoration: underline;
 }
 
@@ -27,7 +27,8 @@ h1
     line-height: 2em;
     font-size: 22px; 
     text-shadow: 1px 1px 2px #111;
-    margin-left:15px;
+    margin-left:30px;
+    color: #258f8c;
 }
 h2
 {
@@ -55,26 +56,31 @@ h5, h6
 
 /* PRIMARY LAYOUT ELEMENTS   
 ----------------------------------------------------------*/
+#toprow
+{
+    background-color:#fff;
+    height:20px;
+    font-size:12px
+}
+#titlerow
+{
+    background-color:#fff;
+}
 #page
 {
     background-color:#fff;
-    padding: 0px 20px; 
 }
 #header
 {
-    margin-top:20px;
 }
 #content
 {   
-    border-top:1px solid #999;
-    margin-top:-3px;
-    padding-top:10px;
-    min-height:500px;    
+    min-height:550px;    
 }
 #footer
 {
     border-top:1px solid #999;
-    text-align: center;
+    text-align: right;
     font-size: .9em;
     height:50px;
     padding-top:10px;
@@ -84,11 +90,7 @@ h5, h6
 ----------------------------------------------------------*/
 #login
 {
-    float: right;
-    display: block;
     text-align: right;
-    color: #000;
-    margin-top:20px;
 }
 
 #login li
@@ -96,18 +98,20 @@ h5, h6
     margin: 0;
     display: inline;
     list-style: none;
-    padding-left: 5px;
+    padding-left: 8px;
 }
-
+#login a
+{
+    color:#000;
+}
 
 /* Menu   
 ----------------------------------------------------------*/
 ul#menu
 {
-    clear: both;
-    padding: 0 0 2px;
     position: relative;
-    margin: 0;
+    margin-top: 4px;
+    float:right;
 }
 
 ul#menu li
@@ -118,20 +122,20 @@ ul#menu li
 
 ul#menu li a
 {
-    padding: 10px 20px;
+    padding: 4px 20px;
     font-weight: bold;
     text-decoration: none;
     line-height: 2.8em;
-    background-color: #fff;
+    background-color: #eee;
     color: #666; /*CSS3 properties*/
-    border-radius: 4px 4px 0 0;
-    -webkit-border-radius: 4px 4px 0 0;
-    -moz-border-radius: 4px 4px 0 0;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
 }
 
 ul#menu li a:hover
 {
-    background-color: #eee;
+    background-color: #fff;
     text-decoration: none;
 }
 
@@ -144,7 +148,7 @@ ul#menu li a:active
 
 ul#menu li.selected a
 {
-    background-color: #999;
+    background-color: #bcd4b9;
     color: #fff;
 }
 
@@ -239,6 +243,25 @@ input[type="text"].error-field, input[type="password"].error-field
     border: solid 1px #be3e16;
     background-color: #ffe4e4;
 }
-article
-{padding:20px;
+#color-block
+{
+    width:910px;
+    height:300px;
+    background-color:#bcd4b9;
+    border-radius: 4px;
+    margin-left:20px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+#main
+{
+    margin-top:20px;
+}
+aside
+{
+    margin-top:20px;
+}
+footer
+{
+    padding-right:40px;
 }

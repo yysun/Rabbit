@@ -12,11 +12,8 @@
     @RenderSection("head", required: false)
 </head>
 <body>
-<div id="page" class="container">
-    <div id="header" class="span-24 last">
-        <header>
-            <h1>@Site.Name()</h1>
-            <div id="login">
+<div id="toprow" class="container">
+<div id="login" class="span-24 last">
                 @if (WebSecurity.IsAuthenticated)
                 {
                     <ul>
@@ -39,28 +36,43 @@
                     </ul>
                 }
             </div>
+</div>
+
+<div id="titlerow" class="container">
+    <div id="header" class="span-24 last">
+        <header>            
+        
+            <h1>@Site.Name()</h1>
+
         </header>
         <nav>@Site.MainMenu()
         </nav>
     </div>
+</div>
 
+<div id="page" class="container">
     <div id="content" class="span-24 last">
 
     @if (string.Compare(Request.AppRelativeCurrentExecutionFilePath, "~/Pages", true) == 0)
     {
         <div class="span-24 last">
-            <section>@RenderBody()</section>
+            <div id="color-block"></div>
         </div>
         <div class="span-24 last">
+            <div class="span-11 prepend-1" id="main">
+            <section>@RenderBody()</section>
+            </div>
+            <div class="span-12 last" id="aside">
             <aside>@RenderSection("aside", required: false)</aside>
+            </div>
         </div>
     }
     else
     { 
-        <div class="span-18">
+        <div class="span-16 prepend-1">
         <section>@RenderBody()</section>
         </div>
-        <div class="span-6 last">
+        <div class="span-7 last">
             @RenderSection("aside", required: false)
         </div>
     }

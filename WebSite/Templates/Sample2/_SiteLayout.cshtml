@@ -12,11 +12,14 @@
     @RenderSection("head", required: false)
 </head>
 <body>
-    <div id="page" class="container">
 
-        <div id="header" class="span-24 last">
-            <p class="site-title">@Site.Name()</p>
-            <div id="login">
+<div id="page" class="container">
+    <header>     
+    <div class="span-5">
+        <h1>@Site.Name()</h1>
+    </div>
+    <div class="span-19 last">
+       <div id="login">
                 @if (WebSecurity.IsAuthenticated)
                 {
                     <ul>
@@ -38,27 +41,26 @@
                         <li><a href="@Href("~/Account/Login")">Login</a></li>
                     </ul>
                 }
-            </div>
-            @Site.MainMenu()          
-        </div>
-
-        <div id="content" class="span-24 last">
-            <h1>@Page.Title</h1>
-            @RenderBody()
-        </div>            
-        
-        <div class="span-15">
-            @RenderSection("zone1", required: false)    
-        </div>
-
-        <div class="span-9 last">
-            @RenderSection("zone2", required: false)
-        </div>
-
-        <div id="footer" class="span-24 last">
-            &copy; Copyright @DateTime.Now.Year, @Site.Author() All Right Reserved.
-        </div>
-
+            </div>        
     </div>
+    </header>
+
+    <div class="span-24 last">
+        <div id="color-block"></div>
+    </div>
+
+    <div id="nav" class="span-5">
+        <nav>@Site.MainMenu()</nav>
+        <aside>@RenderSection("aside", required: false)</aside>
+    </div>
+
+    <div id="content" class="span-19 last">
+    <section>@RenderBody()</section>
+    </div>
+
+    <div id="footer" class="span-24 last">
+        <footer>&copy; Copyright @DateTime.Now.Year, @Site.Author() All Right Reserved.</footer>
+    </div>
+</div>
 </body>
 </html>

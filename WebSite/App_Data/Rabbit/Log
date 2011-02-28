@@ -9,3 +9,14 @@
 2/27/2011 9:46:22 AM SiteEngine: RunHook GET_Pages_Page -> 1 Hook
 2/27/2011 9:46:22 AM SiteEngine: RunHook GET_Pages_Page_ItemView -> 0 Hook
 2/27/2011 9:46:22 AM SiteEngine: RunHook get_menu -> 2 Hook
+3/1/2011 10:03:30 AM SiteEngine: RunHook get_module_admin_menu -> 2 Hook
+3/1/2011 10:03:30 AM SiteEngine: RunHook get_rabbit_setup_view -> 0 Hook
+3/1/2011 10:03:30 AM SiteEngine: RunHook get_site_settings -> 1 Hook
+3/1/2011 10:03:30 AM SiteEngine: RunHook get_homepage -> 1 Hook
+3/1/2011 10:03:30 AM SiteEngine: RunHook get_layout -> 1 Hook
+3/1/2011 10:03:30 AM SiteEngine: RunHook get_site_settings -> 1 Hook
+3/1/2011 10:03:30 AM Controller: Run Action  -> /
+3/1/2011 10:03:30 AM SiteEngine: RunHook GET_Pages_Page -> 2 Hook
+3/1/2011 10:03:30 AM SiteEngine: RunHook GET_Pages_Page_ItemView -> 0 Hook
+3/1/2011 10:03:30 AM SiteEngine: RunHook get_menu -> 2 Hook
+3/1/2011 10:03:30 AM SiteEngine: RunHook Get_PagePart -> 1 Hook

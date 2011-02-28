@@ -2,31 +2,42 @@
 @{  
     Layout = SiteEngine.RunHook("get_layout") as string;
     this.Run();
-    if (((IDictionary<string, object>)Page.Model).ContainsKey("Title")) {
-        Page.Title = Page.Model.Title;
-    }
-
 }
 
-@RenderPage(Page.View, Page.Model)
+@if(Page.View!=null)
+{
+    @RenderPage(Page.View, Page.Model)
+}
 
 @functions {
+
+    [Get("EditHomePageLayout")]
+    public void EditHomePageLayout()
+    {
+    }
+
+    [Get("EditSectionPageLayout")]
+    public void EditSectionPageLayout()
+    {
+    }
+
+    [Get("EditArticlePageLayout")]
+    public void EditArticlePageLayout()
+    {
+    }
+
+    [Get("EditCategories")]
+    public void EditCategories()
+    {
+    }
 
     [Get("EditMenuTree")]
     public void EditMenu()
     {
-        Page.Model = new System.Dynamic.ExpandoObject();
-        Page.Model.Menu = SiteEngine.RunHook("get_menu", "");
-        Page.View = SiteEngine.RunHook("get_menu_view", "~/PagesExt/_MenuTree_Edit.cshtml") as string;
+        //Page.Model = new System.Dynamic.ExpandoObject();
+        //Page.Model.Menu = SiteEngine.RunHook("get_menu", "");
+        //Page.View = SiteEngine.RunHook("get_menu_view", "~/PagesExt/_MenuTree_Edit.cshtml") as string;
     }
     
-    [Post("SaveMenuTree")]
-    public void SaveMenu()
-    {
-        Page.Model = new System.Dynamic.ExpandoObject();
-        Page.Model.Menu = Request.Form["Menu"];
-        Page.Model = SiteEngine.RunHook("save_menu", Page.Model);
-        Page.View = SiteEngine.RunHook("get_menu_view", "~/PagesExt/_MenuTree_Edit.cshtml") as string;
-    }
 
 }

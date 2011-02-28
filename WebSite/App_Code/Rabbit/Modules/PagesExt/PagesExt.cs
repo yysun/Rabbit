@@ -33,11 +33,11 @@ public static class PagesExt
             return PageExtModel.Load(data).Value;
         });
 
-        SiteEngine.AddHook("get_pages_page_itemview", (data) =>
-        {
-            //switch on default, section, article
-            return "~/PagesExt/_HomePage_Layout.cshtml";
-        });
+        //SiteEngine.AddHook("get_pages_page_itemview", (data) =>
+        //{
+        //    //switch on default, section, article
+        //    return "~/PagesExt/_HomePage_Layout.cshtml";
+        //});
 
         SiteEngine.AddHook("get_pages_page_editview", (data) =>
         {
@@ -47,14 +47,6 @@ public static class PagesExt
         SiteEngine.AddHook("get_pages_page_createview", (data) =>
         {
             return "~/PagesExt/_Page_Create.cshtml";
-        });
-       
-        SiteEngine.AddHook("get_homepage_zones", (data) =>
-        {
-            dynamic homePage = HomePageModel.Load().Value;
-
-            data = "Zone1, Zone2, Zone3";
-            return data;
         });
 
         SiteEngine.AddHook("get_pagepart", (data) =>
