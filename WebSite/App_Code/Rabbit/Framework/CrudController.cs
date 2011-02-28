@@ -51,7 +51,7 @@ public abstract class CrudController : Controller
     [Get("/*")]
     public virtual void Get()
     {
-        View(UrlData[0]);
+        View(string.Join("/", UrlData.ToArray()));
     }
 
     protected virtual void View(string id)
@@ -64,7 +64,7 @@ public abstract class CrudController : Controller
     [Get("Edit")]
     public virtual void Edit()
     {
-        Page.Model = GetItemById(UrlData[1]);
+        Page.Model = GetItemById(string.Join("/", UrlData.ToArray(), 1, UrlData.Count() - 1));
         Page.View = SiteEngine.RunHook(GET_ITEM_EDIT_VIEW, DEFAULT_ITEM_EDIT_VIEW) as string;
     }
 
@@ -83,26 +83,13 @@ public abstract class CrudController : Controller
     //    Page.Model = SiteEngine.RunHook(NEW_ITEM, new ExpandoObject());
     //    Page.View = SiteEngine.RunHook(GET_ITEM_CREATE_VIEW, DEFAULT_ITEM_CREATE_VIEW) as string;
     //}
-
-    protected virtual dynamic GetItemById(string id)
-    {
-        dynamic item = new ExpandoObject();
-        item.Id = id;
-        return SiteEngine.RunHook(GET_ITEM, item);
-    }
-
-    protected virtual dynamic GetItemFromRequest(NameValueCollection form)
-    {
-        return form.ToDynamic();
-    }
-
     
     [Get("Delete")]
     public virtual void Delete()
     {
         //check access
 
-        Page.Model = GetItemById(UrlData[1]);
+        Page.Model = GetItemById(string.Join("/", UrlData.ToArray(), 1, UrlData.Count() - 1));
         Page.Model = SiteEngine.RunHook(DELETE_ITEM, Page.Model);
 
         List();
@@ -122,8 +109,18 @@ public abstract class CrudController : Controller
         {
             Page.View = SiteEngine.RunHook(GET_ITEM_VIEW, DEFAULT_ITEM_VIEW) as string;
         }
+    }
 
-        
+    protected virtual dynamic GetItemById(string id)
+    {
+        dynamic item = new ExpandoObject();
+        item.Id = id;
+        return SiteEngine.RunHook(GET_ITEM, item);
+    }
+
+    protected virtual dynamic GetItemFromRequest(NameValueCollection form)
+    {
+        return form.ToDynamic();
     }
 
     protected virtual void Run(string moduleName, string contentTypeName)

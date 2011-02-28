@@ -10,42 +10,41 @@ using System.Collections.Specialized;
 /// <summary>
 /// Summary description for PageModel
 /// </summary>
-public class PageModel : Model
+public class PageExtModel : Model
 {
-    private PageModel()
+    private PageExtModel()
     {
     }
 
     private static string ContentType = "Pages";
 
-    public static PageModel List(dynamic data) //Filtering, Sorting and Paging?
+    public static PageExtModel List(dynamic data) //Filtering, Sorting and Paging?
     {
-        var model = new PageModel();
+        var model = new PageExtModel();
         data.List = ContentStore.LoadContent(ContentType);
         model.Value = data;
         return model;
     }
 
-    public static PageModel Load(dynamic item)
+    public static PageExtModel Load(dynamic item)
     {
-        var model = new PageModel();
-        dynamic value = ContentStore.LoadContent(ContentType, item.Id as string) ?? item;
-        model.Value = value;
+        var model = new PageExtModel();
+        model.Value = ContentStore.LoadContent(ContentType, item.Id as string) ?? item;
         return model;
     }
 
-    public static PageModel New()
+    public static PageExtModel New()
     {
         dynamic value = new ExpandoObject();
-        return new PageModel { Value = value };
+        return new PageExtModel { Value = value };
     }
 
-    public static PageModel New(dynamic data)
+    public static PageExtModel New(dynamic data)
     {
-        return new PageModel { Value = data };
+        return new PageExtModel { Value = data };
     }
 
-    public PageModel Validate()
+    public PageExtModel Validate()
     {
         var rules = new Dictionary<string, string[]>
         {
@@ -56,8 +55,8 @@ public class PageModel : Model
         this.ValidateValue(rules);
         return this;
     }
-    
-    public PageModel Save()
+
+    public PageExtModel Save()
     {
         Validate();
         if (Value != null && !Value.HasError)
@@ -68,8 +67,8 @@ public class PageModel : Model
         }
         return this;
     }
-    
-    public PageModel Create()
+
+    public PageExtModel Create()
     {
         Validate();
         if (Value != null && !Value.HasError)
@@ -78,8 +77,8 @@ public class PageModel : Model
         }
         return this;
     }
-    
-    public PageModel Delete()
+
+    public PageExtModel Delete()
     {
         if (Value != null && Value.Id != null)
         {

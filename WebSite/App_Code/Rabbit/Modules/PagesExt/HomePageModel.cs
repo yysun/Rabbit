@@ -16,24 +16,12 @@ public class HomePageModel : Model
     {
     }
 
-    private static string FileName
-    {
-        get { return HttpContext.Current.Server.MapPath("~/App_Data/Rabbit/PagesExt/HomePage.txt"); }
-    }
+    private static string FileName = "HomePage.Layout";
 
     public static HomePageModel Load()
     {
         var settings = new HomePageModel();
-        if (File.Exists(FileName))
-        {
-            var lines = File.ReadAllLines(FileName).Where(s => !s.StartsWith("#"));
-            settings.Value = lines.ToDynamic();
-        }
-        else
-        {
-            settings.Value = new ExpandoObject();
-        }
-        
+        settings.Value = ContentStore.LoadContent("Pages", FileName);
         return settings;
     }
     
@@ -41,7 +29,7 @@ public class HomePageModel : Model
     {
         if (Value != null)
         {
-            ((IDictionary<string, object>)Value).SaveToFile(FileName);
+            ContentStore.SaveContent("Pages", FileName, Value);
         }
         return this;
     }

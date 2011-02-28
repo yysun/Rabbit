@@ -4,7 +4,7 @@
     @Html.TextBox(name, page[name], htmlAttributes)
     if (page.Errors != null)
     {
-        var errors = from e in ((Dictionary<string, string>) page.Errors)
+        var errors = from e in ((Dictionary<string, object>) page.Errors)
                      where e.Key.StartsWith(name)
                      select e.Value;
 

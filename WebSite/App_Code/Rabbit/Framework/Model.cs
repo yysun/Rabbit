@@ -15,7 +15,7 @@ public abstract class Model
 
     protected void ValidateValue(Dictionary<string, string[]> rules)
     {
-        var errors = new Dictionary<string, string>();
+        var errors = new Dictionary<string, object>();
 
         if (Value == null)
         {
@@ -39,7 +39,7 @@ public abstract class Model
         Value.Errors = errors;
     }
 
-    private void ValidateProperty(string key, string rule, Dictionary<string, string> errors)
+    private void ValidateProperty(string key, string rule, IDictionary<string, object> errors)
     {
         if (string.IsNullOrWhiteSpace(rule)) return;
         var message = rule;

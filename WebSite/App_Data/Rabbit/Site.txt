@@ -1,4 +1,0 @@
-Name:My Rabbit Site
-Author:Yiyi Sun
-Template:White
-enableLog:on

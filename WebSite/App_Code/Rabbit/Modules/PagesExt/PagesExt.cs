@@ -11,11 +11,6 @@ public static class PagesExt
 {
     public static void Init()
     {
-        //SiteEngine.AddHook("get_rabbit_setup_view", (data) =>
-        //{
-        //    return "~/Sample/_get_site_settings.cshtml";
-        //});
-
         SiteEngine.AddHook("get_module_admin_menu", (data) =>
         {
             ((IList<string>)data).Add("Edit Home Page Layout|~/PagesExt/HomePageLayout");
@@ -26,14 +21,21 @@ public static class PagesExt
             return data;
         });
 
+        //support multiple level dropdown menu
         SiteEngine.AddHook("get_menu", (data) =>
         {
             var filename = HttpContext.Current.Server.MapPath("~/App_Data/Rabbit/Menu.txt");
             return File.Exists(filename) ? File.ReadAllText(filename) : data; //TODO: cache it
         });
 
+        SiteEngine.AddHook("get_pages_page", (data) =>
+        {
+            return PageExtModel.Load(data).Value;
+        });
+
         SiteEngine.AddHook("get_pages_page_itemview", (data) =>
         {
+            //switch on default, section, article
             return "~/PagesExt/_HomePage_Layout.cshtml";
         });
 
@@ -57,8 +59,8 @@ public static class PagesExt
 
         SiteEngine.AddHook("get_pagepart", (data) =>
         {
-            var zone = data.ZoneName as string;
-            data.Parts.Add(new KeyValuePair<string, dynamic>("~/PagesExt/_Page_Edit.cshtml", data));
+            //var zone = data.ZoneName as string;
+            //data.Parts.Add(new KeyValuePair<string, dynamic>("~/PagesExt/_Page_Edit.cshtml", data));
             return data;
         });
     }

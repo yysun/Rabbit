@@ -15,7 +15,7 @@ public static class Log
 //#if DEBUG
         if (!Enabled) return;
 
-        var fileName = HttpContext.Current.Server.MapPath("~/App_Data/Rabbit/Log.txt");
+        var fileName = HttpContext.Current.Server.MapPath("~/App_Data/Rabbit/Log");
         using (StreamWriter sw = File.AppendText(fileName))
         {
             sw.WriteLine(DateTime.Now.ToString() + " " + string.Format(format, args));

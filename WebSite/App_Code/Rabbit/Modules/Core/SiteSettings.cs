@@ -15,24 +15,12 @@ public class SiteSettings : Model
 	{
 	}
 
-    private static string FileName
-    {
-        get { return HttpContext.Current.Server.MapPath("~/App_Data/Rabbit/Site.txt"); }
-    }
+    private static string FileName = "Site";
 
     public static SiteSettings Load()
     {
         var settings = new SiteSettings();
-        if (File.Exists(FileName))
-        {
-            var lines = File.ReadAllLines(FileName).Where(s => !s.StartsWith("#"));
-            settings.Value = lines.ToDynamic();
-        }
-        else
-        {
-            settings.Value = new ExpandoObject();
-        }
-
+        settings.Value = ContentStore.LoadContent("", FileName);
         settings.Value = SiteEngine.RunHook("get_site_settings", settings.Value);
         return settings;
     }
@@ -57,7 +45,7 @@ public class SiteSettings : Model
     {
         if (Value != null)
         {
-            ((IDictionary<string, object>)Value).SaveToFile(FileName);
+            ContentStore.SaveContent("", FileName, Value);
         }
         return this;
     }

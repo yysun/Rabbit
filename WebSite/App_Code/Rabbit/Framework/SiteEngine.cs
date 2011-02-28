@@ -57,7 +57,7 @@ public static class SiteEngine
     {
         get
         {
-            return HttpContext.Current.Server.MapPath("~/App_Data/Rabbit/Modules.txt");
+            return HttpContext.Current.Server.MapPath("~/App_Data/Rabbit/Modules");
         }
     }
 

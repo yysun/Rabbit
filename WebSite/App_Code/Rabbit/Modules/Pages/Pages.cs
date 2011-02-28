@@ -20,13 +20,13 @@ public static class Pages
 
         SiteEngine.AddHook("get_menu", (data) => 
         {
-            var filename = HttpContext.Current.Server.MapPath("~/App_Data/Rabbit/Menu.txt");
+            var filename = HttpContext.Current.Server.MapPath("~/App_Data/Rabbit/Menu");
             return File.Exists(filename) ? File.ReadAllText(filename) : data; //TODO: cache it
         });
         
         SiteEngine.AddHook("save_menu", (data) =>
         {
-            var filename = HttpContext.Current.Server.MapPath("~/App_Data/Rabbit/Menu.txt");
+            var filename = HttpContext.Current.Server.MapPath("~/App_Data/Rabbit/Menu");
             File.WriteAllText(filename, data.Menu);
             return data;
         });
