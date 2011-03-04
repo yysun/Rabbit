@@ -76,9 +76,9 @@ public abstract class Model
     {
         {"required",  (v, t) => { return v != null && !string.IsNullOrWhiteSpace(v.ToString()); }},
         {"regex",     (v, t) => { return v == null || Regex.IsMatch(v.ToString(), t); }},
-        {"email",     (v, t) => { return v == null || Regex.IsMatch(v.ToString(), "\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*"); }},
+        {"email",     (v, t) => { return v == null || Regex.IsMatch(v.ToString(), "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$"); }},
         {"number",    (v, t) => { double d; return v == null || double.TryParse(v.ToString(), out d); }},
-        {"digits",    (v, t) => { return v == null || Regex.IsMatch(v.ToString(), "\\d+"); }},
+        {"digits",    (v, t) => { return v == null || Regex.IsMatch(v.ToString(), "^\\d+$"); }},
         {"date",      (v, t) => { DateTime d; return v == null || DateTime.TryParse(v.ToString(), out d); }},
         {"minlength", (v, t) => { return v == null || v.ToString().Length >= int.Parse(t); }},
         {"maxlength", (v, t) => { return v == null || v.ToString().Length <= int.Parse(t); }},

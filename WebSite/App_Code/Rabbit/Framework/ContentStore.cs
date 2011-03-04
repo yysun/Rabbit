@@ -5,6 +5,7 @@ using System.Web;
 using System.IO;
 using System.Web.Script.Serialization;
 using System.Dynamic;
+using System.Collections;
 
 /// <summary>
 /// Summary description for ContentStore
@@ -23,18 +24,23 @@ public static class ContentStore
         File.WriteAllText(fileName, json.Serialize(data));
     }
 
-    private static dynamic CreateDynamic(object input, dynamic parent=null)
+    private static dynamic CreateDynamic(object input)
     {
-        if (input is IDictionary<string, object>[])
+        if (input is ArrayList)
         {
             dynamic result = new ExpandoObject();
-            foreach (var item in (IDictionary<string, object>[])input)
+            foreach (IDictionary<string, object> item in input as ArrayList)
             {
-                ((IDictionary<string, object>)result)[item["Key"].ToString()] = item["Value"];             
+                ((IDictionary<string, object>)result)[item["Key"].ToString()] = CreateDynamic(item["Value"]);
             }
             return result;
         }
-        return input;
+        else if (input is DateTime)
+        {
+            return ((DateTime)input).ToLocalTime();
+        }
+        else
+            return input;
     }
 
     public static dynamic LoadContent(string type, string id)
@@ -44,7 +50,7 @@ public static class ContentStore
 
         var json = new JavaScriptSerializer();
         var text = File.ReadAllText(fileName);
-        var content = json.Deserialize<Dictionary<string, object>[]>(text);
+        var content = json.Deserialize<ArrayList>(text);
         return CreateDynamic(content);
     }
     

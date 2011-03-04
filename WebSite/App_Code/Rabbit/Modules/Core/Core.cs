@@ -5,7 +5,7 @@ using System.Web;
 using System.IO;
 
 /// <summary>
-/// Summary description for Test
+/// Summary description for Core
 /// </summary>
 public static class Core
 {
@@ -23,7 +23,7 @@ public static class Core
         SiteEngine.AddHook("get_layout", (data) =>
         {
             dynamic settings = SiteSettings.Load().Value;   //TODO: cache it
-            return settings == null ? "Default" :
+            return settings == null ? "~/_SiteLayout.cshtml" :
                 string.Format("~/Templates/{0}/_SiteLayout.cshtml", settings.Template ?? "Default");
         });
 

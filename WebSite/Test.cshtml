@@ -1,0 +1,66 @@
+﻿@using System.Dynamic
+@{  
+    Layout = SiteEngine.RunHook("get_layout") as string;
+    dynamic tests = SiteEngine.RunHook("get_tests");
+    var testc = UrlData[0];
+    if (testc.IsEmpty()) {testc = "";}
+    var testn = UrlData[1];    
+}
+
+@section head {
+    <link rel="stylesheet" href="http://code.jquery.com/qunit/git/qunit.css" type="text/css" media="screen">  
+    <script type="text/javascript" src="http://code.jquery.com/qunit/git/qunit.js"></script>  
+}
+
+@section aside
+{
+    <h2>Tests Found</h2>
+    <p>Select test to run</p>
+    <ul>
+    @foreach (var testclass in tests)
+    { 
+        <li><a href="/Test/@testclass.Key">@testclass.Key</a></li>
+        <ul>
+        @foreach (var test in testclass.Value)
+        {
+            <li><a href="/Test/@testclass.Key/@test">@test</a></li>
+        }   
+        </ul>     
+    }
+    </ul>
+    <a href="/Test/all">Run all tests</a>
+    }
+
+<h2>Test Results</h2>
+<div id="qunit-testrunner-toolbar"></div>
+<ol id="qunit-tests"></ol>
+<div id="qunit-fixture"></div>
+
+<script type="text/javascript">
+    $(function () {
+        @foreach (var testclass in tests)
+        {
+            if (testc.ToLower() == "all" || testclass.Key == testc)
+            {
+                <text>module("@testclass.Key");</text> 
+                foreach (var test in testclass.Value)
+                {
+                    if (testn.IsEmpty() || test == testn)
+                    {
+                        dynamic testrun = new ExpandoObject();
+                        testrun.ClassName = testclass.Key;
+                        testrun.MethodName = test;
+                        testrun.HasPassed = "false";
+                        testrun.Message = "";
+                        testrun = SiteEngine.RunHook("run_test", testrun);
+
+                        <text>test("@testrun.MethodName", function () { 
+                            ok(@testrun.HasPassed, "@testrun.Message"); 
+                        });
+                        </text>        
+                     }
+                }
+            }
+        }
+    });
+</script>
