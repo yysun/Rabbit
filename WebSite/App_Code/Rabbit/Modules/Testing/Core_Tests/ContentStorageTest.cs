@@ -43,12 +43,39 @@ public class ContentStorageTest
         d2.Name = "d2";
         d1.Child = d2;
 
+        dynamic d4 = new ExpandoObject();
+        d4.Names = "";
+        d2.Child = d4;
+
         ContentStore.SaveContent("", "D1", d1);
 
         dynamic d3 = ContentStore.LoadContent("", "D1");
         Assert.AreEqual(d1.Name, d3.Name);
         Assert.AreEqual(d1.Child.Name, d3.Child.Name);
+        Assert.AreEqual(d1.Child.Child.Names, d3.Child.Child.Names);
         ContentStore.DeleteContent("", "D1");
     }
 
+    [TestMethod]
+    public void TestSaveDynamicWithChildArray()
+    {
+        dynamic d1 = new ExpandoObject();
+        d1.Name = "d1";
+
+        dynamic d2 = new ExpandoObject();
+        d2.Name = "d2";
+        d1.Child = d2;
+
+        dynamic d4 = new ExpandoObject();
+        d4.Names = new string[] { "1", "2", "3" };
+        d2.Child = d4;
+
+        ContentStore.SaveContent("", "D1", d1);
+
+        dynamic d3 = ContentStore.LoadContent("", "D1");
+        Assert.AreEqual(d1.Name, d3.Name);
+        Assert.AreEqual(d1.Child.Name, d3.Child.Name);
+        Assert.AreEqual(d1.Child.Child.Names[2], d3.Child.Child.Names[2]);
+        ContentStore.DeleteContent("", "D1");
+    }
 }

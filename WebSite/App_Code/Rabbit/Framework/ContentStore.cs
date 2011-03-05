@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.IO;
-using System.Web.Script.Serialization;
 using System.Dynamic;
-using System.Collections;
 
 /// <summary>
 /// Summary description for ContentStore
 /// </summary>
 public static class ContentStore
 {
+    private static Dictionary<string, object> cache = new Dictionary<string, object>();
+    private static object locker = new object();
+
     private static string BaseFolder
     {
         get { return HttpContext.Current.Server.MapPath("~/App_Data/Rabbit/"); }
@@ -19,39 +20,43 @@ public static class ContentStore
 
     public static void SaveContent(string type, string id, dynamic data)
     {
+        var cachekey = type + "." + id;
         var fileName = Path.Combine(BaseFolder + type, id);
-        var json = new JavaScriptSerializer();
-        File.WriteAllText(fileName, json.Serialize(data));
-    }
+        var text = ((ExpandoObject)data).ToJson();
 
-    private static dynamic CreateDynamic(object input)
-    {
-        if (input is ArrayList)
+        lock (locker)
         {
-            dynamic result = new ExpandoObject();
-            foreach (IDictionary<string, object> item in input as ArrayList)
-            {
-                ((IDictionary<string, object>)result)[item["Key"].ToString()] = CreateDynamic(item["Value"]);
-            }
-            return result;
+            cache[cachekey] = data;
+            File.WriteAllText(fileName, text);
         }
-        else if (input is DateTime)
-        {
-            return ((DateTime)input).ToLocalTime();
-        }
-        else
-            return input;
     }
 
     public static dynamic LoadContent(string type, string id)
     {
-        var fileName = Path.Combine(BaseFolder + type, id);
-        if (!File.Exists(fileName)) return null;
+        var cachekey = type + "." + id;
+        
+        if (cache.ContainsKey(cachekey))
+        {
+            return cache[cachekey] as dynamic;
+        }
 
-        var json = new JavaScriptSerializer();
-        var text = File.ReadAllText(fileName);
-        var content = json.Deserialize<ArrayList>(text);
-        return CreateDynamic(content);
+        lock (locker)
+        {
+            var fileName = Path.Combine(BaseFolder + type, id);
+            dynamic data = new ExpandoObject();
+
+            if (!File.Exists(fileName))
+            {
+                data.Id = id;    
+            }
+            else
+            {
+                var text = File.ReadAllText(fileName);
+                data = text.ToDynamic();
+            }
+            cache[cachekey] = data;
+            return data;
+        }
     }
     
     public static void DeleteContent(string type, string id)

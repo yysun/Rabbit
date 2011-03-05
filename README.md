@@ -8,10 +8,12 @@ Rabbit is lightweight framework for building web sites using WebMatrix (ASP.NET 
 
 Features
 --------
-* Support WebMatrix
-* Support Modules, Hooks and Templates
+* Easy to build sites with Modules, Plug-ins and Templates
 * Sinatra style MVC
-* Works with any existing web sites 
+* Monadic method chain
+* Use .NET dynamic
+* Built-in Unite Testing Framework
+* Support WebMatrix, works with any existing web sites 
 * Distributed as NuGet Package 
 
 Installation

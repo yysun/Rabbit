@@ -20,9 +20,11 @@ public static class Testing
     {
         var types = from t in Assembly.GetExecutingAssembly().GetTypes()
                     where t.GetCustomAttributes(typeof(TestClassAttribute), true).Length > 0
+                    orderby t.FullName
                     select new KeyValuePair<string, string[]>(t.FullName,
                         (from m in t.GetMethods(BindingFlags.Public | BindingFlags.Instance)
                          where m.GetCustomAttributes(typeof(TestMethodAttribute), true).Length > 0
+                         orderby m.Name
                          select m.Name).ToArray()
                     );
         return types.ToArray();
