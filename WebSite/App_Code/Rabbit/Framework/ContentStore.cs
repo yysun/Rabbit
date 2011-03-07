@@ -8,7 +8,7 @@ using System.Dynamic;
 /// <summary>
 /// Summary description for ContentStore
 /// </summary>
-public static class ContentStore
+public class ContentStore
 {
     private static Dictionary<string, object> cache = new Dictionary<string, object>();
     private static object locker = new object();
@@ -18,7 +18,7 @@ public static class ContentStore
         get { return HttpContext.Current.Server.MapPath("~/App_Data/Rabbit/"); }
     }
 
-    public static void SaveContent(string type, string id, dynamic data)
+    public void SaveContent(string type, string id, dynamic data)
     {
         var cachekey = type + "." + id;
         var fileName = Path.Combine(BaseFolder + type, id);
@@ -31,7 +31,7 @@ public static class ContentStore
         }
     }
 
-    public static dynamic LoadContent(string type, string id)
+    public dynamic LoadContent(string type, string id)
     {
         var cachekey = type + "." + id;
         
@@ -59,13 +59,13 @@ public static class ContentStore
         }
     }
     
-    public static void DeleteContent(string type, string id)
+    public void DeleteContent(string type, string id)
     {
         var fileName = Path.Combine(BaseFolder + type, id);
         if (File.Exists(fileName)) File.Delete(fileName);
     }
 
-    public static IEnumerable<dynamic> LoadContent(string type)
+    public IEnumerable<dynamic> LoadContent(string type)
     {
         var folder = Path.Combine(BaseFolder, type);
         if (!Directory.Exists(folder)) return null;

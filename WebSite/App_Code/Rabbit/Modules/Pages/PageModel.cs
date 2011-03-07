@@ -16,12 +16,18 @@ public class PageModel : Model
     {
     }
 
-    private static string ContentType = "Pages";
+    private static string ContentType = "Pages";    
+    
+    static PageModel()
+    {
+        Store = new ContentStore();
+    }
+    public static dynamic Store { get; set; }
 
     public static PageModel List(dynamic data) //Filtering, Sorting and Paging?
     {
         var model = new PageModel();
-        data.List = ContentStore.LoadContent(ContentType);
+        data.List = Store.LoadContent(ContentType);
         model.Value = data;
         return model;
     }
@@ -29,7 +35,7 @@ public class PageModel : Model
     public static PageModel Load(dynamic item)
     {
         var model = new PageModel();
-        dynamic value = ContentStore.LoadContent(ContentType, item.Id as string) ?? item;
+        dynamic value = Store.LoadContent(ContentType, item.Id as string) ?? item;
         model.Value = value;
         return model;
     }
@@ -47,6 +53,17 @@ public class PageModel : Model
 
     public PageModel Validate()
     {
+        //generate safe file name
+        if (string.IsNullOrWhiteSpace(Value.Id))
+        {
+            string id = Value.Title;
+            foreach (char c in Path.GetInvalidFileNameChars())
+            {
+                id = id.Replace(c, '-');
+            }
+            Value.Id = id;
+        }
+
         var rules = new Dictionary<string, string[]>
         {
             {"Id", new string[]{"required", "minlength:2", "maxlength:140"}},
@@ -64,26 +81,27 @@ public class PageModel : Model
         {
             ((IDictionary<string, object>)Value).Remove("HasError");
             ((IDictionary<string, object>)Value).Remove("Errors");
-            ContentStore.SaveContent(ContentType, Value.Id as string, Value);
+
+            Store.SaveContent(ContentType, Value.Id as string, Value);
         }
         return this;
     }
     
-    public PageModel Create()
-    {
-        Validate();
-        if (Value != null && !Value.HasError)
-        {
-            //Create
-        }
-        return this;
-    }
+    //public PageModel Create()
+    //{
+    //    Validate();
+    //    if (Value != null && !Value.HasError)
+    //    {
+    //        //Create
+    //    }
+    //    return this;
+    //}
     
     public PageModel Delete()
     {
         if (Value != null && Value.Id != null)
         {
-            ContentStore.DeleteContent(ContentType, Value.Id as string);
+            Store.DeleteContent(ContentType, Value.Id as string);
             Value = null;
         }
         return this;

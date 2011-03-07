@@ -10,6 +10,8 @@ using System.Dynamic;
 [TestClass]
 public class ContentStorageTest
 {
+    ContentStore Store = new ContentStore();
+
     [TestMethod]
     public void TestSaveDynamic()
     {
@@ -20,9 +22,9 @@ public class ContentStorageTest
         d1.Number = -20.5M;
         d1.No = false;
         d1.Yes = true;
-        
-        ContentStore.SaveContent("", "D1", d1);
-        dynamic d3 = ContentStore.LoadContent("", "D1");
+
+        Store.SaveContent("", "D1", d1);
+        dynamic d3 = Store.LoadContent("", "D1");
         Assert.AreEqual(d1.Name, d3.Name);
         Assert.AreEqual(d1.Index, d3.Index);
         Assert.AreEqual(d1.Date.ToString("u"), d3.Date.ToString("u"));
@@ -30,7 +32,7 @@ public class ContentStorageTest
         Assert.AreEqual(d1.Yes, d3.Yes);
         Assert.AreEqual(d1.No, d3.No);
 
-        ContentStore.DeleteContent("", "D1");
+        Store.DeleteContent("", "D1");
     }
 
     [TestMethod]
@@ -47,13 +49,13 @@ public class ContentStorageTest
         d4.Names = "";
         d2.Child = d4;
 
-        ContentStore.SaveContent("", "D1", d1);
+        Store.SaveContent("", "D1", d1);
 
-        dynamic d3 = ContentStore.LoadContent("", "D1");
+        dynamic d3 = Store.LoadContent("", "D1");
         Assert.AreEqual(d1.Name, d3.Name);
         Assert.AreEqual(d1.Child.Name, d3.Child.Name);
         Assert.AreEqual(d1.Child.Child.Names, d3.Child.Child.Names);
-        ContentStore.DeleteContent("", "D1");
+        Store.DeleteContent("", "D1");
     }
 
     [TestMethod]
@@ -70,12 +72,12 @@ public class ContentStorageTest
         d4.Names = new string[] { "1", "2", "3" };
         d2.Child = d4;
 
-        ContentStore.SaveContent("", "D1", d1);
+        Store.SaveContent("", "D1", d1);
 
-        dynamic d3 = ContentStore.LoadContent("", "D1");
+        dynamic d3 = Store.LoadContent("", "D1");
         Assert.AreEqual(d1.Name, d3.Name);
         Assert.AreEqual(d1.Child.Name, d3.Child.Name);
         Assert.AreEqual(d1.Child.Child.Names[2], d3.Child.Child.Names[2]);
-        ContentStore.DeleteContent("", "D1");
+        Store.DeleteContent("", "D1");
     }
 }

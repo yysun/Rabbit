@@ -16,12 +16,19 @@ public class PageExtModel : Model
     {
     }
 
+    static PageExtModel()
+    {
+        Store = new ContentStore();
+    }
+
+    public static dynamic Store { get; set; }
+
     private static string ContentType = "Pages";
 
     public static PageExtModel List(dynamic data) //Filtering, Sorting and Paging?
     {
         var model = new PageExtModel();
-        data.List = ContentStore.LoadContent(ContentType);
+        data.List = Store.LoadContent(ContentType);
         model.Value = data;
         return model;
     }
@@ -29,7 +36,7 @@ public class PageExtModel : Model
     public static PageExtModel Load(dynamic item)
     {
         var model = new PageExtModel();
-        model.Value = ContentStore.LoadContent(ContentType, item.Id as string) ?? item;
+        model.Value = Store.LoadContent(ContentType, item.Id as string) ?? item;
         return model;
     }
 
@@ -82,7 +89,7 @@ public class PageExtModel : Model
     {
         if (Value != null && Value.Id != null)
         {
-            ContentStore.DeleteContent(ContentType, Value.Id as string);
+            Store.DeleteContent(ContentType, Value.Id as string);
             Value = null;
         }
         return this;

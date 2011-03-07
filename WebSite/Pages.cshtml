@@ -40,10 +40,10 @@
         item.Title = Request["Title"];
         item.Content = Request.Unvalidated("Content");
 
-        if (string.IsNullOrWhiteSpace(item.Id))
-        {
-            item.Id = item.Title.Replace(" ", "-");
-        }
+        //if (string.IsNullOrWhiteSpace(item.Id))
+        //{
+        //    item.Id = item.Title.Replace(" ", "-");
+        //}
         return item;
     }
 }

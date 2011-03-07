@@ -37,12 +37,40 @@ public static class Testing
             Type type = Assembly.GetExecutingAssembly().GetType(data.ClassName);
             var test = Activator.CreateInstance(type);
             type.InvokeMember(data.MethodName, BindingFlags.InvokeMethod, null, test, new object[0]);
-            data.HasPassed = "true";
+
+            //Ensure no exception expected
+            MethodInfo method = type.GetMethod(data.MethodName);
+            var attribute = method.GetCustomAttributes(typeof(ExpectedException), true).FirstOrDefault();
+            if (attribute != null)
+            {
+                data.HasPassed = "false";
+                data.Message = "Exception "+ ((ExpectedException) attribute).Type.Name + " did not occur as expected";
+            }
+            else
+            {
+                data.HasPassed = "true";
+            }
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             data.HasPassed = "false";
             data.Message = ex.InnerException.Message;
+
+            Type type = Assembly.GetExecutingAssembly().GetType(data.ClassName);
+            if (type != null)
+            {
+                //Ensure the exception is expected
+                MethodInfo method = type.GetMethod(data.MethodName);
+                var attribute = method.GetCustomAttributes(typeof(ExpectedException), true).FirstOrDefault();
+                if (attribute != null)
+                {
+                    if (((ExpectedException) attribute).Type.Equals(ex.InnerException.GetType()))
+                    {
+                        data.HasPassed = "true";
+                        data.Message = "";
+                    }
+                }
+            }
         }
         return data;
     }

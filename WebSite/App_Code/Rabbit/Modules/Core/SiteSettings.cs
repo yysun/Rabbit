@@ -20,7 +20,7 @@ public class SiteSettings : Model
     public static SiteSettings Load()
     {
         var settings = new SiteSettings();
-        settings.Value = ContentStore.LoadContent("", FileName);
+        settings.Value = new ContentStore().LoadContent("", FileName);
         settings.Value = SiteEngine.RunHook("get_site_settings", settings.Value);
         return settings;
     }
@@ -45,7 +45,7 @@ public class SiteSettings : Model
     {
         if (Value != null)
         {
-            ContentStore.SaveContent("", FileName, Value);
+            new ContentStore().SaveContent("", FileName, Value);
         }
         return this;
     }

@@ -16,12 +16,19 @@ public class HomePageModel : Model
     {
     }
 
+    static HomePageModel()
+    {
+        Store = new ContentStore();
+    }
+
+    public static dynamic Store { get; set; }
+
     private static string FileName = "HomePage.Layout";
 
     public static HomePageModel Load()
     {
         var settings = new HomePageModel();
-        settings.Value = ContentStore.LoadContent("Pages", FileName);
+        settings.Value = Store.LoadContent("Pages", FileName);
         return settings;
     }
     
@@ -29,7 +36,7 @@ public class HomePageModel : Model
     {
         if (Value != null)
         {
-            ContentStore.SaveContent("Pages", FileName, Value);
+            Store.SaveContent("Pages", FileName, Value);
         }
         return this;
     }
