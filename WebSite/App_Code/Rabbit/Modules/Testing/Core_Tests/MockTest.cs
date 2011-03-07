@@ -6,7 +6,7 @@ using System.Dynamic;
 using Microsoft.CSharp.RuntimeBinder;
 using System.Reflection;
 
-[TestClass]
+//[TestClass]
 public class MockTest
 {
     [TestMethod]

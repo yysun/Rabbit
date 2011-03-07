@@ -7,7 +7,7 @@ using System.Web.Script.Serialization;
 using System.Collections;
 using System.Text;
 
-[TestClass]
+//[TestClass]
 public class PageModelTest
 {
     [TestMethod]
@@ -15,14 +15,10 @@ public class PageModelTest
     {
         var mock = new Mock();
         PageModel.Store = mock;
-
         dynamic data = new ExpandoObject();
         data.Id = "123";    
-        
         mock.Setup("LoadContent", new object[]{"Pages", "123"}, null);
-
         SiteEngine.RunHook("GET_PAGES_PAGE", data);
-
         mock.Verify();
     }
 

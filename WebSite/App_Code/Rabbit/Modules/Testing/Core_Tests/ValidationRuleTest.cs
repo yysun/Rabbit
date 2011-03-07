@@ -6,7 +6,7 @@ using System.Web;
 /// <summary>
 /// Summary description for ValidationTest
 /// </summary>
-[TestClass]
+//[TestClass]
 public class ValidationRuleTest
 {
     [TestMethod]

@@ -10,7 +10,7 @@ using System.Text;
 /// <summary>
 /// Summary description for ContentStorageTest
 /// </summary>
-[TestClass]
+//[TestClass]
 public class SerializationTest
 {
     //[TestMethod]

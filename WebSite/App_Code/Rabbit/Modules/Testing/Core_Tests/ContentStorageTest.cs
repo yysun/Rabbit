@@ -7,7 +7,7 @@ using System.Dynamic;
 /// <summary>
 /// Summary description for ContentStorageTest
 /// </summary>
-[TestClass]
+//[TestClass]
 public class ContentStorageTest
 {
     ContentStore Store = new ContentStore();
