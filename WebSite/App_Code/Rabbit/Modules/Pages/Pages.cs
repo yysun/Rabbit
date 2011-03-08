@@ -40,22 +40,22 @@ public static class Pages
 
         SiteEngine.AddHook("get_pages_page_list", (data) =>
         {
-            return PageModel.List(data).Value;
+            return new PageModel().List(data).Value;
         });
 
         SiteEngine.AddHook("get_pages_page", (data) =>
         {
-            return PageModel.Load(data).Value;
+            return new PageModel().Load(data).Value;
         });
 
         SiteEngine.AddHook("save_pages_page", (data) =>
         {
-            return PageModel.New(data).Save().Value;
+            return new PageModel(data).Save().Value;
         });
 
         SiteEngine.AddHook("delete_pages_page", (data) =>
         {
-            return PageModel.Load(data).Delete().Value;
+            return new PageModel().Load(data).Delete().Value;
         });
 	}
 }

@@ -13,29 +13,33 @@ public class PageModelTest
     [TestMethod]
     public void GetPageTest()
     {
-        var mock = new Mock();
-        PageModel.Store = mock;
         dynamic data = new ExpandoObject();
-        data.Id = "123";    
+        data.Id = "123"; 
+
+        var mock = new Mock();
         mock.Setup("LoadContent", new object[]{"Pages", "123"}, null);
-        SiteEngine.RunHook("GET_PAGES_PAGE", data);
+        
+        var model = new PageModel();
+        model.Store = mock;        
+        model.Load(data);
+        
         mock.Verify();
     }
 
     [TestMethod]
     public void GetSafeIdTest()
     {
-        var mock = new Mock();
-        PageModel.Store = mock;
-
         dynamic data = new ExpandoObject();
         data.Id = null;
-        data.Title = @"~`!@#$%^&*()_+=-{}[]|\?><,./";
+        data.Title = @"~`!@#$%^&*()_+=-{}[]|\?><,./;:'""";
 
-        mock.Setup("SaveContent", new object[] { "Pages", "~`!@#$%^&-()_+=-{}[]-----,.-", data }, null);
+        var mock = new Mock();
+        mock.Setup("SaveContent", new object[] { "Pages", "----------()_---{}[]------.---'-", data }, null);
 
-        SiteEngine.RunHook("SAVE_PAGES_PAGE", data);
-
+        var model = new PageModel(data);
+        model.Store = mock;
+        model.Save();
+        
         mock.Verify();
 
     }

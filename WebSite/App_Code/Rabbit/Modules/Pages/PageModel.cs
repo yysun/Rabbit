@@ -12,19 +12,22 @@ using System.Collections.Specialized;
 /// </summary>
 public class PageModel : Model
 {
-    private PageModel()
-    {
-    }
-
     private static string ContentType = "Pages";    
     
-    static PageModel()
+    public dynamic Store { get; set; }
+
+    public PageModel()
     {
+        Value = new ExpandoObject();
         Store = new ContentStore();
     }
-    public static dynamic Store { get; set; }
 
-    public static PageModel List(dynamic data) //Filtering, Sorting and Paging?
+    public PageModel(dynamic data)
+    {
+        Value = data;
+    }
+
+    public PageModel List(dynamic data) //Filtering, Sorting and Paging?
     {
         var model = new PageModel();
         data.List = Store.LoadContent(ContentType);
@@ -32,7 +35,7 @@ public class PageModel : Model
         return model;
     }
 
-    public static PageModel Load(dynamic item)
+    public PageModel Load(dynamic item)
     {
         var model = new PageModel();
         dynamic value = Store.LoadContent(ContentType, item.Id as string) ?? item;
@@ -40,24 +43,17 @@ public class PageModel : Model
         return model;
     }
 
-    public static PageModel New()
-    {
-        dynamic value = new ExpandoObject();
-        return new PageModel { Value = value };
-    }
-
-    public static PageModel New(dynamic data)
-    {
-        return new PageModel { Value = data };
-    }
-
     public PageModel Validate()
     {
         //generate safe file name
-        if (string.IsNullOrWhiteSpace(Value.Id))
+        if (string.IsNullOrWhiteSpace(Value.Id) & Value.Title != null)
         {
             string id = Value.Title;
             foreach (char c in Path.GetInvalidFileNameChars())
+            {
+                id = id.Replace(c, '-');
+            }
+            foreach (char c in @"~`!@#$%^&+=,;""".ToCharArray())
             {
                 id = id.Replace(c, '-');
             }
