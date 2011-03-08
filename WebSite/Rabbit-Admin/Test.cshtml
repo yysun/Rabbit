@@ -19,23 +19,22 @@
     <ul>
     @foreach (var testclass in tests)
     { 
-        <li><a href="/Test/@testclass.Key">@testclass.Key</a></li>
+        <li><a href="/Rabbit-Admin/Test/@testclass.Key">@testclass.Key</a></li>
         <ul>
         @foreach (var test in testclass.Value)
         {
-            <li><a href="/Test/@testclass.Key/@test">@test</a></li>
+            <li><a href="/Rabbit-Admin/Test/@testclass.Key/@test">@test</a></li>
         }   
         </ul>     
     }
     </ul>
-    <a href="/Test/all">Run all tests</a>
+    <a href="/Rabbit-Admin/Test/all">Run all tests</a>
     }
-
 <h2>Test Results</h2>
 <div id="qunit-testrunner-toolbar"></div>
 <ol id="qunit-tests"></ol>
 <div id="qunit-fixture"></div>
-
+<p><br />Please do not run unit tests in live production environment!</p>
 <script type="text/javascript">
     $(function () {
         @foreach (var testclass in tests)
