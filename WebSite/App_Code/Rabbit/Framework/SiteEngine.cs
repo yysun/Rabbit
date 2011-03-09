@@ -31,6 +31,7 @@ public static class SiteEngine
         hooks.Add(new KeyValuePair<string, Func<dynamic, dynamic>>(name, action));
     }
 
+    [System.Diagnostics.DebuggerStepThrough]
     public static object RunHook(string name, dynamic data = null)
     {        
         var foundhooks = hooks.Where(a => string.Compare(a.Key, name, true) == 0)
@@ -82,20 +83,40 @@ public static class SiteEngine
     {
         hooks = new List<KeyValuePair<string, Func<object, object>>>();
         modules = GetActivatedModules().ToList();
-        modules.ForEach(m =>
+        modules.ForEach(module =>
         {
             try
             {
-                Log.Write("SiteEngine: Start Loading Module {0}", m);
+                Log.Write("SiteEngine: Start Loading Module {0}", module);
 
-                Type module = Type.GetType(m);
-                module.InvokeMember("Init", BindingFlags.InvokeMethod, null, module, new object[0]);
+                Type moduleType = Type.GetType(module);
 
-                Log.Write("SiteEngine: Done Loading Module {0}\r\n", m);
+                //Init function is obsolete
+                var initMmethod = moduleType.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
+                                 .Where(m => m.Name == "Init").FirstOrDefault();
+                if (initMmethod != null)
+                {
+                    moduleType.InvokeMember("Init", BindingFlags.InvokeMethod, null, moduleType, new object[0]);
+                }
+
+                //Use Hook attribute
+                var methods = moduleType.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
+                              .Where(m => m.GetCustomAttributes(typeof(HookAttribute), true).Count() > 0);
+
+                foreach (var method in methods)
+                {
+                    foreach (var attr in method.GetCustomAttributes(typeof(HookAttribute), true))
+                    {
+                        var func = Delegate.CreateDelegate(typeof(Func<object, object>), method) as Func<object, object>;
+                        SiteEngine.AddHook(((HookAttribute)attr).Name ?? method.Name, func);
+                    }
+                }
+
+                Log.Write("SiteEngine: Done Loading Module {0}\r\n", module);
             }
             catch (Exception ex)
             {
-                Log.Write("SiteEngine: Failed Loading Module: {0}: Error: {1}\r\n", m, ex.Message);
+                Log.Write("SiteEngine: Failed Loading Module: {0}: Error: {1}\r\n", module, ex.Message);
             }
         });
     }
@@ -127,6 +148,24 @@ public static class SiteEngine
 
         return string.Join("\r\n", list1.Union(list2));
 
+    }
+}
+
+[AttributeUsage(AttributeTargets.Method)]
+public class HookAttribute : Attribute
+{
+    public string Name { get; private set; }
+    
+    public HookAttribute()
+        : this(null)
+    {
+
+    }
+    
+    public HookAttribute(string name)
+        : base()
+    {
+        this.Name = name;
     }
 }
 

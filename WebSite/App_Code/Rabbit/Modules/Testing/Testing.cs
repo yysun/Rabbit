@@ -10,13 +10,14 @@ using System.Reflection;
 /// </summary>
 public static class Testing
 {
-    public static void Init()
-    {
-        SiteEngine.AddHook("get_tests", (data) => GetTests());
-        SiteEngine.AddHook("run_test", (data) => RunTest(data));
-    }
+    //public static void Init()
+    //{
+    //    SiteEngine.AddHook("get_tests", (data) => Get_Tests(data));
+    //    SiteEngine.AddHook("run_test", (data) => Run_Test(data));
+    //}
 
-    private static object GetTests()
+    [Hook]
+    public static object Get_Tests(dynamic data)
     {
         var types = from t in Assembly.GetExecutingAssembly().GetTypes()
                     where t.GetCustomAttributes(typeof(TestClassAttribute), true).Length > 0
@@ -30,7 +31,8 @@ public static class Testing
         return types.ToArray();
     }
 
-    private static object RunTest(dynamic data)
+    [Hook]
+    public static object Run_Test(dynamic data)
     {
         try
         {
