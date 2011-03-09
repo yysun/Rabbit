@@ -37,13 +37,19 @@ public static class Extensions
         return obj;
     }
 
-    public static void EnsureProperty(this IDictionary<string, object> obj, string propertyName, object propertyValue)
+    public static void EnsureProperty(this ExpandoObject obj, string propertyName, object propertyValue)
     {
         if (obj == null) return;
         if (!((IDictionary<string, object>)obj).ContainsKey(propertyName))
         {
             ((IDictionary<string, object>)obj)[propertyName] = propertyValue;
         }
+    }
+
+    public static bool HasProperty(this ExpandoObject obj, string propertyName, object propertyValue = null)
+    {
+        if (obj == null || !((IDictionary<string, object>)obj).ContainsKey(propertyName)) return false;
+        return propertyValue == null || propertyValue.Equals(((IDictionary<string, object>)obj)[propertyName]);
     }
 
     public static string ToJson(this ExpandoObject expando)
@@ -71,7 +77,6 @@ public static class Extensions
         sb.Append("}"); 
         return sb.ToString();
     }
-
 
     public static ExpandoObject ToDynamic(this string text)
     {

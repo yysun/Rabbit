@@ -12,15 +12,13 @@ public static class Log
     public static bool Enabled { get; set; }
 	public static void Write(string format, params object[] args)
 	{
-//#if DEBUG
-        if (!Enabled) return;
+
+        if (!Enabled || !HttpContext.Current.IsDebuggingEnabled) return;
 
         var fileName = HttpContext.Current.Server.MapPath("~/App_Data/Rabbit/Log");
         using (StreamWriter sw = File.AppendText(fileName))
         {
             sw.WriteLine(DateTime.Now.ToString() + " " + string.Format(format, args));
         }   
-
-//#endif
 	}
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.IO;
+using System.Dynamic;
 
 /// <summary>
 /// Summary description for Core
@@ -40,11 +41,10 @@ public static class Core
     //    });
     //}
 
-
     [Hook]
     public static dynamic Get_Site_Settings(dynamic data)
     {
-        var settings = (IDictionary<string, object>)data;
+        var settings = (ExpandoObject)data;
         settings.EnsureProperty("Name", "[Your Site Name]");
         settings.EnsureProperty("Author", "");
         settings.EnsureProperty("Template", "Default");

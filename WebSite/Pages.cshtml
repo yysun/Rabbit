@@ -6,7 +6,7 @@
     Assert.IsTrue(Page.View != null, "View has not been set.");
     Assert.IsTrue(Page.Model != null, "Model has not been set.");
 
-    if (((IDictionary<string, object>)Page.Model).ContainsKey("Title")) {
+    if (((System.Dynamic.ExpandoObject)Page.Model).HasProperty("Title")) {
         Page.Title = Page.Model.Title;
     }
 }

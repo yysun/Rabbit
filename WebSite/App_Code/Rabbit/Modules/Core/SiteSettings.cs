@@ -22,6 +22,7 @@ public class SiteSettings : Model
         var settings = new SiteSettings();
         settings.Value = new ContentStore().LoadContent("", FileName);
         settings.Value = SiteEngine.RunHook("get_site_settings", settings.Value);
+        //Log.Enabled = ((ExpandoObject)settings.Value).HasProperty("EnableLog", "on");
         return settings;
     }
 
@@ -37,7 +38,7 @@ public class SiteSettings : Model
         var value = form.ToDynamic();
         ((IDictionary<string, object>)value).Remove("modules"); //maybe remove keys start with lowercase letters
 
-        Log.Enabled = form.AllKeys.Contains("enableLog");
+        Log.Enabled = form.AllKeys.Contains("EnableLog");
         return new SiteSettings { Value = value };
     }
 
