@@ -33,17 +33,17 @@ public class UnitTestException : Exception
 
 public static class Assert
 {
-    internal static void IsTrue(bool p, string message = null)
+    public static void IsTrue(bool p, string message = null)
     {
         if (!p) throw new UnitTestException(message ?? "IsTrue failed");
     }
 
-    internal static void IsFalse(bool p, string message = null)
+    public static void IsFalse(bool p, string message = null)
     {
         if (p) throw new UnitTestException(message ?? "IsFalse failed");
     }
 
-    internal static void AreEqual(object obj1, object obj2, string message = null)
+    public static void AreEqual(object obj1, object obj2, string message = null)
     {
         if ((obj1 == null && obj2 != null) || !obj1.Equals(obj2))
         {
@@ -58,7 +58,7 @@ public static class Assert
         }
     }
 
-    internal static void AreNotEqual(object obj1, object obj2, string message = null)
+    public static void AreNotEqual(object obj1, object obj2, string message = null)
     {
         if ((obj1 == null && obj2 == null) || obj1.Equals(obj2)) 
         {

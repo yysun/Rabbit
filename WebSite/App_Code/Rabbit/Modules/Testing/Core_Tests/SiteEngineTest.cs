@@ -17,5 +17,18 @@ public class SiteEngineTest
         dynamic a = SiteEngine.RunHook("get_site_settings", new ExpandoObject());
         Assert.IsTrue(a.Template == "Default");
     }
+
+    [TestMethod]
+    public void AssertTest()
+    {
+        var i = 0;
+
+        //this works only web.config says debug=true 
+        //it could blow up IISExpress, if not clicked ignore
+        //System.Diagnostics.Debug.Assert(i != 0); 
+
+        //this always works
+        Assert.IsTrue(i == 0);
+    }
 }
 

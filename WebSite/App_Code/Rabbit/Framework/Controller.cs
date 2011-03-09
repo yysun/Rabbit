@@ -31,9 +31,9 @@ public abstract class Controller : WebPage
                     routes.Add((RouteAttribute)attr);
                 }
             }
-#if (!DEBUG)
-            //cache[cacheKey] = routes;
-#endif
+
+            //not to cache, if web.config says debug=true
+            if(!Context.IsDebuggingEnabled) cache[cacheKey] = routes;
         }
 
         Run(routes);

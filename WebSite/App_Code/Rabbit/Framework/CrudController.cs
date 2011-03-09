@@ -47,6 +47,12 @@ public abstract class CrudController : Controller
     {
         View("Default");
     }
+    
+    [Post("/")]
+    public virtual void Default_Post()
+    {
+        View("Default");
+    }
 
     [Get("/*")]
     public virtual void Get()
