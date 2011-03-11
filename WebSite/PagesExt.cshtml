@@ -1,7 +1,7 @@
-﻿@inherits Controller
-@{  
+﻿@{  
     Layout = SiteEngine.RunHook("get_layout") as string;
-    this.Run();
+
+    Mvc.Run(new PagesExtController(this));
 }
 
 @if(Page.View!=null)
@@ -9,35 +9,3 @@
     @RenderPage(Page.View, Page.Model)
 }
 
-@functions {
-
-    [Get("EditHomePageLayout")]
-    public void EditHomePageLayout()
-    {
-    }
-
-    [Get("EditSectionPageLayout")]
-    public void EditSectionPageLayout()
-    {
-    }
-
-    [Get("EditArticlePageLayout")]
-    public void EditArticlePageLayout()
-    {
-    }
-
-    [Get("EditCategories")]
-    public void EditCategories()
-    {
-    }
-
-    [Get("EditMenuTree")]
-    public void EditMenu()
-    {
-        //Page.Model = new System.Dynamic.ExpandoObject();
-        //Page.Model.Menu = SiteEngine.RunHook("get_menu", "");
-        //Page.View = SiteEngine.RunHook("get_menu_view", "~/PagesExt/_MenuTree_Edit.cshtml") as string;
-    }
-    
-
-}

@@ -5,97 +5,46 @@ using System.Web;
 using System.Web.WebPages;
 using System.Reflection;
 using System.Dynamic;
+using System.Collections.Specialized;
 
-public abstract class Controller : WebPage
+public class Controller 
 {
-    static Dictionary<string, IList<RouteAttribute>> cache = new Dictionary<string, IList<RouteAttribute>>();
+    public dynamic WebPage { get; protected set; }
+    public dynamic Request { get; set; }
+    public IList<string> UrlData { get; set; }
 
-    public void Run()
+    public Controller(object webPage)
     {
-        var cacheKey = this.ToString();
-        IList<RouteAttribute> routes = null;
-
-        if (cache.Keys.Contains(cacheKey))
-        {
-            routes = cache[cacheKey] as IList<RouteAttribute>;
-        }
-        else
-        {
-            routes = new List<RouteAttribute>();
-            var methods = this.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance);
-            foreach (var method in methods)
-            {
-                foreach (var attr in method.GetCustomAttributes(typeof(RouteAttribute), true))
-                {
-                    ((RouteAttribute)attr).Method = method;
-                    routes.Add((RouteAttribute)attr);
-                }
-            }
-
-            //not to cache, if web.config says debug=true
-            if(!Context.IsDebuggingEnabled) cache[cacheKey] = routes;
-        }
-
-        Run(routes);
+        this.WebPage = (dynamic) webPage;
+        this.Request = (dynamic) WebPage.Request;
+        this.UrlData = WebPage.UrlData;
     }
 
-    private void Run(IList<RouteAttribute> routes)
+    protected void RenderView(string view, object model)
     {
-        var action = UrlData[0].ToLower();
-        var rs = routes.Where(r => string.Compare(r.Action, action, true) == 0);
-
-        if (rs.Count() == 0)
-        {
-            rs = UrlData.Count == 0 ?
-                routes.Where(r => r.Action == "/") :
-                routes.Where(r => r.Action == "/*");
-        }
-        
-        var route = rs.Where(r => r.IsPost == this.IsPost).FirstOrDefault();
-
-        //if (route == null) route = routes.Where(r => r.Action == "*").FirstOrDefault();
-
-        if (route != null && route.Method != null)
-        {
-            Log.Write("Controller: Run Action {0} -> {1}", action, route.Action);
-
-            route.Method.Invoke(this, null);
-        }
-        else
-        {
-            Log.Write("Controller: Cannot Run Action {0}", action);
-        }
+        WebPage.Page.View = view;
+        WebPage.Page.Model = model;
+        //WebPage.Write(WebPage.RenderPage(view, model));
     }
-}
 
-[AttributeUsage(AttributeTargets.Method)]
-public class RouteAttribute : Attribute
-{
-    internal bool IsPost { get; set; }
-    internal string Action { get; set; }
-    internal MethodInfo Method { get; set; }
+    public string ModuleName { get; protected set; }
+    public string ContentTypeName { get; protected set; }
 
-    public RouteAttribute(bool isPost, string action)
-    {
-        this.IsPost = isPost;
-        this.Action = action;
-    }
-}
+    public string GET_LIST { get { return string.Format("GET_{0}_{1}_List", ModuleName, ContentTypeName); } }
+    public string GET_ITEM { get { return string.Format("GET_{0}_{1}", ModuleName, ContentTypeName); } }
+    public string DELETE_ITEM { get { return string.Format("DELETE_{0}_{1}", ModuleName, ContentTypeName); } }
+    public string SAVE_ITEM { get { return string.Format("SAVE_{0}_{1}", ModuleName, ContentTypeName); } }
+    public string NEW_ITEM { get { return string.Format("NEW_{0}_{1}", ModuleName, ContentTypeName); } }
+    public string CREATE_ITEM { get { return string.Format("CREATE_{0}_{1}", ModuleName, ContentTypeName); } }
+    public string VALIDATE_ITEM { get { return string.Format("VALIDATE_{0}_{1}", ModuleName, ContentTypeName); } }
 
-[AttributeUsage(AttributeTargets.Method)]
-public class GetAttribute : RouteAttribute
-{
-    public GetAttribute(string action)
-        : base(false, action)
-    {
-    }
-}
+    public string GET_LIST_VIEW { get { return string.Format("GET_{0}_{1}_ListView", ModuleName, ContentTypeName); } }
+    public string GET_ITEM_VIEW { get { return string.Format("GET_{0}_{1}_ItemView", ModuleName, ContentTypeName); } }
+    public string GET_ITEM_EDIT_VIEW { get { return string.Format("GET_{0}_{1}_EditView", ModuleName, ContentTypeName); } }
+    public string GET_ITEM_CREATE_VIEW { get { return string.Format("GET_{0}_{1}_CreateView", ModuleName, ContentTypeName); } }
 
-[AttributeUsage(AttributeTargets.Method)]
-public class PostAttribute : RouteAttribute
-{
-    public PostAttribute(string action)
-        : base(true, action)
-    {
-    }
+    public string DEFAULT_LIST_VIEW { get { return string.Format("~/{0}/_{1}_List.cshtml", ModuleName, ContentTypeName); } }
+    public string DEFAULT_ITEM_VIEW { get { return string.Format("~/{0}/_{1}_View.cshtml", ModuleName, ContentTypeName); } }
+    public string DEFAULT_ITEM_EDIT_VIEW { get { return string.Format("~/{0}/_{1}_Edit.cshtml", ModuleName, ContentTypeName); } }
+    public string DEFAULT_ITEM_CREATE_VIEW { get { return string.Format("~/{0}/_{1}_Create.cshtml", ModuleName, ContentTypeName); } }
 }

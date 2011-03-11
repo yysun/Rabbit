@@ -22,13 +22,16 @@ public class Mock: DynamicObject
         }
         else
         {
-            if(expectations.Where(e => e.Name == name).Count()>0)
+            if (expectations.Where(e => e.Name == name).Count() > 0)
             {
                 throw new UnitTestException(
                     string.Format("{0} has been called already. Add more setup.", name));
             }
-            result = null;
-            return false;
+            else
+            {
+                throw new UnitTestException(
+                    string.Format("{0} has not been defined.", name));
+            }
         }
     }
 
@@ -51,19 +54,20 @@ public class Mock: DynamicObject
         return GetExpectation(name, args, out result);
     }
 
-    public void SetupGet(string p, object value)
+    public void SetupGet(string name, object value)
     {
-        expectations.Add(new Expectation("get_" + p, null, value));
+        expectations.Add(new Expectation("get_" + name, null, value));
     }
 
-    public void SetupSet(string p, object value)
+    public void SetupSet(string name, object value)
     {
-        expectations.Add(new Expectation("set_" + p, new object[] { value }, null));
+        expectations.Add(new Expectation("set_" + name, new object[] { value }, null));
     }
 
-    public void Setup(string p, object[] p_2, object value)
+        
+     public void Setup(string name, object[] parameters, object returnValue)
     {
-        expectations.Add(new Expectation(p, p_2, value));
+        expectations.Add(new Expectation(name, parameters, returnValue));
     }
 
     public void Verify()
@@ -150,5 +154,10 @@ public static class It
     public static Func<object, bool> IsAny<T>()
     {
         return (input) => input is T;
+    }
+
+    public static Func<object, bool> Is<T>(Func<T, bool> condition)
+    {
+        return (input) => condition((T) input);
     }
 }

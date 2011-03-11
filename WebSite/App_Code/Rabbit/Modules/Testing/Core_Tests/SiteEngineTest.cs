@@ -8,7 +8,7 @@ using System.Collections;
 using System.Text;
 using System.Reflection;
 
-[TestClass]
+//[TestClass]
 public class SiteEngineTest
 {
     [TestMethod]
