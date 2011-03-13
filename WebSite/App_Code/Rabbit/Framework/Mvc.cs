@@ -69,7 +69,7 @@ public static class Mvc
         }
         else
         {
-            Log.Write("Controller: Cannot Run Action {0}", action);
+            throw new Exception(string.Format("Controller: Cannot Run Action {0}", action));
         }
     }
 }

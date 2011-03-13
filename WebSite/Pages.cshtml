@@ -1,10 +1,11 @@
 ﻿@{  
-    Layout = SiteEngine.RunHook("get_layout") as string;
+    Layout = SiteEngine.RunHook("get_layout");
+    var ct = SiteEngine.RunHook("get_pages_controller", new PagesController(this));
     
-    Mvc.Run(new PagesController(this));
+    Mvc.Run(ct);
 
-    Assert.IsTrue(Page.View != null, "View has not been set.");
-    Assert.IsTrue(Page.Model != null, "Model has not been set.");
+    //Assert.IsTrue(Page.View != null, "View has not been set.");
+    //Assert.IsTrue(Page.Model != null, "Model has not been set.");
 
     if (((System.Dynamic.ExpandoObject)Page.Model).HasProperty("Title"))
     {
@@ -13,8 +14,10 @@
    
 }
 
-@RenderPage(Page.View, Page.Model)
-
+@if (Page.View != null)
+{
+    @RenderPage(Page.View, Page.Model)
+}
 
 @section aside
 {

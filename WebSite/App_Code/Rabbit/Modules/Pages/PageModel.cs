@@ -22,7 +22,7 @@ public class PageModel : Model
         Store = new ContentStore();
     }
 
-    public PageModel(dynamic data)
+    public PageModel(dynamic data) : this()
     {
         Value = data;
     }

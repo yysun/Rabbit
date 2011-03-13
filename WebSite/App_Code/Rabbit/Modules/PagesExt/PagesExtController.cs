@@ -6,7 +6,7 @@ using System.Web;
 /// <summary>
 /// Summary description for PagesExtController
 /// </summary>
-public class PagesExtController : Controller
+public class PagesExtController : PagesController
 {
 	public PagesExtController(object webPage)
         : base(webPage)
@@ -15,31 +15,29 @@ public class PagesExtController : Controller
     }
 
     [Get("EditHomePageLayout")]
-    public void EditHomePageLayout()
+    public virtual void EditHomePageLayout()
     {
     }
 
     [Get("EditSectionPageLayout")]
-    public void EditSectionPageLayout()
+    public virtual void EditSectionPageLayout()
     {
     }
 
     [Get("EditArticlePageLayout")]
-    public void EditArticlePageLayout()
+    public virtual void EditArticlePageLayout()
     {
     }
 
     [Get("EditCategories")]
-    public void EditCategories()
+    public virtual void EditCategories()
     {
     }
 
     [Get("EditMenuTree")]
-    public void EditMenu()
+    public virtual void EditMenuTree()
     {
-        //Page.Model = new System.Dynamic.ExpandoObject();
-        //Page.Model.Menu = SiteEngine.RunHook("get_menu", "");
-        //Page.View = SiteEngine.RunHook("get_menu_view", "~/PagesExt/_MenuTree_Edit.cshtml") as string;
+
     }
 
 }

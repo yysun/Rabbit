@@ -32,7 +32,7 @@ public static class SiteEngine
     }
 
     [System.Diagnostics.DebuggerStepThrough]
-    public static object RunHook(string name, dynamic data = null)
+    public static dynamic RunHook(string name, dynamic data = null)
     {        
         var foundhooks = hooks.Where(a => string.Compare(a.Key, name, true) == 0)
                .Select(a => a.Value)
