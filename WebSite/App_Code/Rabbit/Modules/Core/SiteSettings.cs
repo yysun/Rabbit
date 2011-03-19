@@ -20,7 +20,7 @@ public class SiteSettings : Model
     public static SiteSettings Load()
     {
         var settings = new SiteSettings();
-        settings.Value = new ContentStore().LoadContent("", FileName);
+        settings.Value = new Repository("").Load(FileName);
         settings.Value = SiteEngine.RunHook("get_site_settings", settings.Value);
         //Log.Enabled = ((ExpandoObject)settings.Value).HasProperty("EnableLog", "on");
         return settings;
@@ -46,7 +46,7 @@ public class SiteSettings : Model
     {
         if (Value != null)
         {
-            new ContentStore().SaveContent("", FileName, Value);
+            new Repository("").Save(FileName, Value);
         }
         return this;
     }

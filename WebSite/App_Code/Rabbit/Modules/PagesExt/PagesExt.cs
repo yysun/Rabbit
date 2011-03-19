@@ -41,4 +41,10 @@ public static class PagesExt
         var page = data.WebPage;
         return new PagesExtController(page);
     }
+
+    [Hook]
+    public static dynamic get_pages_page_itemview(dynamic data)
+    {
+        return "~/PagesExt/_Page_View.cshtml";
+    }
 }

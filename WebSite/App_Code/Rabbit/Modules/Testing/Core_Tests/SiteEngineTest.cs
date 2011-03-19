@@ -30,5 +30,16 @@ public class SiteEngineTest
         //this always works
         Assert.IsTrue(i == 0);
     }
+
+    //[TestMethod]
+    //public void DynamicTest()
+    //{
+    //    dynamic json = "{\"id\":1,\"name\":\"test\"}";
+    //    Type type = json.GetType();
+               
+    //    dynamic expando = json.ToDynamic();
+    //    Assert.AreEqual(expando.id, 1);
+    //    Assert.AreEqual(expando.name, "test");
+    //}
 }
 

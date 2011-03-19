@@ -6,7 +6,7 @@ using System.Web;
 /// <summary>
 /// Summary description for PagesExtController
 /// </summary>
-public class PagesExtController : PagesController
+public class PagesExtController : PageController
 {
 	public PagesExtController(object webPage)
         : base(webPage)

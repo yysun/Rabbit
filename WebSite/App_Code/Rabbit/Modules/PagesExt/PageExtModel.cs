@@ -18,17 +18,15 @@ public class PageExtModel : Model
 
     static PageExtModel()
     {
-        Store = new ContentStore();
+        Repository = new Repository("Pages");
     }
 
-    public static dynamic Store { get; set; }
-
-    private static string ContentType = "Pages";
+    public static dynamic Repository { get; set; }
 
     public static PageExtModel List(dynamic data) //Filtering, Sorting and Paging?
     {
         var model = new PageExtModel();
-        data.List = Store.LoadContent(ContentType);
+        data.List = Repository.List();
         model.Value = data;
         return model;
     }
@@ -36,7 +34,7 @@ public class PageExtModel : Model
     public static PageExtModel Load(dynamic item)
     {
         var model = new PageExtModel();
-        model.Value = Store.LoadContent(ContentType, item.Id as string) ?? item;
+        model.Value = Repository.Load(item.Id as string) ?? item;
         return model;
     }
 
@@ -70,7 +68,7 @@ public class PageExtModel : Model
         {
             ((IDictionary<string, object>)Value).Remove("HasError");
             ((IDictionary<string, object>)Value).Remove("Errors");
-            ContentStore.SaveContent(ContentType, Value.Id as string, Value);
+            Repository.Save(Value.Id as string, Value);
         }
         return this;
     }
@@ -89,7 +87,7 @@ public class PageExtModel : Model
     {
         if (Value != null && Value.Id != null)
         {
-            Store.DeleteContent(ContentType, Value.Id as string);
+            Repository.Delete(Value.Id as string);
             Value = null;
         }
         return this;

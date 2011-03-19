@@ -1,6 +1,6 @@
 ﻿@{  
     Layout = SiteEngine.RunHook("get_layout");
-    var ct = SiteEngine.RunHook("get_pages_controller", new PagesController(this));
+    var ct = SiteEngine.RunHook("get_pages_controller", new PageController(this));
     
     Mvc.Run(ct);
 

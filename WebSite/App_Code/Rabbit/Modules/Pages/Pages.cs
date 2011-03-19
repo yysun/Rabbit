@@ -44,28 +44,33 @@ public static class Pages
         return data;
     }
 
-    [Hook]
-    public static dynamic get_pages_page_list(dynamic data)
-    {
-        return new PageModel().List(data).Value;
-    }
+    //[Hook]
+    //public static dynamic get_pages_page_list(dynamic data)
+    //{
+    //    return new PageModel().List(data).Value;
+    //}
 
-    [Hook]
-    public static dynamic get_pages_page(dynamic data)
-    {
-        return new PageModel().Load(data).Value;
-    }
+    //[Hook]
+    //public static dynamic get_pages_page(dynamic data)
+    //{
+    //    return new PageModel().Load(data).Value;
+    //}
 
-    [Hook]
-    public static dynamic save_pages_page(dynamic data)
-    {
-        return new PageModel(data).Save().Value;
-    }
+    //[Hook]
+    //public static dynamic save_pages_page(dynamic data)
+    //{
+    //    return new PageModel(data).Save().Value;
+    //}
 
-    [Hook]
-    public static dynamic delete_pages_page(dynamic data)
-    {
-        return new PageModel().Load(data).Delete().Value;
-    }
+    //[Hook]
+    //public static dynamic delete_pages_page(dynamic data)
+    //{
+    //    return new PageModel().Load(data).Delete().Value;
+    //}
 
+    //[Hook]
+    //public static dynamic Get_PageModel(dynamic data)
+    //{
+    //    return new PageModel();
+    //}
 }

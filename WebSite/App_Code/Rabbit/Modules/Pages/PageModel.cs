@@ -12,14 +12,13 @@ using System.Collections.Specialized;
 /// </summary>
 public class PageModel : Model
 {
-    private static string ContentType = "Pages";    
-    
-    public dynamic Store { get; set; }
+   
+    public dynamic Repository { get; set; }
 
     public PageModel()
     {
         Value = new ExpandoObject();
-        Store = new ContentStore();
+        Repository = new Repository("Pages");
     }
 
     public PageModel(dynamic data) : this()
@@ -30,7 +29,7 @@ public class PageModel : Model
     public PageModel List(dynamic data) //Filtering, Sorting and Paging?
     {
         var model = new PageModel();
-        data.List = Store.LoadContent(ContentType);
+        data.List = Repository.List();
         model.Value = data;
         return model;
     }
@@ -38,7 +37,7 @@ public class PageModel : Model
     public PageModel Load(dynamic item)
     {
         var model = new PageModel();
-        dynamic value = Store.LoadContent(ContentType, item.Id as string) ?? item;
+        dynamic value = Repository.Load(item.Id as string) ?? item;
         model.Value = value;
         return model;
     }
@@ -78,7 +77,7 @@ public class PageModel : Model
             ((IDictionary<string, object>)Value).Remove("HasError");
             ((IDictionary<string, object>)Value).Remove("Errors");
 
-            Store.SaveContent(ContentType, Value.Id as string, Value);
+            Repository.Save(Value.Id as string, Value);
         }
         return this;
     }
@@ -97,7 +96,7 @@ public class PageModel : Model
     {
         if (Value != null && Value.Id != null)
         {
-            Store.DeleteContent(ContentType, Value.Id as string);
+            Repository.Delete(Value.Id as string);
             Value = null;
         }
         return this;

@@ -7,7 +7,7 @@ using System.Web.Script.Serialization;
 using System.Collections;
 using System.Text;
 
-//[TestClass]
+[TestClass]
 public class PagesExtControllerTest
 {
     [TestMethod]

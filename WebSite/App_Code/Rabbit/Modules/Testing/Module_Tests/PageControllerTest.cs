@@ -7,14 +7,14 @@ using System.Web.Script.Serialization;
 using System.Collections;
 using System.Text;
 
-//[TestClass]
-public class PagesControllerTest
+[TestClass]
+public class PageControllerTest
 {
     [TestMethod]
-    public void PagesController_Default_Get()
+    public void PageController_Default_Get()
     {
         dynamic page = new MockGet(new string[] { "/" });
-        Mvc.Run(new PagesController(page));
+        Mvc.Run(new PageController(page));
 
         Assert.AreEqual("~/Pages/_Page_View.cshtml", page.Page.View);
         Assert.AreEqual("Default", page.Page.Model.Id);
@@ -23,10 +23,10 @@ public class PagesControllerTest
     }
 
     [TestMethod]
-    public void PagesController_Default_Post()
+    public void PageController_Default_Post()
     {
         dynamic page = new MockGet(new string[] { "/" });
-        Mvc.Run(new PagesController(page));
+        Mvc.Run(new PageController(page));
 
         Assert.AreEqual("~/Pages/_Page_View.cshtml", page.Page.View);
         Assert.AreEqual("Default", page.Page.Model.Id);
@@ -35,10 +35,10 @@ public class PagesControllerTest
     }
 
     [TestMethod]
-    public void PagesController_Default_Edit()
+    public void PageController_Default_Edit()
     {
         dynamic page = new MockGet(new string[] { "Edit" });
-        Mvc.Run(new PagesController(page));
+        Mvc.Run(new PageController(page));
 
         //Assert.AreEqual("~/Pages/_Page_Edit.cshtml", page.Page.View);
         Assert.AreEqual("", page.Page.Model.Id);

@@ -13,6 +13,16 @@ public abstract class Model
 {
     public dynamic Value { get; protected set; }
 
+    public Model()
+    {
+
+    }
+
+    public Model(dynamic data)
+    {
+        Value = data;
+    }
+
     protected void ValidateValue(Dictionary<string, string[]> rules)
     {
         var errors = new Dictionary<string, object>();

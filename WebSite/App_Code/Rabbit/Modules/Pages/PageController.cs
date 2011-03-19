@@ -9,11 +9,13 @@ using System.Web.WebPages;
 using System.Web.Helpers;
 
 /// <summary>
-/// Summary description for PagesController
+/// Summary description for PageController
 /// </summary>
-public class PagesController : Controller
+public class PageController : Controller
 {
-    public PagesController(object webPage)
+    private string GetModelHook = "Get_PageModel";
+
+    public PageController(object webPage)
         : base(webPage)
     {
         this.ModuleName = "Pages";
@@ -52,6 +54,7 @@ public class PagesController : Controller
     protected virtual void ViewItem(string id)
     {
         //check access
+
         RenderView(
             SiteEngine.RunHook(GET_ITEM_VIEW, DEFAULT_ITEM_VIEW),
             GetItemById(id));
@@ -73,14 +76,6 @@ public class PagesController : Controller
             SiteEngine.RunHook(GET_ITEM_CREATE_VIEW, DEFAULT_ITEM_CREATE_VIEW),
             SiteEngine.RunHook(NEW_ITEM, new ExpandoObject()));
     }
-
-    //[Post("Create")]
-    //public virtual void Create()
-    //{
-    //    //check access
-    //    Page.Model = SiteEngine.RunHook(NEW_ITEM, new ExpandoObject());
-    //    Page.View = SiteEngine.RunHook(GET_ITEM_CREATE_VIEW, DEFAULT_ITEM_CREATE_VIEW) as string;
-    //}
 
     [Get("Delete")]
     public virtual void Delete()
@@ -111,13 +106,24 @@ public class PagesController : Controller
         RenderView(view, item);
     }
 
-    protected virtual dynamic GetItemById(string id)
+    protected dynamic GetItemById(string id)
     {
         dynamic item = new ExpandoObject();
         item.Id = id;
-        return SiteEngine.RunHook(GET_ITEM, item);
+        //return SiteEngine.RunHook(GET_ITEM, item);
+
+        dynamic model = SiteEngine.RunHook(GetModelHook, new PageModel());
+        return model.Load(item).Value;
     }
 
+    protected dynamic GetItemFromRequest()
+    {
+        dynamic item = new ExpandoObject();
+        item.Id = Request.Form["Id"];
+        item.Title = Request.Form["Title"];
+        item.Content = Validation.Unvalidated(Request, "Content");
+        return item;
+    }
 
     [Get("EditMenu")]
     public void EditMenu()
@@ -136,12 +142,5 @@ public class PagesController : Controller
             SiteEngine.RunHook("save_menu", WebPage.Page.Model));
     }
 
-    protected dynamic GetItemFromRequest()
-    {
-        dynamic item = new ExpandoObject();
-        item.Id = Request.Form["Id"];
-        item.Title = Request.Form["Title"];
-        item.Content = Validation.Unvalidated(Request, "Content");
-        return item;
-    }
+
 }
