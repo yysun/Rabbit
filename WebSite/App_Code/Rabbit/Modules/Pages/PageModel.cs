@@ -12,7 +12,6 @@ using System.Collections.Specialized;
 /// </summary>
 public class PageModel : Model
 {
-   
     public dynamic Repository { get; set; }
 
     public PageModel()
@@ -21,43 +20,30 @@ public class PageModel : Model
         Repository = new Repository("Pages");
     }
 
-    public PageModel(dynamic data) : this()
+    public PageModel List(int pageNo, int pageSize, Func<ExpandoObject, bool> filter = null)
     {
-        Value = data;
-    }
+        Value.PageNo = pageNo;
+        Value.PageSize = pageSize;
+        IEnumerable<ExpandoObject> list = Repository.List();
 
-    public PageModel List(dynamic data) //Filtering, Sorting and Paging?
-    {
-        var model = new PageModel();
-        data.List = Repository.List();
-        model.Value = data;
-        return model;
+        if (filter != null) list = list.Where(p => filter(p));
+        //if (sort != null) sort = list.OrderBy((p=>sort(p));
+        
+        Value.List = list == null ? null :
+            list.Skip((pageNo - 1) * pageSize).Take(pageSize);
+
+        return this;
     }
 
     public PageModel Load(dynamic item)
     {
-        var model = new PageModel();
-        dynamic value = Repository.Load(item.Id as string) ?? item;
-        model.Value = value;
-        return model;
+        Value = Repository.Load(item.Id as string);
+        return this;
     }
 
     public PageModel Validate()
     {
-        //generate safe file name
-        if (string.IsNullOrWhiteSpace(Value.Id) & Value.Title != null)
-        {
-            string id = Value.Title;
-            foreach (char c in Path.GetInvalidFileNameChars())
-            {
-                id = id.Replace(c, '-');
-            }
-            foreach (char c in @"~`!@#$%^&+=,;""".ToCharArray())
-            {
-                id = id.Replace(c, '-');
-            }
-            Value.Id = id;
-        }
+        Assert.IsTrue(Value != null);
 
         var rules = new Dictionary<string, string[]>
         {
@@ -68,32 +54,71 @@ public class PageModel : Model
         this.ValidateValue(rules);
         return this;
     }
-    
-    public PageModel Save()
-    {
-        Validate();
-        if (Value != null && !Value.HasError)
-        {
-            ((IDictionary<string, object>)Value).Remove("HasError");
-            ((IDictionary<string, object>)Value).Remove("Errors");
 
-            Repository.Save(Value.Id as string, Value);
+
+    public PageModel Update(dynamic item)
+    {
+        Assert.IsTrue(item != null);
+        Value = item;
+        Validate();
+        if (HasError) return this;
+
+        var oldId = Value.Id as string;
+        var newId = GetId();
+
+        if (oldId != newId)
+        {
+            if (Repository.Exists(newId))
+            {
+                Errors.Add("Title", string.Format("{0} exisits already.", Value.Title));
+            }
+            else
+            {
+                Repository.Delete(oldId);
+                Value.Id = newId;
+            }
         }
+
+        if (!HasError) Repository.Save(Value.Id as string, Value);
         return this;
     }
-    
-    //public PageModel Create()
-    //{
-    //    Validate();
-    //    if (Value != null && !Value.HasError)
-    //    {
-    //        //Create
-    //    }
-    //    return this;
-    //}
-    
-    public PageModel Delete()
+
+    private string GetId()
     {
+        string id = Value.Title ?? "";
+        foreach (char c in Path.GetInvalidFileNameChars())
+        {
+            id = id.Replace(c, '-');
+        }
+        foreach (char c in @" ~`!@#$%^&+=,;""".ToCharArray())
+        {
+            id = id.Replace(c, '-');
+        }
+        return id;
+    }
+
+    public PageModel Create(dynamic item)
+    {
+        Assert.IsTrue(item != null);
+        Value = item;
+        Value.Id = GetId();
+        Validate();
+        if (HasError) return this;
+
+        if (Repository.Exists(Value.Id))
+        {
+            Errors.Add("Title", string.Format("{0} exisits already.", Value.Title));
+        }
+
+        if (!HasError) Repository.Save(Value.Id, Value);
+
+        return this;
+    }
+
+
+    public PageModel Delete(dynamic item)
+    {
+        Value = item;
         if (Value != null && Value.Id != null)
         {
             Repository.Delete(Value.Id as string);

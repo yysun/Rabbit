@@ -10,12 +10,6 @@ using System.Reflection;
 /// </summary>
 public static class Testing
 {
-    //public static void Init()
-    //{
-    //    SiteEngine.AddHook("get_tests", (data) => Get_Tests(data));
-    //    SiteEngine.AddHook("run_test", (data) => Run_Test(data));
-    //}
-
     [Hook]
     public static object Get_Tests(dynamic data)
     {

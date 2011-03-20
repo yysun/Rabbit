@@ -5,6 +5,7 @@ using System.Web;
 using System.Collections.Specialized;
 using System.Dynamic;
 using System.Text.RegularExpressions;
+using System.Linq.Expressions;
 
 /// <summary>
 /// Summary description for Model
@@ -13,19 +14,23 @@ public abstract class Model
 {
     public dynamic Value { get; protected set; }
 
+    private Dictionary<string, object> errors;
+    public Dictionary<string, object> Errors { get { return errors; } }
+    public bool HasError { get { return errors.Count() > 0; } }
+
+
     public Model()
     {
-
+        errors = new Dictionary<string, object>();
     }
 
-    public Model(dynamic data)
+    public Model(dynamic data) : this()
     {
         Value = data;
     }
 
     protected void ValidateValue(Dictionary<string, string[]> rules)
     {
-        var errors = new Dictionary<string, object>();
 
         if (Value == null)
         {
@@ -41,15 +46,13 @@ public abstract class Model
                 }
                 else
                 {
-                    rules[key].ToList().ForEach(r => ValidateProperty(key, r, errors));
+                    rules[key].ToList().ForEach(r => ValidateProperty(key, r));
                 }
             }
         }
-        Value.HasError = errors.Count() > 0;
-        Value.Errors = errors;
     }
 
-    private void ValidateProperty(string key, string rule, IDictionary<string, object> errors)
+    protected void ValidateProperty(string key, string rule)
     {
         if (string.IsNullOrWhiteSpace(rule)) return;
         var message = rule;

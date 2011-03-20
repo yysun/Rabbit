@@ -13,134 +13,154 @@ using System.Web.Helpers;
 /// </summary>
 public class PageController : Controller
 {
-    private string GetModelHook = "Get_PageModel";
-
     public PageController(object webPage)
         : base(webPage)
     {
         this.ModuleName = "Pages";
         this.ContentTypeName = "Page";
-    }
-
-    [Get("List")]
-    public virtual void List()
-    {
-        dynamic data = new ExpandoObject();
-        data.List = new dynamic[] { };
-        data.Start = 1;
-        data = SiteEngine.RunHook(GET_LIST, data);
-
-        RenderView(SiteEngine.RunHook(GET_LIST_VIEW, DEFAULT_LIST_VIEW) as string, data);
+        this.Model = new PageModel();
     }
 
     [Get("/")]
     public virtual void Default()
     {
-        ViewItem("Default");
+        View("Default");
     }
 
     [Post("/")]
-    public virtual void Default_Post()
+    public virtual void Default(object form)
     {
-        ViewItem("Default");
+        View("Default");
     }
 
     [Get("/*")]
-    public virtual void Get()
+    public virtual void Get(string[] urlData)
     {
-        ViewItem(string.Join("/", UrlData.ToArray()));
+        var id = string.Join("/", urlData.ToArray());
+        View(id);
     }
 
-    protected virtual void ViewItem(string id)
+    protected virtual void View(string id)
     {
-        //check access
+        RenderView(GetItemById(id));
+    }
 
-        RenderView(
-            SiteEngine.RunHook(GET_ITEM_VIEW, DEFAULT_ITEM_VIEW),
-            GetItemById(id));
+    [Get("List")]
+    public virtual void List(string[] urlData)
+    {
+        int pageNo   = urlData.Length > 1 && int.TryParse(urlData[1], out pageNo) ? pageNo : 1;
+        int pageSize = urlData.Length > 2 && int.TryParse(urlData[2], out pageSize) ? pageSize : 20;
+
+        dynamic data = this.Model.List(pageNo, pageSize).Value;
+        data.Title = this.ModuleName;
+        data = SiteEngine.RunHook(GET_LIST, data);
+        RenderView((ExpandoObject) data);
     }
 
     [Get("Edit")]
-    public virtual void Edit()
+    public virtual void Edit(string id)
     {
-        RenderView(
-            SiteEngine.RunHook(GET_ITEM_EDIT_VIEW, DEFAULT_ITEM_EDIT_VIEW),
-            GetItemById(string.Join("/", UrlData.ToArray(), 1, UrlData.Count() - 1)));
-    }
+        var item = GetItemById(id);
 
-    [Get("New")]
-    public virtual void New()
-    {
-        //check access
-        RenderView(
-            SiteEngine.RunHook(GET_ITEM_CREATE_VIEW, DEFAULT_ITEM_CREATE_VIEW),
-            SiteEngine.RunHook(NEW_ITEM, new ExpandoObject()));
-    }
-
-    [Get("Delete")]
-    public virtual void Delete()
-    {
-        //check access
-        var item = GetItemById(string.Join("/", WebPage.UrlData.ToArray(), 1, WebPage.UrlData.Count() - 1));
-        SiteEngine.RunHook(DELETE_ITEM, item);
-
-        List();
-    }
-
-    [Post("Save")]
-    public virtual void Save()
-    {
-        dynamic item = GetItemFromRequest();
-        item = SiteEngine.RunHook(SAVE_ITEM, item);
-        string view;
-
-        if (((IDictionary<string, object>)item).ContainsKey("HasError") && item.HasError)
+        if (item == null)
         {
-            view = SiteEngine.RunHook(GET_ITEM_EDIT_VIEW, DEFAULT_ITEM_EDIT_VIEW);
+            View("Default"); //Reponse.Redirect("~/");
         }
         else
         {
-            view = SiteEngine.RunHook(GET_ITEM_VIEW, DEFAULT_ITEM_VIEW);
+            RenderView(item);
         }
-
-        RenderView(view, item);
     }
 
-    protected dynamic GetItemById(string id)
+    [Post("Edit")]
+    public virtual void Edit(string id, dynamic request)
     {
+        dynamic item = new ExpandoObject();
+        item.Id = request.Form["Id"];
+        item.Title = request.Form["Title"];
+        item.Content = request is HttpRequestBase ? Validation.Unvalidated(request, "Content")
+            : request.Form["Content"];
+
+        item = this.Model.Update(item).Value;
+        item = SiteEngine.RunHook(SAVE_ITEM, item);
+
+        if (this.Model.HasError)
+        {
+            item.Errors = Model.Errors;
+            RenderView((ExpandoObject) item);
+        }
+        else
+        {
+            View(id);
+        }
+    }
+
+    [Post("Delete")]
+    public virtual void Delete(NameValueCollection form)
+    {
+        dynamic item = new ExpandoObject();
+        item.Id = form["Id"];
+        SiteEngine.RunHook(DELETE_ITEM, item);
+        this.Model.Delete(item);
+        View("Default");
+    }
+
+    [Get("Create")]
+    public virtual void Create()
+    {
+        //check access
+        dynamic newitem = new ExpandoObject();
+        newitem.Id = null as string;
+        newitem.Title = string.Format("[New {0}]", this.ContentTypeName);
+        newitem = SiteEngine.RunHook(NEW_ITEM, newitem);
+        RenderView((ExpandoObject)newitem);
+    }
+
+    [Post("Create")]
+    public virtual void Create(dynamic request)
+    {
+        dynamic item = new ExpandoObject();
+        item.Title = request.Form["Title"];
+        item.Content = request is HttpRequestBase ? Validation.Unvalidated(request, "Content")
+            : request.Form["Content"];
+        
+        item = this.Model.Create(item).Value;
+        item = SiteEngine.RunHook(SAVE_ITEM, item);
+
+        if (this.Model.HasError)
+        {
+            item.Errors = Model.Errors;
+            RenderView((ExpandoObject)item);
+        }
+        else
+        {
+            View(item.Id);
+        }
+    }
+
+    protected ExpandoObject GetItemById(string id)
+    {
+        if (string.IsNullOrWhiteSpace(id)) return null;
+
         dynamic item = new ExpandoObject();
         item.Id = id;
-        //return SiteEngine.RunHook(GET_ITEM, item);
-
-        dynamic model = SiteEngine.RunHook(GetModelHook, new PageModel());
-        return model.Load(item).Value;
+        item = Model.Load(item).Value;
+        return SiteEngine.RunHook(GET_ITEM, item);        
     }
 
-    protected dynamic GetItemFromRequest()
-    {
-        dynamic item = new ExpandoObject();
-        item.Id = Request.Form["Id"];
-        item.Title = Request.Form["Title"];
-        item.Content = Validation.Unvalidated(Request, "Content");
-        return item;
-    }
 
     [Get("EditMenu")]
     public void EditMenu()
     {
         RenderView(
-            SiteEngine.RunHook("get_menu_view", "~/Pages/_Menu_Edit.cshtml"),
+            SiteEngine.RunHook("get_menu_view", "~/Pages/_Menu_Edit.cshtml") as string,
             SiteEngine.RunHook("get_menu", ""));
     }
 
-    [Post("SaveMenu")]
-    public void SaveMenu()
+    [Post("EditMenu")]
+    public void EditMenu(NameValueCollection form)
     {
-        dynamic menu = WebPage.Context.Request.Form["Menu"];
-        RenderView(
-            SiteEngine.RunHook("get_menu_view", "~/Pages/_Menu_Edit.cshtml"),
-            SiteEngine.RunHook("save_menu", WebPage.Page.Model));
+        dynamic menu = form["Menu"];
+        RenderView(SiteEngine.RunHook("save_menu", menu));
     }
-
-
 }

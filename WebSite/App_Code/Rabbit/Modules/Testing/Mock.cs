@@ -9,7 +9,8 @@ using System.Reflection;
 public class Mock: DynamicObject
 {
     List<Expectation> expectations = new List<Expectation>();
-
+    
+    [System.Diagnostics.DebuggerStepThrough]
     private bool GetExpectation(string name, object[] args, out object result)
     {
         var exp = expectations.Where(e => e.Name == name && !e.HasCalled).FirstOrDefault();
@@ -64,12 +65,12 @@ public class Mock: DynamicObject
         expectations.Add(new Expectation("set_" + name, new object[] { value }, null));
     }
 
-        
-     public void Setup(string name, object[] parameters, object returnValue)
+    public void Setup(string name, object[] parameters, object returnValue = null)
     {
         expectations.Add(new Expectation(name, parameters, returnValue));
     }
 
+    [System.Diagnostics.DebuggerStepThrough]
     public void Verify()
     {
         foreach (var exp in expectations)

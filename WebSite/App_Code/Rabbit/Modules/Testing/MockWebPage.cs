@@ -6,9 +6,9 @@ using System.Dynamic;
 using System.Collections.Specialized;
 
 /// <summary>
-/// Summary description for MockAction
+/// Summary description for MockWebPage
 /// </summary>
-public class MockRequest : Mock
+public class MockWebPage : Mock
 {
     public dynamic Request { get; set; }
     public dynamic Context { get; set; }
@@ -16,7 +16,7 @@ public class MockRequest : Mock
     public bool IsPost { get; set; }
     public IList<string> UrlData { get; set; }
 
-	public MockRequest(string[] urlData, bool isPost=false)
+	public MockWebPage(string[] urlData, bool isPost=false)
 	{
         Request = new ExpandoObject();
         Context = new ExpandoObject();
@@ -28,20 +28,20 @@ public class MockRequest : Mock
 	}
 }
 
-public class MockGet : MockRequest
+public class MockGet : MockWebPage
 {
     public MockGet(string[] UrlData) : base(UrlData, false)
     {
     }
 }
 
-public class MockPost : MockRequest
+public class MockPost : MockWebPage
 {
     public NameValueCollection Form { get; set; }
 
     public MockPost(string[] UrlData, NameValueCollection form)
         : base(UrlData, true)
     {
-        Form = form;
+        Request.Form = form;
     }
 }

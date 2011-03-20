@@ -11,12 +11,16 @@ public static class Mvc
 {
     static Dictionary<string, IList<RouteAttribute>> cache = new Dictionary<string, IList<RouteAttribute>>();
 
-    public static void Run(object controller)
+    [System.Diagnostics.DebuggerStepThrough]
+    public static void Run(dynamic controller)
     {
+        dynamic page = controller.WebPage;
+        Assert.IsTrue(page != null);
+        
         var cacheKey = controller.ToString();
         IList<RouteAttribute> routes = null;
 
-        if (cache.Keys.Contains(cacheKey))
+        if (cache.ContainsKey(cacheKey))
         {
             routes = cache[cacheKey] as IList<RouteAttribute>;
         }
@@ -34,10 +38,10 @@ public static class Mvc
             }
 
             //not to cache, if web.config says debug=true
-            if (!HttpContext.Current.IsDebuggingEnabled) cache[cacheKey] = routes;
+            //if (!HttpContext.Current.IsDebuggingEnabled) cache[cacheKey] = routes;
+            if (!page.Context.IsDebuggingEnabled) cache[cacheKey] = routes;
         }
 
-        dynamic page = ((dynamic)controller).WebPage;
         IList<string> urlData = page.UrlData;
 
         var action = urlData[0].ToLower();
@@ -60,7 +64,40 @@ public static class Mvc
 
             try
             {
-                route.Method.Invoke(controller, null);
+                var parameters = route.Method.GetParameters();
+                if(parameters==null || parameters.Length ==0)
+                {
+                    route.Method.Invoke(controller, null);
+                }
+                else
+                {
+                    var objects = new object[parameters.Length];
+                    for(int i=0; i<parameters.Length; i++)
+                    {
+                        if(parameters[i].ParameterType == typeof(string[]))
+                        {
+                            objects[i] = urlData.ToArray();
+                        }
+                        else if(parameters[i].ParameterType == typeof(string))
+                        {
+                            //action name removed
+                            objects[i] = string.Join("/", urlData.ToArray(), 1, urlData.Count() - 1);
+                        }
+                        else if (parameters[i].Name == "form" ||
+                                 parameters[i].ParameterType == typeof(NameValueCollection))
+                        {
+                            objects[i] = page.Request.Form;
+                        }
+                        else if (parameters[i].Name=="request" ||
+                                 parameters[i].ParameterType == typeof(HttpRequest))
+                        {
+                            objects[i] = page.Request;
+                        }
+                    }
+
+                    //controller._viewName = route.Method.Name;
+                    route.Method.Invoke(controller, objects);
+                }
             }
             catch (TargetInvocationException ex)
             {
@@ -69,7 +106,7 @@ public static class Mvc
         }
         else
         {
-            throw new Exception(string.Format("Controller: Cannot Run Action {0}", action));
+            throw new Exception(string.Format("Controller: Cannot Find Action {0}", action));
         }
     }
 }
@@ -83,6 +120,10 @@ public class RouteAttribute : Attribute
 
     public RouteAttribute(bool isPost, string action)
     {
+        //remove leading /
+        if (action != "/" && action != "/*" && action[0] == '/') 
+            action = action.Substring(1, action.Length - 1);
+
         this.IsPost = isPost;
         this.Action = action;
     }

@@ -24,7 +24,7 @@ public class Repository
     {
         this.type = type;
     }
-
+    
     public void Save(string id, dynamic data)
     {
         var cachekey = type + "." + id;
@@ -38,7 +38,7 @@ public class Repository
         }
     }
 
-    public dynamic Load(string id)
+    public ExpandoObject Load(string id)
     {
         var cachekey = type + "." + id;
         
@@ -50,29 +50,29 @@ public class Repository
         lock (locker)
         {
             var fileName = Path.Combine(BaseFolder + type, id);
-            dynamic data = new ExpandoObject();
+            if (!File.Exists(fileName)) return null;
 
-            if (!File.Exists(fileName))
-            {
-                data.Id = id;    
-            }
-            else
-            {
-                var text = File.ReadAllText(fileName);
-                data = text.ToDynamic();
-            }
+            dynamic data = new ExpandoObject();
+            var text = File.ReadAllText(fileName);
+            data = text.ToDynamic();
+
             cache[cachekey] = data;
             return data;
         }
     }
-    
+
+    public bool Exists(string id)
+    {
+        return Load(id) != null;
+    }
+
     public void Delete(string id)
     {
         var fileName = Path.Combine(BaseFolder + type, id);
         if (File.Exists(fileName)) File.Delete(fileName);
     }
 
-    public IEnumerable<dynamic> List()
+    public IEnumerable<ExpandoObject> List()
     {
         var folder = Path.Combine(BaseFolder, type);
         if (!Directory.Exists(folder)) return null;
