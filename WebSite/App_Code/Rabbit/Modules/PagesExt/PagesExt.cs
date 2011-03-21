@@ -20,31 +20,4 @@ public static class PagesExt
         menus.Add("Edit MenuTree|~/Pages/EditMenuTree");
         return data;
     }
-
-    //support multiple level dropdown menu
-    [Hook]
-    public static dynamic get_menu(dynamic data)
-    {
-        var filename = HttpContext.Current.Server.MapPath("~/App_Data/Rabbit/Menu.txt");
-        return File.Exists(filename) ? File.ReadAllText(filename) : data; //TODO: cache it
-    }
-
-    [Hook]
-    public static dynamic get_pages_page(dynamic data)
-    {
-        return PageExtModel.Load(data).Value;
-    }
-
-    [Hook]
-    public static dynamic get_pages_controller(dynamic data)
-    {
-        var page = data.WebPage;
-        return new PagesExtController(page);
-    }
-
-    [Hook]
-    public static dynamic get_pages_page_itemview(dynamic data)
-    {
-        return "~/PagesExt/_Page_View.cshtml";
-    }
 }

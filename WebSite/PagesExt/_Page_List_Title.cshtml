@@ -1,9 +1,0 @@
-﻿@if (Page.Model.List != null)
-{ 
-    <ul>
-    @foreach (var page in Page.Model.List)
-    {
-        <li><a href="/Pages/@page.Id">@page.Title</a></li>
-    }
-    </ul>
-}

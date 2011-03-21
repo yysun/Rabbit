@@ -73,16 +73,25 @@ public class PageController : Controller
     }
 
     [Post("Edit")]
-    public virtual void Edit(string id, dynamic request)
+    public virtual void Edit(dynamic request)
     {
+        var newId = request.Form["Id"];
         dynamic item = new ExpandoObject();
-        item.Id = request.Form["Id"];
+        item.Id = request.Form["OldId"];
         item.Title = request.Form["Title"];
         item.Content = request is HttpRequestBase ? Validation.Unvalidated(request, "Content")
             : request.Form["Content"];
 
-        item = this.Model.Update(item).Value;
-        item = SiteEngine.RunHook(SAVE_ITEM, item);
+        if (string.IsNullOrEmpty(newId) || item.Id == newId)
+        {
+            item = this.Model.Update(item).Value;
+        }
+        else
+        {
+            item = this.Model.SaveAs(item, newId).Value;
+        }
+
+        item = SiteEngine.RunHook(UPDATE_ITEM, item);
 
         if (this.Model.HasError)
         {
@@ -91,18 +100,18 @@ public class PageController : Controller
         }
         else
         {
-            View(id);
+            Redirect(item.Id);
         }
     }
 
     [Post("Delete")]
-    public virtual void Delete(NameValueCollection form)
+    public virtual void Delete(string id)
     {
         dynamic item = new ExpandoObject();
-        item.Id = form["Id"];
+        item.Id = id;
         SiteEngine.RunHook(DELETE_ITEM, item);
         this.Model.Delete(item);
-        View("Default");
+        Redirect("List");
     }
 
     [Get("Create")]
@@ -125,7 +134,7 @@ public class PageController : Controller
             : request.Form["Content"];
         
         item = this.Model.Create(item).Value;
-        item = SiteEngine.RunHook(SAVE_ITEM, item);
+        item = SiteEngine.RunHook(UPDATE_ITEM, item);
 
         if (this.Model.HasError)
         {
@@ -134,7 +143,7 @@ public class PageController : Controller
         }
         else
         {
-            View(item.Id);
+            Redirect(item.Id);
         }
     }
 
@@ -153,7 +162,7 @@ public class PageController : Controller
     public void EditMenu()
     {
         RenderView(
-            SiteEngine.RunHook("get_menu_view", "~/Pages/_Menu_Edit.cshtml") as string,
+            SiteEngine.RunHook("get_menu_view", "Menu_Edit") as string,
             SiteEngine.RunHook("get_menu", ""));
     }
 
@@ -161,6 +170,8 @@ public class PageController : Controller
     public void EditMenu(NameValueCollection form)
     {
         dynamic menu = form["Menu"];
-        RenderView(SiteEngine.RunHook("save_menu", menu));
+        RenderView(
+            SiteEngine.RunHook("get_menu_view", "Menu_Edit") as string,
+            SiteEngine.RunHook("save_menu", menu));
     }
 }

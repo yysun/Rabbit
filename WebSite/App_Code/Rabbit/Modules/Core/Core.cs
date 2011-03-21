@@ -11,7 +11,7 @@ using System.Dynamic;
 public static class Core
 {
     [Hook]
-    public static dynamic Get_Site_Settings(dynamic data)
+    public static object Get_Site_Settings(object data)
     {
         var settings = (ExpandoObject)data;
         settings.EnsureProperty("Name", "[Your Site Name]");
@@ -21,7 +21,7 @@ public static class Core
     }
 
     [Hook]
-    public static dynamic Get_Layout(dynamic data)
+    public static object Get_Layout(object data)
     {
         dynamic settings = SiteSettings.Load().Value; 
         return settings == null ? "" :
@@ -29,7 +29,7 @@ public static class Core
     }
 
     [Hook]
-    public static dynamic get_templates(dynamic data)
+    public static object get_templates(dynamic data)
     {
         var path = HttpContext.Current.Server.MapPath("~/Templates");
 

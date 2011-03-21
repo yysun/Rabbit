@@ -55,22 +55,29 @@ public class PageModel : Model
         return this;
     }
 
-
     public PageModel Update(dynamic item)
     {
         Assert.IsTrue(item != null);
         Value = item;
         Validate();
-        if (HasError) return this;
+        if (!HasError) Repository.Save(Value.Id as string, Value);
+        return this;
+    }
 
-        var oldId = Value.Id as string;
-        var newId = GetId();
+    public PageModel SaveAs(dynamic item, string newId)
+    {
+        Assert.IsTrue(item != null);
+        var oldId = item.Id as string;
+        Value = item;
+        Value.Id = newId;
+        Validate();
+        if (HasError) return this;
 
         if (oldId != newId)
         {
             if (Repository.Exists(newId))
             {
-                Errors.Add("Title", string.Format("{0} exisits already.", Value.Title));
+                Errors.Add("Id", string.Format("{0} exisits already.", Value.Id));
             }
             else
             {
@@ -83,7 +90,7 @@ public class PageModel : Model
         return this;
     }
 
-    private string GetId()
+    private string GetIdFromTitle()
     {
         string id = Value.Title ?? "";
         foreach (char c in Path.GetInvalidFileNameChars())
@@ -101,7 +108,7 @@ public class PageModel : Model
     {
         Assert.IsTrue(item != null);
         Value = item;
-        Value.Id = GetId();
+        Value.Id = GetIdFromTitle();
         Validate();
         if (HasError) return this;
 

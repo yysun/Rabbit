@@ -16,7 +16,7 @@ public static class SiteEngine
         SiteEngine.RunHook("start");
     }
 
-    private static List<KeyValuePair<string, Func<dynamic, dynamic>>> hooks;
+    private static List<KeyValuePair<string, Func<object, object>>> hooks;
     private static List<string> modules;
 
     static SiteEngine()
@@ -24,15 +24,15 @@ public static class SiteEngine
         InitModules();
     }
 
-    public static void AddHook(string name, Func<dynamic, dynamic> action)
+    public static void AddHook(string name, Func<object, object> action)
     {
         Log.Write("SiteEngine: \tAddHook {0}", name);
 
-        hooks.Add(new KeyValuePair<string, Func<dynamic, dynamic>>(name, action));
+        hooks.Add(new KeyValuePair<string, Func<object, object>>(name, action));
     }
 
     [System.Diagnostics.DebuggerStepThrough]
-    public static dynamic RunHook(string name, dynamic data = null)
+    public static dynamic RunHook(string name, object data = null)
     {        
         var foundhooks = hooks.Where(a => string.Compare(a.Key, name, true) == 0)
                .Select(a => a.Value)

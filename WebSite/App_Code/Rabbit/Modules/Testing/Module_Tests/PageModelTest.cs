@@ -11,7 +11,7 @@ using System.Text;
 public class PageModelTest
 {
     [TestMethod]
-    public void UpdatePage_Should_Validate_Title()
+    public void Update_Should_Validate_Title()
     {
         dynamic data = new ExpandoObject();
         data.Id = "id";
@@ -24,39 +24,39 @@ public class PageModelTest
     }
 
     [TestMethod]
-    public void UpdatePage_Should_Validate_New_Title_Exists()
+    public void SaveAs_Should_Validate_New_Id_Exists()
     {
         dynamic data = new ExpandoObject();
-        data.Id = "old title";
+        data.Id = "old-id";
         data.Title = "new title";
         var repository = new Mock();
-        repository.Setup("Exists", new object[] { "new-title" }, true); // <-- it should catch this
+        repository.Setup("Exists", new object[] { "new-id" }, true); // <-- it should catch this
         var model = new PageModel();
         model.Repository = repository;
-        model.Update(data);
+        model.SaveAs(data, "new-id");
         Assert.IsTrue(model.HasError);
         repository.Verify();
     }
 
     [TestMethod]
-    public void UpdatePage_Should_Delete_Old_Title()
+    public void SaveAs_Should_Delete_Old_Id()
     {
         dynamic data = new ExpandoObject();
-        data.Id = "old-title";
+        data.Id = "old-id";
         data.Title = "new title";
         var repository = new Mock();
-        repository.Setup("Exists", new object[] { "new-title" }, false);
-        repository.Setup("Delete", new object[] { "old-title" });
-        repository.Setup("Save", new object[] { "new-title", It.IsAny() });
+        repository.Setup("Exists", new object[] { "new-id" }, false);
+        repository.Setup("Delete", new object[] { "old-id" });
+        repository.Setup("Save", new object[] { "new-id", It.IsAny() });
         var model = new PageModel();
         model.Repository = repository;
-        model.Update(data);
+        model.SaveAs(data,"new-id");
         Assert.IsFalse(model.HasError); //no validation error
         repository.Verify(); // all repository functions called
     }
 
     [TestMethod]
-    public void CreatePage_Should_Validate_Title()
+    public void Create_Should_Validate_Title()
     {
         dynamic data = new ExpandoObject();
         data.Id = "id";
@@ -70,7 +70,7 @@ public class PageModelTest
     }
 
     [TestMethod]
-    public void CreatePage_Should_Validate_New_Title_Exists()
+    public void Create_Should_Validate_New_Title_Exists()
     {
         dynamic data = new ExpandoObject();
         data.Id = null;
@@ -85,7 +85,7 @@ public class PageModelTest
     }
 
     [TestMethod]
-    public void CreatePage_Should_Use_SafeId()
+    public void Create_Should_Use_SafeId()
     {
         dynamic data = new ExpandoObject();
         data.Id = "123";
@@ -105,7 +105,7 @@ public class PageModelTest
     }
 
     [TestMethod]
-    public void ListPage_Should_Use_Paging()
+    public void List_Should_Use_Paging()
     {
         var repository = new Mock();
         repository.Setup("List", null);
@@ -121,7 +121,7 @@ public class PageModelTest
     }
 
     [TestMethod]
-    public void ListPage_Should_Use_Paging_Filter()
+    public void List_Should_Use_Paging_Filter()
     {
         var list = new List<ExpandoObject>();
         for (int i = 0; i < 50; i++)
@@ -145,6 +145,23 @@ public class PageModelTest
         Assert.AreEqual(11, ret.Count());
 
         repository.Verify();
+    }
+
+    [TestMethod]
+    public void Delete_Should_Call_Delete_To_Repository()
+    {
+        dynamic data = new ExpandoObject();
+        data.Id = "id";
+
+        var repository = new Mock();
+        repository.Setup("Delete", new object[] { It.Is<string>(item => item == "id") }, null);
+
+        var model = new PageModel();
+        model.Repository = repository;
+        model.Delete(data);
+
+        Assert.IsTrue(model.Value == null);
+        repository.Verify(); 
     }
 }
 

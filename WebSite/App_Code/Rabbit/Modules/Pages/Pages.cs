@@ -12,28 +12,28 @@ using System.Collections.Specialized;
 public static class Pages
 {
     [Hook]
-    public static dynamic get_homepage(dynamic data)
+    public static dynamic get_homepage(object data)
     {
         return "~/Pages";
     }
 
     [Hook]
-    public static dynamic get_menu(dynamic data)
+    public static object get_menu(object data)
     {
         var filename = HttpContext.Current.Server.MapPath("~/App_Data/Rabbit/Menu");
         return File.Exists(filename) ? File.ReadAllText(filename) : data;
     }
 
     [Hook]
-    public static dynamic save_menu(dynamic data)
+    public static object save_menu(dynamic data)
     {
         var filename = HttpContext.Current.Server.MapPath("~/App_Data/Rabbit/Menu");
-        File.WriteAllText(filename, data.Menu);
+        File.WriteAllText(filename, data);
         return data;
     }
 
     [Hook]
-    public static dynamic get_module_admin_menu(dynamic data)
+    public static object get_module_admin_menu(object data)
     {
         ((IList<string>)data).Add("Manage Pages|~/Pages/List");
         ((IList<string>)data).Add("Manage Menus|~/Pages/EditMenu");

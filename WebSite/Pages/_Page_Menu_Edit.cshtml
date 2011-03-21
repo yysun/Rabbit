@@ -1,13 +1,13 @@
 ﻿@{  
     
 }
-<form method="post" action="/Pages/SaveMenu">
+<form method="post" action="/Pages/EditMenu">
 <fieldset>
     <legend>Edit Menu</legend>
     <ol>
         <li>
             @Html.Label("Menu")
-            <textarea name="Menu" rows="10" cols="60">@Page.Menu</textarea></li>
+            <textarea name="Menu" rows="10" cols="60">@Page.Model</textarea></li>
     </ol>
     <p><input type="submit" value="Save" /></p>
 </fieldset>

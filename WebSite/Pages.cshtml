@@ -1,4 +1,5 @@
-﻿@{  
+﻿@using System.Dynamic;
+@{  
     Layout = SiteEngine.RunHook("get_layout");
     var ct = SiteEngine.RunHook("get_pages_controller", new PageController(this));
     
@@ -7,7 +8,7 @@
     //Assert.IsTrue(Page.View != null, "View has not been set.");
     //Assert.IsTrue(Page.Model != null, "Model has not been set.");
 
-    if (((System.Dynamic.ExpandoObject)Page.Model).HasProperty("Title"))
+    if (Page.Model is ExpandoObject && ((ExpandoObject)Page.Model).HasProperty("Title"))
     {
         Page.Title = Page.Model.Title;
     }

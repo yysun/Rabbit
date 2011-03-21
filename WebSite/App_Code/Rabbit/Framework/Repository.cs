@@ -68,8 +68,15 @@ public class Repository
 
     public void Delete(string id)
     {
+        var cachekey = type + "." + id;
+
         var fileName = Path.Combine(BaseFolder + type, id);
         if (File.Exists(fileName)) File.Delete(fileName);
+
+        if (cache.ContainsKey(cachekey))
+        {
+            cache.Remove(cachekey);
+        }
     }
 
     public IEnumerable<ExpandoObject> List()

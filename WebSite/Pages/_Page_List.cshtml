@@ -9,15 +9,40 @@
 else
 { 
     <table>
-    <tr></tr>
+    <tr>
+    <td>Id</td>
+    <td>Title</td>
+    <td></td>
+    <td></td>
+    </tr>
     @foreach (var page in Page.Model.List)
     {
         <tr>
-        <td><a href="/Pages/@page.Id">@page.Title</a></td>
+        <td><a href="/Pages/@page.Id">@page.Id</a></td>
+        <td><a href="/Pages/Edit/@page.Id">@page.Title</a></td>
         <td><a href="/Pages/Edit/@page.Id">Edit</a></td>
-        <td><a href="/Pages/Delete/@page.Id">Delete</a></td>
+        <td><a href="/Pages/Delete/@page.Id" class="delete-link">Delete</a></td>
         </tr>
     }
     </table>
     <a href="/Pages/Create">Create New Page</a>
 }
+
+<script type="text/javascript">
+    $(function () {
+        $('.delete-link').click(function () {
+
+            var lnkobj = $(this);
+
+            if (confirm("Are you sure?")) {
+
+                $.post(lnkobj[0].href, function () { 
+                    lnkobj.closest("tr").hide();
+                });
+
+            }
+            return false;
+        });
+
+    });
+</script>

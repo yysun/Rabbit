@@ -1,5 +1,6 @@
 ﻿@{  
-    
+    var host = Request.Url.ToString();
+    host = host.Substring(0, host.IndexOf(Request.Path));
 }
 <form method="post" action="/Pages/Edit">
 <fieldset>
@@ -8,9 +9,13 @@
         <li>@HtmlExt.TextAndLabel("Title", "Title", Page, new { style="width:100%" })</li>
         <li>
             @Html.Label("Content")
-            <textarea name="Content" rows="10" cols="60" style="width:100%">@Page.Content</textarea></li>
+            <textarea name="Content" rows="8" cols="60" style="width:100%">@Page.Content</textarea></li>
+        <li>@HtmlExt.TextAndLabel("SEO Id", "Id", Page, new { style="width:100%" })<br />
+            @Html.Label("Permanent Link")
+            @host/Pages/@Page.Id
+        </li>
     </ol>
-    @Html.Hidden("Id", @Page.Id)
+    @Html.Hidden("OldId", @Page.Id)
     <p><input type="submit" value="Save" /></p>
 </fieldset>
 </form>
