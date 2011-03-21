@@ -26,7 +26,8 @@
     <div class="container home">
     <div id="content" class="span-24 last">
 
-    @if (string.Compare(Request.AppRelativeCurrentExecutionFilePath, "~/Pages", true) == 0)
+    @if (string.Compare(Request.AppRelativeCurrentExecutionFilePath, "~/Pages", true) == 0 ||
+         string.Compare(Request.AppRelativeCurrentExecutionFilePath, "~/Pages/Default", true) == 0)    
     {
         <div class="span-16 last">
             <div id="color-block"></div>

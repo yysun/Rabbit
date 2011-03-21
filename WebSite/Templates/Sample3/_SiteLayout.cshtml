@@ -51,7 +51,8 @@
 <div id="page" class="container">
     <div id="content" class="span-24 last">
 
-    @if (string.Compare(Request.AppRelativeCurrentExecutionFilePath, "~/Pages", true) == 0)
+    @if (string.Compare(Request.AppRelativeCurrentExecutionFilePath, "~/Pages", true) == 0 ||
+         string.Compare(Request.AppRelativeCurrentExecutionFilePath, "~/Pages/Default", true) == 0)    
     {
         <div class="span-18">
             <div id="color-block1" class="span-18"></div>
