@@ -52,9 +52,7 @@
 
 <div id="page" class="container">
     <div id="content" class="span-24 last">
-
-    @if (string.Compare(Request.AppRelativeCurrentExecutionFilePath, "~/Pages", true) == 0 ||
-         string.Compare(Request.AppRelativeCurrentExecutionFilePath, "~/Pages/Default", true) == 0)
+    @if ((bool)SiteEngine.RunHook("IsHomePage"))
     {
         <div class="span-24 last">
             <div id="color-block"></div>

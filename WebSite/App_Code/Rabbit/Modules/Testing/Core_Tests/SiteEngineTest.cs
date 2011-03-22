@@ -41,5 +41,17 @@ public class SiteEngineTest
     //    Assert.AreEqual(expando.id, 1);
     //    Assert.AreEqual(expando.name, "test");
     //}
+
+    [TestMethod]
+    public void EnsurePropertyTest()
+    {
+        var o = new ExpandoObject();
+
+        o.EnsureProperty("Id", "aa");
+        Assert.AreEqual("aa", ((dynamic)o).Id);
+
+        o.EnsureProperty("Id", 12);
+        Assert.AreEqual(12, ((dynamic)o).Id);
+    }
 }
 

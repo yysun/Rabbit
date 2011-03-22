@@ -45,6 +45,17 @@ public class PageModel : Model
     {
         Assert.IsTrue(Value != null);
 
+        //if (string.IsNullOrWhiteSpace(Value.Id)) Value.Id = Value.Title ?? "";
+
+        //foreach (char c in Path.GetInvalidFileNameChars())
+        //{
+        //    Value.Id = Value.Id.Replace(c, '-');
+        //}
+        //foreach (char c in @" ~`!@#$%^&+=,;""".ToCharArray())
+        //{
+        //    Value.Id = Value.Id.Replace(c, '-');
+        //}
+
         var rules = new Dictionary<string, string[]>
         {
             {"Id", new string[]{"required", "minlength:2", "maxlength:140"}},
@@ -82,33 +93,18 @@ public class PageModel : Model
             else
             {
                 Repository.Delete(oldId);
-                Value.Id = newId;
             }
         }
 
-        if (!HasError) Repository.Save(Value.Id as string, Value);
+        if (!HasError) Value.Id = Repository.Save(Value.Id as string, Value);
         return this;
-    }
-
-    private string GetIdFromTitle()
-    {
-        string id = Value.Title ?? "";
-        foreach (char c in Path.GetInvalidFileNameChars())
-        {
-            id = id.Replace(c, '-');
-        }
-        foreach (char c in @" ~`!@#$%^&+=,;""".ToCharArray())
-        {
-            id = id.Replace(c, '-');
-        }
-        return id;
     }
 
     public PageModel Create(dynamic item)
     {
         Assert.IsTrue(item != null);
         Value = item;
-        Value.Id = GetIdFromTitle();
+        Value.Id = Value.Title;
         Validate();
         if (HasError) return this;
 
@@ -117,7 +113,7 @@ public class PageModel : Model
             Errors.Add("Title", string.Format("{0} exisits already.", Value.Title));
         }
 
-        if (!HasError) Repository.Save(Value.Id, Value);
+        if (!HasError) Value.Id = Repository.Save(Value.Id, Value);
 
         return this;
     }

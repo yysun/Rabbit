@@ -11,12 +11,14 @@ using System.Collections.Specialized;
 /// </summary>
 public static class Pages
 {
+    private static string[] HomePages = new string[]{"~/pages", "~/pages/", "~/pages/default"};
+    
     [Hook]
     public static dynamic get_homepage(object data)
     {
         return "~/Pages";
     }
-
+    
     [Hook]
     public static object get_menu(object data)
     {
@@ -39,4 +41,12 @@ public static class Pages
         ((IList<string>)data).Add("Manage Menus|~/Pages/EditMenu");
         return data;
     }
+
+    [Hook]
+    public static object IsHomePage(object data)
+    {
+        string path = HttpContext.Current.Request.AppRelativeCurrentExecutionFilePath.ToLower();
+        return HomePages.Any(s => s == path);
+    }
+
 }

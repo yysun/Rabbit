@@ -80,4 +80,16 @@ public class RepositoryTest
         Assert.AreEqual(d1.Child.Child.Names[2], d3.Child.Child.Names[2]);
         repository.Delete("D1");
     }
+
+    [TestMethod]
+    public void Save_Should_UseSafeId()
+    {
+        var id = "----------()_---{}[]------.---'-";
+        dynamic d1 = new ExpandoObject();
+        var newid = repository.Save(@"~`!@#$%^&*()_+=-{}[]|\?><,./;:'""", d1);
+        Assert.AreEqual(id, newid);
+        Assert.IsTrue(repository.Exists(id));
+        repository.Delete(id);
+        Assert.IsFalse(repository.Exists(id));
+    }
 }

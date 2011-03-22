@@ -146,3 +146,13 @@ public class PostAttribute : RouteAttribute
     {
     }
 }
+
+[AttributeUsage(AttributeTargets.Method)]
+public class HandleError : Attribute
+{
+}
+
+[AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
+public class Authroize : Attribute
+{
+}

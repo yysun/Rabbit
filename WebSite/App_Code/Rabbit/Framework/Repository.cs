@@ -24,22 +24,45 @@ public class Repository
     {
         this.type = type;
     }
-    
-    public void Save(string id, dynamic data)
+
+    public string Save(string id, ExpandoObject data)
     {
+        Assert.IsTrue(!string.IsNullOrWhiteSpace(id));
+        Assert.IsTrue(data != null);
+
+        id = GetSafeId(id);
+
         var cachekey = type + "." + id;
         var fileName = Path.Combine(BaseFolder + type, id);
-        var text = ((ExpandoObject)data).ToJson();
+        var text = data.ToJson();
 
         lock (locker)
         {
             cache[cachekey] = data;
             File.WriteAllText(fileName, text);
         }
+
+        return id;
+    }
+
+    private string GetSafeId(string id)
+    {
+        foreach (char c in Path.GetInvalidFileNameChars())
+        {
+            id = id.Replace(c, '-');
+        }
+        foreach (char c in @" ~`!@#$%^&+=,;""".ToCharArray())
+        {
+            id = id.Replace(c, '-');
+        }
+        return id;
     }
 
     public ExpandoObject Load(string id)
     {
+        Assert.IsTrue(!string.IsNullOrWhiteSpace(id));
+        id = GetSafeId(id);
+
         var cachekey = type + "." + id;
         
         if (cache.ContainsKey(cachekey))
@@ -68,6 +91,9 @@ public class Repository
 
     public void Delete(string id)
     {
+        Assert.IsTrue(!string.IsNullOrWhiteSpace(id));
+        id = GetSafeId(id);
+
         var cachekey = type + "." + id;
 
         var fileName = Path.Combine(BaseFolder + type, id);

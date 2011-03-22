@@ -76,32 +76,12 @@ public class PageModelTest
         data.Id = null;
         data.Title = "new title";
         var repository = new Mock();
-        repository.Setup("Exists", new object[] { "new-title" }, true); // <-- it should catch this
+        repository.Setup("Exists", new object[] { "new title" }, true); // <-- it should catch this
         var model = new PageModel();
         model.Repository = repository;
         model.Create(data);
         Assert.IsTrue(model.HasError);
         repository.Verify();
-    }
-
-    [TestMethod]
-    public void Create_Should_Use_SafeId()
-    {
-        dynamic data = new ExpandoObject();
-        data.Id = "123";
-        data.Title = @"~`!@#$%^&*()_+=-{}[]|\?><,./;:'""";
-
-        var id = "----------()_---{}[]------.---'-";
-        var repository = new Mock();
-        repository.Setup("Exists", new object[] { id }, false);
-        repository.Setup("Save", new object[] { id, data }, null);
-
-        var model = new PageModel();
-        model.Repository = repository;
-        model.Create(data);
-
-        Assert.IsFalse(model.HasError); //no validation error
-        repository.Verify(); // all repository functions called
     }
 
     [TestMethod]
