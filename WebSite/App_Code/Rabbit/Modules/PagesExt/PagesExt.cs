@@ -22,6 +22,12 @@ public static class PagesExt
     }
 
     [Hook]
+    public static dynamic get_pages_page_detail_view(dynamic data)
+    {
+        return "~/PagesExt/_Page_Detail.cshtml";
+    }
+
+    [Hook]
     public static dynamic get_pages_page_edit_view(dynamic data)
     {
         return "~/PagesExt/_Page_Edit.cshtml";

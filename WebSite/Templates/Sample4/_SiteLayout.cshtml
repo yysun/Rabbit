@@ -33,7 +33,10 @@
         </div>
         <div class="aside span-8 last">
             <section>@RenderBody()</section>
-            @RenderSection("aside", required: false)
+            <aside>
+                @Site.RenderSection("aside")
+                @RenderSection("aside", required: false)
+            </aside>
         </div>
     }
     else
@@ -42,7 +45,10 @@
         <section>@RenderBody()</section>
         </div>
         <div class="span-6 last">
-            <aside>@RenderSection("aside", required: false)</aside>
+            <aside>
+                @Site.RenderSection("aside")
+                @RenderSection("aside", required: false)
+            </aside>
         </div>
     }
     </div>

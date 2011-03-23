@@ -53,13 +53,20 @@
         }
     </ul>
 }
-@helper RenderPagePart(WebPage parent, string zoneName, dynamic data)
+@helper RenderSection(string sectionName)
 {  
-    data.ZoneName = zoneName;
-    data.Parts = new List<KeyValuePair<string, dynamic>> { };
-    var views = (List<KeyValuePair<string, dynamic>>) SiteEngine.RunHook("Get_PagePart", data).Parts;
-    foreach(var view in views)
+    var page = PageContext.Page;
+    var hookName = (Page.Hook ?? "") + "_" + sectionName;
+    var parts = SiteEngine.RunHook(hookName, new List<string>()) as IList<string>;
+    foreach (var part in parts)
     {
-        @parent.RenderPage(view.Key, view.Value);
-    }      
+        if (part.StartsWith("<"))
+        {
+            page.WriteLiteral(part);
+        }
+        else 
+        { 
+            @page.RenderPage(part, page);
+        }
+    }
 } 

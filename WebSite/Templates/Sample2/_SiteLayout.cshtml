@@ -51,7 +51,10 @@
 
     <div id="nav" class="span-5">
         <nav>@Site.MainMenu()</nav>
-        <aside>@RenderSection("aside", required: false)</aside>
+            <aside>
+                @Site.RenderSection("aside")
+                @RenderSection("aside", required: false)
+            </aside>
     </div>
 
     <div id="content" class="span-19 last">

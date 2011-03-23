@@ -17,19 +17,13 @@
     <h2 class="editable" id="article-title">@Page.Title</h2>
     <div class="editable" id="article-content">@Html.Raw(Page.Content)</div>
 </article>
-
-
+<a href="/Pages/@Page.Model.Id">stop editing</a>
 <form method="post" action="/Pages/Edit" id="editform">
 @Html.Hidden("OldId", @Page.Id)
 @Html.Hidden("Id", @Page.Id)
 @Html.Hidden("Content", "")
 @Html.Hidden("Title", "")
 </form>
-
-@section aside {
-<a href="/Pages/@Page.Id">stop editing</a>
-}
-
 
 <script type="text/javascript">
     $(function () {

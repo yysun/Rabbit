@@ -41,15 +41,12 @@
 <div id="titlerow" class="container">
     <div id="header" class="span-24 last">
         <header>            
-        
             <h1>@Site.Name()</h1>
-
         </header>
         <nav>@Site.MainMenu()
         </nav>
     </div>
 </div>
-
 <div id="page" class="container">
     <div id="content" class="span-24 last">
     @if ((bool)SiteEngine.RunHook("IsHomePage"))
@@ -62,7 +59,10 @@
             <section>@RenderBody()</section>
             </div>
             <div class="span-12 last" id="aside">
-            <aside>@RenderSection("aside", required: false)</aside>
+            <aside>
+                @Site.RenderSection("aside")
+                @RenderSection("aside", required: false)
+            </aside>
             </div>
         </div>
     }
@@ -72,7 +72,10 @@
         <section>@RenderBody()</section>
         </div>
         <div class="span-7 last">
-            @RenderSection("aside", required: false)
+            <aside>
+                @Site.RenderSection("aside")
+                @RenderSection("aside", required: false)
+            </aside>
         </div>
     }
     </div>
