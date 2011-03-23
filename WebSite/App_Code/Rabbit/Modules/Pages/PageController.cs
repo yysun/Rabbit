@@ -24,23 +24,23 @@ public class PageController : Controller
     [Get("/")]
     public virtual void Default()
     {
-        View("Default");
+        Detail("Default");
     }
 
     [Post("/")]
     public virtual void Default(object form)
     {
-        View("Default");
+        Detail("Default");
     }
 
     [Get("/*")]
     public virtual void Get(string[] urlData)
     {
         var id = string.Join("/", urlData.ToArray());
-        View(id);
+        Detail(id);
     }
 
-    protected virtual void View(string id)
+    protected virtual void Detail(string id)
     {
         RenderView(GetItemById(id));
     }
@@ -64,7 +64,7 @@ public class PageController : Controller
 
         if (item == null)
         {
-            View("Default"); //Reponse.Redirect("~/");
+            Detail("Default"); //Reponse.Redirect("~/");
         }
         else
         {

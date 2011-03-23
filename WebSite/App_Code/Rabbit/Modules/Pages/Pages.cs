@@ -11,7 +11,7 @@ using System.Collections.Specialized;
 /// </summary>
 public static class Pages
 {
-    private static string[] HomePages = new string[]{"~/pages", "~/pages/", "~/pages/default"};
+    private static string[] HomePages = new string[]{"~/pages", "~/pages/", "~/pages/default", "~/pages/edit/default"};
     
     [Hook]
     public static dynamic get_homepage(object data)

@@ -16,7 +16,7 @@ public class Controller
   
     internal void RenderView(string view, object model)
     {
-        var getViewHook = string.Format("GET_{0}_{1}_{2}View", ModuleName, ContentTypeName, view);
+        var getViewHook = string.Format("GET_{0}_{1}_{2}_View", ModuleName, ContentTypeName, view);
         var defaultView = string.Format("~/{0}/_{1}_{2}.cshtml", ModuleName, ContentTypeName, view);
         WebPage.Page.View = SiteEngine.RunHook(getViewHook, defaultView) as string;
         WebPage.Page.Model = model;

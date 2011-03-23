@@ -20,4 +20,10 @@ public static class PagesExt
         menus.Add("Edit MenuTree|~/Pages/EditMenuTree");
         return data;
     }
+
+    [Hook]
+    public static dynamic get_pages_page_edit_view(dynamic data)
+    {
+        return "~/PagesExt/_Page_Edit.cshtml";
+    }
 }

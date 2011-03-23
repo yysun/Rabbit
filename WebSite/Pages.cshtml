@@ -12,7 +12,6 @@
     {
         Page.Title = Page.Model.Title;
     }
-   
 }
 
 @if (Page.View != null)
@@ -23,4 +22,5 @@
 @section aside
 {
     @Site.RenderPagePart(this, "aside", Page)
+    
 }

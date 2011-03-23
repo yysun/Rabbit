@@ -1,0 +1,77 @@
+﻿@{
+    //Layout = SiteEngine.RunHook("get_layout");
+}
+<style type="text/css">
+    .editable:hover
+    {
+        border: 1px dotted #ffaaaa;
+    }
+    .editing, .editing:hover
+    {
+        border: 1px solid red;
+        background-color:rgba(250, 250, 200, 0.3);
+    }    
+</style>
+
+<article>
+    <h2 class="editable" id="article-title">@Page.Title</h2>
+    <div class="editable" id="article-content">@Html.Raw(Page.Content)</div>
+</article>
+
+
+<form method="post" action="/Pages/Edit" id="editform">
+@Html.Hidden("OldId", @Page.Id)
+@Html.Hidden("Id", @Page.Id)
+@Html.Hidden("Content", "")
+@Html.Hidden("Title", "")
+</form>
+
+@section aside {
+<a href="/Pages/@Page.Id">stop editing</a>
+}
+
+
+<script type="text/javascript">
+    $(function () {
+
+        var editing = false;
+        var editing_id;
+        var origin;
+
+        $('body').click(function (e) {
+
+            if (editing) {
+
+                editing = false;
+                $(".editable").attr("contenteditable", "false")
+                              .removeClass("editing");
+
+                if (origin != $(editing_id).html()) {
+
+                    if (confirm("Do you want to save the change?")) {
+
+                        $("#Title").val($("#article-title").html());
+                        $("#Content").val($("#article-content").html());
+                        $("#editform")[0].submit();
+
+                        return false;
+                    }
+                    else {
+                        $(editing_id).html(origin);
+                    }
+                }
+            }
+        });
+
+        $('.editable').click(function (e) {
+            e.stopPropagation();
+            if (!editing) {
+                editing = true;
+                editing_id = "#" + this.id;
+                origin = $(this).html();
+                $(this).attr("contenteditable", "true")
+                       .addClass("editing");
+            }
+        });
+    });
+</script>
