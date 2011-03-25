@@ -17,7 +17,6 @@ public static class SiteEngine
     }
 
     private static List<KeyValuePair<string, Func<object, object>>> hooks;
-    private static List<string> modules;
 
     static SiteEngine()
     {
@@ -82,7 +81,7 @@ public static class SiteEngine
     private static void InitModules()
     {
         hooks = new List<KeyValuePair<string, Func<object, object>>>();
-        modules = GetActivatedModules().ToList();
+        var modules = GetActivatedModules().ToList();
         modules.ForEach(module =>
         {
             try
@@ -147,7 +146,6 @@ public static class SiteEngine
                     select "# " + a;
 
         return string.Join("\r\n", list1.Union(list2));
-
     }
 }
 

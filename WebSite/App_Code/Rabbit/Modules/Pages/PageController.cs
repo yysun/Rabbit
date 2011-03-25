@@ -82,6 +82,8 @@ public class PageController : Controller
         item.Content = request is HttpRequestBase ? Validation.Unvalidated(request, "Content")
             : request.Form["Content"];
 
+        item = SiteEngine.RunHook(UPDATE_ITEM, item);
+
         if (string.IsNullOrEmpty(newId) || item.Id == newId)
         {
             item = this.Model.Update(item).Value;
@@ -90,8 +92,6 @@ public class PageController : Controller
         {
             item = this.Model.SaveAs(item, newId).Value;
         }
-
-        item = SiteEngine.RunHook(UPDATE_ITEM, item);
 
         if (this.Model.HasError)
         {

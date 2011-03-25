@@ -105,12 +105,15 @@ public class Repository
         }
     }
 
-    public IEnumerable<ExpandoObject> List()
+    public IEnumerable<ExpandoObject> List(Func<ExpandoObject, bool> filter = null)
     {
         var folder = Path.Combine(BaseFolder, type);
         if (!Directory.Exists(folder)) return null;
-        return Directory.EnumerateFiles(folder)
-                        .Select(f => Load(Path.GetFileName(f)));
+        var list = Directory.EnumerateFiles(folder)
+                            .Select(f => Load(Path.GetFileName(f)));
+
+        if (filter != null) list = list.Where(p => filter(p));
+        return list;
     }
 }
 

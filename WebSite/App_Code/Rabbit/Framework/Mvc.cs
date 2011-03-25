@@ -83,6 +83,10 @@ public static class Mvc
                             //action name removed
                             objects[i] = string.Join("/", urlData.ToArray(), 1, urlData.Count() - 1);
                         }
+                        else if (parameters[i].ParameterType == typeof(ExpandoObject))
+                        {
+                            objects[i] = ((NameValueCollection)page.Request.Form).ToDynamic();
+                        }
                         else if (parameters[i].Name == "form" ||
                                  parameters[i].ParameterType == typeof(NameValueCollection))
                         {
@@ -109,50 +113,4 @@ public static class Mvc
             throw new Exception(string.Format("Controller: Cannot Find Action {0}", action));
         }
     }
-}
-
-[AttributeUsage(AttributeTargets.Method)]
-public class RouteAttribute : Attribute
-{
-    internal bool IsPost { get; set; }
-    internal string Action { get; set; }
-    internal MethodInfo Method { get; set; }
-
-    public RouteAttribute(bool isPost, string action)
-    {
-        //remove leading /
-        if (action != "/" && action != "/*" && action[0] == '/') 
-            action = action.Substring(1, action.Length - 1);
-
-        this.IsPost = isPost;
-        this.Action = action;
-    }
-}
-
-[AttributeUsage(AttributeTargets.Method)]
-public class GetAttribute : RouteAttribute
-{
-    public GetAttribute(string action)
-        : base(false, action)
-    {
-    }
-}
-
-[AttributeUsage(AttributeTargets.Method)]
-public class PostAttribute : RouteAttribute
-{
-    public PostAttribute(string action)
-        : base(true, action)
-    {
-    }
-}
-
-[AttributeUsage(AttributeTargets.Method)]
-public class HandleError : Attribute
-{
-}
-
-[AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
-public class Authroize : Attribute
-{
 }

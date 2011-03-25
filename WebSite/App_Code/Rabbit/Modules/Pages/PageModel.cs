@@ -24,9 +24,9 @@ public class PageModel : Model
     {
         Value.PageNo = pageNo;
         Value.PageSize = pageSize;
-        IEnumerable<ExpandoObject> list = Repository.List();
+        IEnumerable<ExpandoObject> list = Repository.List(filter);
 
-        if (filter != null) list = list.Where(p => filter(p));
+        //if (filter != null) list = list.Where(p => filter(p));
         //if (sort != null) sort = list.OrderBy((p=>sort(p));
         
         Value.List = list == null ? null :
