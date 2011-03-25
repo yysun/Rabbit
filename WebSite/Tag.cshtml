@@ -1,0 +1,13 @@
+﻿@{
+    var tag = UrlData[0];
+    if (tag.IsEmpty())
+    {
+        Response.Redirect("~/Tags");
+    }
+    
+    Page.Title = tag;
+    Layout = SiteEngine.RunHook("get_layout");
+}
+
+<h3>Pages Tagged as @tag</h3>
+@RenderPage("~/Tags/_Page_List_By_Tag.cshtml", new { Tag = tag })

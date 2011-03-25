@@ -63,7 +63,7 @@ public class PageController : Controller
 
         if (item == null)
         {
-            return Detail("Default"); //Reponse.Redirect("~/");
+            return Redirect("Create");
         }
         else
         {

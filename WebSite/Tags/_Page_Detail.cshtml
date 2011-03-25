@@ -1,0 +1,21 @@
+﻿<article>
+    <div class="article-title"><header><h2>@Page.Title</h2></header></div>
+    <div class="article-content">@Html.Raw(Page.Content)</div>
+    <div class="article-tags"> 
+    @if (Page.Tags != null && Page.Tags.Length > 0)
+    {
+        
+        <text>Tags:</text>
+        <span class="article-tags" id="article-tags">
+
+        @for (int i = 0; i < Page.Tags.Length; i++)
+        {
+            string tag = Page.Tags[i];
+            <a href="/Tag/@tag">@tag</a>if (i < Page.Tags.Length - 1) {<text>,</text>}
+        }
+        </span>
+    }
+    
+    </div>
+</article>
+<a href="/Pages/Edit/@Page.Id">edit this page</a><br />        
