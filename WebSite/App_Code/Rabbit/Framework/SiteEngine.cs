@@ -25,6 +25,8 @@ public static class SiteEngine
 
     public static void AddHook(string name, Func<object, object> action)
     {
+        if (string.IsNullOrWhiteSpace(name)) return;
+
         Log.Write("SiteEngine: \tAddHook {0}", name);
 
         hooks.Add(new KeyValuePair<string, Func<object, object>>(name, action));
@@ -32,7 +34,9 @@ public static class SiteEngine
 
     [System.Diagnostics.DebuggerStepThrough]
     public static dynamic RunHook(string name, object data = null)
-    {        
+    {
+        if (string.IsNullOrWhiteSpace(name)) return data;
+
         var foundhooks = hooks.Where(a => string.Compare(a.Key, name, true) == 0)
                .Select(a => a.Value)
                .ToList();

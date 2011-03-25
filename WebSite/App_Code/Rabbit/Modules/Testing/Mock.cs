@@ -69,7 +69,7 @@ public class Mock: DynamicObject
     }
 
     [System.Diagnostics.DebuggerStepThrough]
-    public void Verify()
+    public virtual void Verify()
     {
         foreach (var exp in expectations)
         {

@@ -15,7 +15,7 @@ public class PagesExtControllerTest
     {
         dynamic page = new MockWebPage(new string[] { "/" });
 
-        Mvc.Run(new PagesExtController(page));
+        Mvc.Run(page, new PagesExtController());
         //Assert.AreEqual("", page.Page.View);
         
         //Assert.IsTrue(page.Page.View != null, "View has not been set.");
@@ -27,7 +27,7 @@ public class PagesExtControllerTest
     {
         dynamic page = new MockWebPage(new string[] { "EditMenuTree" });
 
-        Mvc.Run(new PagesExtController(page));
+        Mvc.Run(page, new PagesExtController());
         //Assert.AreEqual("", page.Page.View);
 
         //Assert.IsTrue(page.Page.View != null, "View has not been set.");

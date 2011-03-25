@@ -45,17 +45,6 @@ public class PageModel : Model
     {
         Assert.IsTrue(Value != null);
 
-        //if (string.IsNullOrWhiteSpace(Value.Id)) Value.Id = Value.Title ?? "";
-
-        //foreach (char c in Path.GetInvalidFileNameChars())
-        //{
-        //    Value.Id = Value.Id.Replace(c, '-');
-        //}
-        //foreach (char c in @" ~`!@#$%^&+=,;""".ToCharArray())
-        //{
-        //    Value.Id = Value.Id.Replace(c, '-');
-        //}
-
         var rules = new Dictionary<string, string[]>
         {
             {"Id", new string[]{"required", "minlength:2", "maxlength:140"}},

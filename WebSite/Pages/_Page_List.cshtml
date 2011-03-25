@@ -2,7 +2,7 @@
 
 <p>Pages module allows to create, modify and delete site pages. The pages are stored under the App_Data folder. </p>
 
-@if (Page.Model.List == null)
+@if (Page.List == null)
 { 
     <div>No pages found</div>
 }
@@ -15,7 +15,7 @@ else
     <td></td>
     <td></td>
     </tr>
-    @foreach (var page in Page.Model.List)
+    @foreach (var page in Page.List)
     {
         <tr>
         <td><a href="/Pages/@page.Id">@page.Id</a></td>

@@ -13,8 +13,7 @@ using System.Web.Helpers;
 /// </summary>
 public class PageController : Controller
 {
-    public PageController(object webPage)
-        : base(webPage)
+    public PageController()
     {
         this.ModuleName = "Pages";
         this.ContentTypeName = "Page";
@@ -22,31 +21,31 @@ public class PageController : Controller
     }
 
     [Get("/")]
-    public virtual void Default()
+    public virtual object Default()
     {
-        Detail("Default");
+        return Detail("Default");
     }
 
     [Post("/")]
-    public virtual void Default(object form)
+    public virtual object Default(object form)
     {
-        Detail("Default");
+        return Detail("Default");
     }
 
     [Get("/*")]
-    public virtual void Get(string[] urlData)
+    public virtual object Get(string[] urlData)
     {
         var id = string.Join("/", urlData.ToArray());
-        Detail(id);
+        return Detail(id);
     }
 
-    protected virtual void Detail(string id)
+    protected virtual object Detail(string id)
     {
-        RenderView(GetItemById(id));
+        return RenderView(GetItemById(id));
     }
 
     [Get("List")]
-    public virtual void List(string[] urlData)
+    public virtual object List(string[] urlData)
     {
         int pageNo   = urlData.Length > 1 && int.TryParse(urlData[1], out pageNo) ? pageNo : 1;
         int pageSize = urlData.Length > 2 && int.TryParse(urlData[2], out pageSize) ? pageSize : 20;
@@ -54,26 +53,26 @@ public class PageController : Controller
         dynamic data = this.Model.List(pageNo, pageSize).Value;
         data.Title = this.ModuleName;
         data = SiteEngine.RunHook(GET_LIST, data);
-        RenderView((ExpandoObject) data);
+        return RenderView((ExpandoObject)data);
     }
 
     [Get("Edit")]
-    public virtual void Edit(string id)
+    public virtual object Edit(string id)
     {
         var item = GetItemById(id);
 
         if (item == null)
         {
-            Detail("Default"); //Reponse.Redirect("~/");
+            return Detail("Default"); //Reponse.Redirect("~/");
         }
         else
         {
-            RenderView(item);
+            return RenderView(item);
         }
     }
 
     [Post("Edit")]
-    public virtual void Edit(dynamic request)
+    public virtual object Edit(dynamic request)
     {
         var newId = request.Form["Id"];
         dynamic item = new ExpandoObject();
@@ -96,37 +95,37 @@ public class PageController : Controller
         if (this.Model.HasError)
         {
             item.Errors = Model.Errors;
-            RenderView((ExpandoObject) item);
+            return RenderView((ExpandoObject)item);
         }
         else
         {
-            Redirect(item.Id);
+            return Redirect(item.Id);
         }
     }
 
     [Post("Delete")]
-    public virtual void Delete(string id)
+    public virtual object Delete(string id)
     {
         dynamic item = new ExpandoObject();
         item.Id = id;
         SiteEngine.RunHook(DELETE_ITEM, item);
         this.Model.Delete(item);
-        Redirect("List");
+        return Redirect("List");
     }
 
     [Get("Create")]
-    public virtual void Create()
+    public virtual object Create()
     {
         //check access
         dynamic newitem = new ExpandoObject();
         newitem.Id = null as string;
         newitem.Title = string.Format("[New {0}]", this.ContentTypeName);
         newitem = SiteEngine.RunHook(NEW_ITEM, newitem);
-        RenderView((ExpandoObject)newitem);
+        return RenderView((ExpandoObject)newitem);
     }
 
     [Post("Create")]
-    public virtual void Create(dynamic request)
+    public virtual object Create(dynamic request)
     {
         dynamic item = new ExpandoObject();
         item.Title = request.Form["Title"];
@@ -139,11 +138,11 @@ public class PageController : Controller
         if (this.Model.HasError)
         {
             item.Errors = Model.Errors;
-            RenderView((ExpandoObject)item);
+            return RenderView((ExpandoObject)item);
         }
         else
         {
-            Redirect(item.Id);
+            return Redirect(item.Id);
         }
     }
 
@@ -159,18 +158,18 @@ public class PageController : Controller
 
 
     [Get("EditMenu")]
-    public void EditMenu()
+    public object EditMenu()
     {
-        RenderView(
+        return RenderView(
             SiteEngine.RunHook("get_menu_view", "Menu_Edit") as string,
             SiteEngine.RunHook("get_menu", ""));
     }
 
     [Post("EditMenu")]
-    public void EditMenu(NameValueCollection form)
+    public object EditMenu(NameValueCollection form)
     {
         dynamic menu = form["Menu"];
-        RenderView(
+        return RenderView(
             SiteEngine.RunHook("get_menu_view", "Menu_Edit") as string,
             SiteEngine.RunHook("save_menu", menu));
     }

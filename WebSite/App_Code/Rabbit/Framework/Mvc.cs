@@ -6,16 +6,19 @@ using System.Web.WebPages;
 using System.Reflection;
 using System.Dynamic;
 using System.Collections.Specialized;
+using System.IO;
 
 public static class Mvc
 {
     static Dictionary<string, IList<RouteAttribute>> cache = new Dictionary<string, IList<RouteAttribute>>();
 
     [System.Diagnostics.DebuggerStepThrough]
-    public static void Run(dynamic controller)
+    public static void Run(dynamic page, dynamic controller)
     {
-        dynamic page = controller.WebPage;
         Assert.IsTrue(page != null);
+
+        IList<string> urlData = page.UrlData;
+        var action = urlData[0].ToLower();
         
         var cacheKey = controller.ToString();
         IList<RouteAttribute> routes = null;
@@ -42,9 +45,6 @@ public static class Mvc
             if (!page.Context.IsDebuggingEnabled) cache[cacheKey] = routes;
         }
 
-        IList<string> urlData = page.UrlData;
-
-        var action = urlData[0].ToLower();
         var rs = routes.Where(r => string.Compare(r.Action, action, true) == 0);
 
         if (rs.Count() == 0)
@@ -67,7 +67,7 @@ public static class Mvc
                 var parameters = route.Method.GetParameters();
                 if(parameters==null || parameters.Length ==0)
                 {
-                    route.Method.Invoke(controller, null);
+                    HandleResult(page, route.Method.Invoke(controller, null));
                 }
                 else
                 {
@@ -83,10 +83,6 @@ public static class Mvc
                             //action name removed
                             objects[i] = string.Join("/", urlData.ToArray(), 1, urlData.Count() - 1);
                         }
-                        else if (parameters[i].ParameterType == typeof(ExpandoObject))
-                        {
-                            objects[i] = ((NameValueCollection)page.Request.Form).ToDynamic();
-                        }
                         else if (parameters[i].Name == "form" ||
                                  parameters[i].ParameterType == typeof(NameValueCollection))
                         {
@@ -99,8 +95,7 @@ public static class Mvc
                         }
                     }
 
-                    //controller._viewName = route.Method.Name;
-                    route.Method.Invoke(controller, objects);
+                    HandleResult(page, route.Method.Invoke(controller, objects));
                 }
             }
             catch (TargetInvocationException ex)
@@ -113,4 +108,76 @@ public static class Mvc
             throw new Exception(string.Format("Controller: Cannot Find Action {0}", action));
         }
     }
+
+    private static void HandleResult(dynamic page, dynamic val)
+    {
+        //Assert.IsTrue(val != null);
+        if (val == null) return;
+
+        if (val is string)
+        {
+            page.Write(val);
+            page.Response.Close();
+        }
+        else if (val is ExpandoObject)
+        {
+            if (((ExpandoObject)val).HasProperty("Redirect"))
+            {
+                page.Page.Redirect = val.Redirect;
+                page.Response.Redirect(val.Redirect, false);
+            }
+            else
+            {
+                page.Page.Model = val.Model;
+                page.Page.Hook = val.PageHook;
+                page.Page.View = SiteEngine.RunHook(val.ViewHook, val.DefaultView) as string;
+            }
+        }
+    }
+}
+
+[AttributeUsage(AttributeTargets.Method)]
+public class RouteAttribute : Attribute
+{
+    internal bool IsPost { get; set; }
+    internal string Action { get; set; }
+    internal MethodInfo Method { get; set; }
+
+    public RouteAttribute(bool isPost, string action)
+    {
+        //remove leading /
+        if (action != "/" && action != "/*" && action[0] == '/')
+            action = action.Substring(1, action.Length - 1);
+
+        this.IsPost = isPost;
+        this.Action = action;
+    }
+}
+
+[AttributeUsage(AttributeTargets.Method)]
+public class GetAttribute : RouteAttribute
+{
+    public GetAttribute(string action)
+        : base(false, action)
+    {
+    }
+}
+
+[AttributeUsage(AttributeTargets.Method)]
+public class PostAttribute : RouteAttribute
+{
+    public PostAttribute(string action)
+        : base(true, action)
+    {
+    }
+}
+
+[AttributeUsage(AttributeTargets.Method)]
+public class HandleError : Attribute
+{
+}
+
+[AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
+public class Authroize : Attribute
+{
 }

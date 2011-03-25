@@ -13,7 +13,8 @@ public class PageControllerTest
 {
     private void Assert_ShowDefaultPage(MockWebPage page)
     {
-        Assert.AreEqual("~/Pages/_Page_View.cshtml", page.Page.View);
+        var view = SiteEngine.RunHook("GET_Pages_Page_Detail_View", page.Page.View) as string;
+        Assert.AreEqual(view, page.Page.View);
         Assert.AreEqual("Default", page.Page.Model.Id);
         page.Verify();
     }
@@ -22,7 +23,7 @@ public class PageControllerTest
     public void Default_Get()
     {
         dynamic page = new MockGet(new string[] { "/" });
-        Mvc.Run(new PageController(page));
+        Mvc.Run(page, new PageController());
         Assert_ShowDefaultPage(page);
     }
 
@@ -30,7 +31,7 @@ public class PageControllerTest
     public void Default_Post()
     {
         dynamic page = new MockGet(new string[] { "/" });
-        Mvc.Run(new PageController(page));
+        Mvc.Run(page, new PageController());
         Assert_ShowDefaultPage(page);
     }
 
@@ -38,7 +39,7 @@ public class PageControllerTest
     public void Edit_No_Id_Shoud_Goto_Default()
     {
         dynamic page = new MockGet(new string[] { "Edit" });
-        Mvc.Run(new PageController(page));
+        Mvc.Run(page, new PageController());
         Assert_ShowDefaultPage(page);
     }
 
@@ -46,7 +47,7 @@ public class PageControllerTest
     public void Edit_Wrong_Id_Shoud_Goto_Default()
     {
         dynamic page = new MockGet(new string[] { "Edit", "id" });
-        Mvc.Run(new PageController(page));
+        Mvc.Run(page, new PageController());
         Assert_ShowDefaultPage(page);
     }
 
@@ -58,10 +59,10 @@ public class PageControllerTest
         model.SetupGet("Value", new ExpandoObject());
         
         dynamic page = new MockGet(new string[] { "List" });
-        var controller = new PageController(page);
+        var controller = new PageController();
         controller.Model = model;
 
-        Mvc.Run(controller);
+        Mvc.Run(page, controller);
         Assert.AreEqual("~/Pages/_Page_List.cshtml", page.Page.View);
         model.Verify();
     }
@@ -74,10 +75,10 @@ public class PageControllerTest
         model.SetupGet("Value", new ExpandoObject());
 
         dynamic page = new MockGet(new string[] { "List", "2" });
-        var controller = new PageController(page);
+        var controller = new PageController();
         controller.Model = model;
 
-        Mvc.Run(controller);
+        Mvc.Run(page, controller);
         Assert.AreEqual("~/Pages/_Page_List.cshtml", page.Page.View);
         model.Verify();
     }
@@ -90,9 +91,9 @@ public class PageControllerTest
         model.SetupGet("Value", new ExpandoObject());
 
         dynamic page = new MockGet(new string[] { "List", "5", "30" });
-        var controller = new PageController(page);
+        var controller = new PageController();
         controller.Model = model;
-        Mvc.Run(controller);
+        Mvc.Run(page, controller);
         Assert.AreEqual("~/Pages/_Page_List.cshtml", page.Page.View);
         model.Verify();
     }
@@ -107,11 +108,12 @@ public class PageControllerTest
         model.SetupGet("Value", data);
 
         dynamic page = new MockGet(new string[] { "Edit", "id" });
-        var controller = new PageController(page);
+        var controller = new PageController();
         controller.Model = model;
 
-        Mvc.Run(controller);
-        Assert.AreEqual("~/Pages/_Page_Edit.cshtml", page.Page.View);
+        Mvc.Run(page, controller);
+        var view = SiteEngine.RunHook("GET_Pages_Page_Edit_View", page.Page.View) as string;
+        Assert.AreEqual(view, page.Page.View);
         Assert.AreEqual("id", page.Page.Model.Id);
         model.Verify();
     }
@@ -131,12 +133,12 @@ public class PageControllerTest
         form["OldId"] = "id";
 
         dynamic page = new MockPost(new string[] { "Edit" }, form);
-        var controller = new PageController(page);
+        var controller = new PageController();
         controller.Model = model;
 
-        Mvc.Run(controller);
+        Mvc.Run(page, controller);
 
-        Assert.AreEqual("id", page.Page.Redirect); // redirect 
+        Assert.AreEqual("~/Pages/id", page.Page.Redirect); // redirect 
         model.Verify();
     }
 
@@ -158,12 +160,12 @@ public class PageControllerTest
         form["Id"] = "new-id";
 
         dynamic page = new MockPost(new string[] { "Edit", "id" }, form);
-        var controller = new PageController(page);
+        var controller = new PageController();
         controller.Model = model;
 
-        Mvc.Run(controller);
+        Mvc.Run(page, controller);
 
-        Assert.AreEqual("new-id", page.Page.Redirect); // redirect 
+        Assert.AreEqual("~/Pages/new-id", page.Page.Redirect); // redirect 
         page.Verify();
     }
 
@@ -183,12 +185,13 @@ public class PageControllerTest
         form["OldId"] = "id";
 
         dynamic page = new MockPost(new string[] { "Edit", "id" }, form);
-        var controller = new PageController(page);
+        var controller = new PageController();
         controller.Model = model;
 
-        Mvc.Run(controller);
-
-        Assert.AreEqual("~/Pages/_Page_Edit.cshtml", page.Page.View); //stayed on edit page
+        Mvc.Run(page, controller);
+        
+        var view = SiteEngine.RunHook("GET_Pages_Page_Edit_View", page.Page.View) as string;
+        Assert.AreEqual(view, page.Page.View); //stayed on edit page
         Assert.AreEqual("x", page.Page.Model.Errors); // pushed error message
         model.Verify();
     }
@@ -198,7 +201,7 @@ public class PageControllerTest
     public void Create_Get()
     {
         dynamic page = new MockGet(new string[] { "Create", "id" });
-        Mvc.Run(new PageController(page));
+        Mvc.Run(page, new PageController());
 
         Assert.AreEqual("~/Pages/_Page_Create.cshtml", page.Page.View);
         Assert.IsTrue(page.Page.Model.Id == null);
@@ -222,12 +225,13 @@ public class PageControllerTest
         form["title"] = "new page";
 
         dynamic page = new MockPost(new string[] { "Create" }, form);
-        var controller = new PageController(page);
+
+        var controller = new PageController();
         controller.Model = model;
 
-        Mvc.Run(controller);
+        Mvc.Run(page, controller);
 
-        Assert.AreEqual("new-page", page.Page.Redirect); // redirect 
+        Assert.AreEqual("~/Pages/new-page", page.Page.Redirect); // redirect 
         model.Verify();
     }
 
@@ -247,10 +251,10 @@ public class PageControllerTest
         form["title"] = "new page";
 
         dynamic page = new MockPost(new string[] { "Create" }, form);
-        var controller = new PageController(page);
+        var controller = new PageController();
         controller.Model = model;
 
-        Mvc.Run(controller);
+        Mvc.Run(page, controller);
 
         Assert.AreEqual("~/Pages/_Page_Create.cshtml", page.Page.View); // stayed on create page
         Assert.AreEqual("x", page.Page.Model.Errors); // pushed error messages
@@ -262,7 +266,7 @@ public class PageControllerTest
     public void Delete_Get()
     {
         dynamic page = new MockGet(new string[] { "Delete", "id" });
-        Mvc.Run(new PageController(page));
+        Mvc.Run(page, new PageController());
     }
 
     [TestMethod]
@@ -271,13 +275,11 @@ public class PageControllerTest
         dynamic model = new Mock();
         model.Setup("Delete", new object[] { It.Is<dynamic>(item => item.Id == "id") }, null);
         dynamic page = new MockPost(new string[] { "Delete", "id" }, null); //get id from url
-        var controller = new PageController(page);
+        var controller = new PageController();
         controller.Model = model;
-        Mvc.Run(controller);
+        Mvc.Run(page, controller);
         model.Verify();
-        Assert.AreEqual("List", page.Page.Redirect); // redirect to List
-
+        Assert.AreEqual("~/Pages/List", page.Page.Redirect); // redirect to List
     }
-
 }
 

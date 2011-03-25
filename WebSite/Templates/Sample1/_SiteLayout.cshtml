@@ -69,9 +69,11 @@
     else
     { 
         <div class="span-16 prepend-1">
+        @Site.RenderSection("beforeContent")
         <section>@RenderBody()</section>
+        @Site.RenderSection("afterContent")
         </div>
-        <div class="span-7 last">
+        <div class="span-6 prepend-1 last">
             <aside>
                 @Site.RenderSection("aside")
                 @RenderSection("aside", required: false)

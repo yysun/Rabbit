@@ -6,49 +6,41 @@ using System.Web.WebPages;
 
 public class Controller 
 {
-    internal dynamic WebPage { get; set; }
     internal dynamic Model { get; set; }
 
-    public Controller(object webPage)
+    internal object RenderView(string view, object model)
     {
-        this.WebPage = (dynamic) webPage;
-    }
-  
-    internal void RenderView(string view, object model)
-    {
-        var getViewHook = string.Format("GET_{0}_{1}_{2}_View", ModuleName, ContentTypeName, view);
-        var pageHookName = string.Format("{0}_{1}_{2}", ModuleName, ContentTypeName, view);
+        var viewHook = string.Format("GET_{0}_{1}_{2}_View", ModuleName, ContentTypeName, view);
+        var pageHook = string.Format("{0}_{1}_{2}", ModuleName, ContentTypeName, view);
         var defaultView = string.Format("~/{0}/_{1}_{2}.cshtml", ModuleName, ContentTypeName, view);
-        WebPage.Page.View = SiteEngine.RunHook(getViewHook, defaultView) as string;
-        WebPage.Page.Model = model;
-        WebPage.Page.Hook = pageHookName;
-        //WebPage.Write(WebPage.RenderPage(view, model));
+        dynamic ret = new ExpandoObject();
+        ret.ViewHook = viewHook;
+        ret.PageHook = pageHook;
+        ret.Model = model;
+        ret.DefaultView = defaultView;
+        return ret;
     }
 
     /// <summary>
-    /// To call this function, paramter cannot be dynamic
-    /// It has to be casted to ExpandoObject if it is dynmaic. 
+    /// To call this function, parameter cannot be dynamic
+    /// It has to be casted to ExpandoObject if it is dynamic. 
     /// e.g. it should be used like this: RenderView((ExpandoObject) data)
     /// Otherwise the view name will be CallSite.Target
     /// </summary>
     /// <param name="model"></param>
     [MethodImpl(MethodImplOptions.NoInlining)]
-    protected void RenderView(ExpandoObject model)
+    protected object RenderView(ExpandoObject model)
     {
         var st = new StackTrace(1);
         var view = st.GetFrame(0).GetMethod().Name;
-        RenderView(view, model);
+        return RenderView(view, model);
     }
 
-    protected void Redirect(string path)
+    protected object Redirect(string path)
     {
-        this.WebPage.Page.Redirect = path;
-
-        if (!(this.WebPage is DynamicObject))
-        {
-            this.WebPage.WriteLiteral(string.Format("<meta http-equiv='refresh' content='0;url=/{0}/{1}'>", 
-                this.ModuleName, path));
-        }
+        dynamic ret = new ExpandoObject();
+        ret.Redirect = string.Format("~/{0}/{1}", ModuleName, path);
+        return ret;
     }
 
     protected string ModuleName { get; set; }

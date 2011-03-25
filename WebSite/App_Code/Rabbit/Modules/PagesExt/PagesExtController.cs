@@ -8,11 +8,6 @@ using System.Web;
 /// </summary>
 public class PagesExtController : PageController
 {
-	public PagesExtController(object webPage)
-        : base(webPage)
-    {
-
-    }
 
     [Get("EditHomePageLayout")]
     public virtual void EditHomePageLayout()
@@ -26,11 +21,6 @@ public class PagesExtController : PageController
 
     [Get("EditArticlePageLayout")]
     public virtual void EditArticlePageLayout()
-    {
-    }
-
-    [Get("EditCategories")]
-    public virtual void EditCategories()
     {
     }
 

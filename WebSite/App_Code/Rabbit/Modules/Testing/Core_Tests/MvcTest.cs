@@ -14,8 +14,8 @@ public class MvcTest
     public void Routing_Default_Get()
     {
         dynamic webPage = new MockGet(new string[] { "/" });
-        dynamic controller = new MockController(webPage);
-        Mvc.Run(controller);
+        dynamic controller = new MockController();
+        Mvc.Run(webPage, controller);
         Assert.IsTrue(controller.Default_Called);
 
         controller.Verify();
@@ -25,8 +25,8 @@ public class MvcTest
     public void Routing_Default_Post()
     {
         dynamic webPage = new MockPost(new string[] { "/" }, null);
-        dynamic controller = new MockController(webPage);
-        Mvc.Run(controller);
+        dynamic controller = new MockController();
+        Mvc.Run(webPage, controller);
         Assert.IsTrue(controller.Default_Post_Called);
 
         controller.Verify();
@@ -36,8 +36,8 @@ public class MvcTest
     public void Routing_Get()
     {
         dynamic webPage = new MockGet(new string[] { "a", "1", "2" });
-        dynamic controller = new MockController(webPage);
-        Mvc.Run(controller);
+        dynamic controller = new MockController();
+        Mvc.Run(webPage, controller);
         Assert.IsTrue(controller.Get_Called);
         controller.Verify();
     }
@@ -46,8 +46,8 @@ public class MvcTest
     public void Routing_Post()
     {
         dynamic webPage = new MockPost(new string[] { "a", "b", "c" }, null);
-        dynamic controller = new MockController(webPage);
-        Mvc.Run(controller);
+        dynamic controller = new MockController();
+        Mvc.Run(webPage, controller);
         Assert.IsTrue(controller.Post_Called);
         controller.Verify();
     }
@@ -56,8 +56,8 @@ public class MvcTest
     public void Routing_All()
     {
         dynamic webPage = new MockGet(new string[] { "x", "y", "z" });
-        dynamic controller = new MockController(webPage);
-        Mvc.Run(controller);
+        dynamic controller = new MockController();
+        Mvc.Run(webPage, controller);
         Assert.IsTrue(controller.All_Called);
         Assert.AreEqual("y", controller.UrlData[1]);
         Assert.AreEqual("z", controller.UrlData[2]);
@@ -68,8 +68,8 @@ public class MvcTest
     public void Get_Edit_Pass_String()
     {
         dynamic webPage = new MockGet(new string[] { "Edit", "y", "z" });
-        dynamic controller = new MockController(webPage);
-        Mvc.Run(controller);
+        dynamic controller = new MockController();
+        Mvc.Run(webPage, controller);
         Assert.AreEqual("y/z", controller.Id);
         controller.Verify();
     }
@@ -80,8 +80,8 @@ public class MvcTest
         dynamic webPage = new MockPost(new string[] { "Edit", "y", "z" }, null);
         webPage.Request.TestValue = -20.3m;
 
-        dynamic controller = new MockController(webPage);
-        Mvc.Run(controller);
+        dynamic controller = new MockController();
+        Mvc.Run(webPage, controller);
 
         Assert.AreEqual("y/z", controller.Id);
         Assert.AreEqual(-20.3m, controller.TestValue);
@@ -94,8 +94,8 @@ public class MvcTest
     public void Get_Delete()
     {
         dynamic webPage = new MockGet(new string[] { "Delete", "y", "z" });
-        dynamic controller = new MockController(webPage);
-        Mvc.Run(controller);
+        dynamic controller = new MockController();
+        Mvc.Run(webPage, controller);
         controller.Verify();
     }
 
@@ -103,8 +103,8 @@ public class MvcTest
     public void Post_Delete()
     {
         dynamic webPage = new MockPost(new string[] { "Delete", "y", "z" }, null);
-        dynamic controller = new MockController(webPage);
-        Mvc.Run(controller);
+        dynamic controller = new MockController();
+        Mvc.Run(webPage, controller);
         Assert.AreEqual("y/z", controller.Id);
         controller.Verify();
     }
@@ -113,60 +113,62 @@ public class MvcTest
 
 public class MockController : Mock
 {
-    public dynamic WebPage { get; protected set; }
-    public MockController(dynamic webPage)
-    {
-        WebPage = webPage;
-    }
-    
     [Get("/")]
-    public void Default()
+    public object Default()
     {
         SetupGet("Default_Called", true);
+        return null;
     }
 
     [Post("/")]
-    public void Default_Post()
+    public object Default_Post()
     {
         SetupGet("Default_Post_Called", true);
+        return null;
     }
 
     [Get("/a")]
-    public void Get_Test()
+    public object Get_Test()
     {
         SetupGet("Get_Called", true);
+        return null;
     }
 
     [Post("a")]
-    public void Post_Test()
+    public object Post_Test()
     {
         SetupGet("Post_Called", true);
+        return null;
     }
 
     [Get("/*")]
-    public void All(string[] urlData)
+    public object All(string[] urlData)
     {
         SetupGet("All_Called", true);
         SetupGet("UrlData", urlData);
         SetupGet("UrlData", urlData);
+        return null;
     }
 
     [Get("Edit")] //same as [Get("/Edit")]
-    public void Edit(string id)
+    public object Edit(string id)
     {
         SetupGet("Id", id);
+        return null;
     }
 
     [Post("/Edit")]
-    public void Post(string id, dynamic request)
+    public object Post(string id, dynamic request)
     {
         SetupGet("Id", id);
         SetupGet("TestValue", request.TestValue);
+        return null;
     }
 
     [Post("Delete")]
-    public void Post(string id)
+    public object Post(string id)
     {
         SetupGet("Id", id);
+        return null;
     }
 }

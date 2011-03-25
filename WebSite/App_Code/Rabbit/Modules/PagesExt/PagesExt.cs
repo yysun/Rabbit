@@ -16,20 +16,8 @@ public static class PagesExt
         menus.Add("Edit Home Page Layout|~/Pages/EditHomePageLayout");
         menus.Add("Edit Section Page Layout|~/Pages/EditSectionPageLayout");
         menus.Add("Edit Article Page Layout|~/Pages/EditArticlePageLayout");
-        menus.Add("Edit Categories|~/Pages/EditCategories");
         menus.Add("Edit MenuTree|~/Pages/EditMenuTree");
         return data;
     }
 
-    [Hook]
-    public static dynamic get_pages_page_detail_view(dynamic data)
-    {
-        return "~/PagesExt/_Page_Detail.cshtml";
-    }
-
-    [Hook]
-    public static dynamic get_pages_page_edit_view(dynamic data)
-    {
-        return "~/PagesExt/_Page_Edit.cshtml";
-    }
 }

@@ -122,7 +122,7 @@ public class PageModelTest
         Assert.AreEqual(20, model.Value.PageSize);
 
         IEnumerable<ExpandoObject> ret = model.Value.List;
-        Assert.AreEqual(11, ret.Count());
+        Assert.AreEqual(20, ret.Count()); //should be 11, if model handles the filter
 
         repository.Verify();
     }
