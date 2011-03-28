@@ -1,9 +1,26 @@
 ﻿@{  
-    var homepage = SiteEngine.RunHook("get_homepage") as string;
-    if (!homepage.IsEmpty())
+    Layout = SiteEngine.RunHook("get_layout");
+    var ct = SiteEngine.RunHook("get_" + UrlData[0] + "_Controller") as Controller;
+
+    if (ct != null)
+    {     
+        Mvc.Run(this, ct);
+    }
+    else 
     {
-        Server.TransferRequest(homepage);
+        var homepage = SiteEngine.RunHook("get_homepage") as string;
+        if (!homepage.IsEmpty())
+        {
+            Response.Redirect(homepage, false);
+        }
     }
 }
-<p style="font: 18px/24px Arial">It looks like that the <a href="http://rabbit.codeplex.com">Rabbit</a> Pages module is disabled. Please <a href="/Rabbit/Admin">click here</a> to enable it.<br />
-Or replace Default.cshtml with your own.</p>
+
+@if (Page.View != null)
+{
+    @RenderPage(Page.View, Page.Model)
+}
+else
+{ 
+    <text><a href="/Rabbit/Admin">Rabbit Admin</text>
+}

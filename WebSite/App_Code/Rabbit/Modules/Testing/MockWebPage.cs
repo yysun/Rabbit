@@ -27,7 +27,7 @@ public class MockWebPage : Mock
         IsPost = isPost;
         UrlData = urlData;
         //Setup("Write", new object[] { It.IsAny<string>()}, null);
-        Response.Setup("Redirect", new object[] { It.IsAny() });
+        //Response.Setup("Redirect", new object[] { It.IsAny() });
 	}
 }
 

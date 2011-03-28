@@ -7,13 +7,13 @@ using System.Web.Script.Serialization;
 using System.Collections;
 using System.Text;
 
-//[TestClass]
+[TestClass]
 public class MvcTest
 {
     [TestMethod]
     public void Routing_Default_Get()
     {
-        dynamic webPage = new MockGet(new string[] { "/" });
+        dynamic webPage = new MockGet(new string[] { "Mock", "/" });
         dynamic controller = new MockController();
         Mvc.Run(webPage, controller);
         Assert.IsTrue(controller.Default_Called);
@@ -24,7 +24,7 @@ public class MvcTest
     [TestMethod]
     public void Routing_Default_Post()
     {
-        dynamic webPage = new MockPost(new string[] { "/" }, null);
+        dynamic webPage = new MockPost(new string[] { "Mock", "/" }, null);
         dynamic controller = new MockController();
         Mvc.Run(webPage, controller);
         Assert.IsTrue(controller.Default_Post_Called);
@@ -35,7 +35,7 @@ public class MvcTest
     [TestMethod]
     public void Routing_Get()
     {
-        dynamic webPage = new MockGet(new string[] { "a", "1", "2" });
+        dynamic webPage = new MockGet(new string[] { "Mock", "a", "1", "2" });
         dynamic controller = new MockController();
         Mvc.Run(webPage, controller);
         Assert.IsTrue(controller.Get_Called);
@@ -45,7 +45,7 @@ public class MvcTest
     [TestMethod]
     public void Routing_Post()
     {
-        dynamic webPage = new MockPost(new string[] { "a", "b", "c" }, null);
+        dynamic webPage = new MockPost(new string[] { "Mock", "a", "b", "c" }, null);
         dynamic controller = new MockController();
         Mvc.Run(webPage, controller);
         Assert.IsTrue(controller.Post_Called);
@@ -55,7 +55,7 @@ public class MvcTest
     [TestMethod]
     public void Routing_All()
     {
-        dynamic webPage = new MockGet(new string[] { "x", "y", "z" });
+        dynamic webPage = new MockGet(new string[] { "Mock", "x", "y", "z" });
         dynamic controller = new MockController();
         Mvc.Run(webPage, controller);
         Assert.IsTrue(controller.All_Called);
@@ -67,7 +67,7 @@ public class MvcTest
     [TestMethod]
     public void Get_Edit_Pass_String()
     {
-        dynamic webPage = new MockGet(new string[] { "Edit", "y", "z" });
+        dynamic webPage = new MockGet(new string[] { "Mock", "Edit", "y", "z" });
         dynamic controller = new MockController();
         Mvc.Run(webPage, controller);
         Assert.AreEqual("y/z", controller.Id);
@@ -77,7 +77,7 @@ public class MvcTest
     [TestMethod]
     public void Post_Edit_Pass_Form()
     {
-        dynamic webPage = new MockPost(new string[] { "Edit", "y", "z" }, null);
+        dynamic webPage = new MockPost(new string[] { "Mock", "Edit", "y", "z" }, null);
         webPage.Request.TestValue = -20.3m;
 
         dynamic controller = new MockController();
@@ -93,7 +93,7 @@ public class MvcTest
     [ExpectedException(typeof(Exception))] //delete through GET should not be allowed
     public void Get_Delete()
     {
-        dynamic webPage = new MockGet(new string[] { "Delete", "y", "z" });
+        dynamic webPage = new MockGet(new string[] { "Mock", "Delete", "y", "z" });
         dynamic controller = new MockController();
         Mvc.Run(webPage, controller);
         controller.Verify();
@@ -102,7 +102,7 @@ public class MvcTest
     [TestMethod]
     public void Post_Delete()
     {
-        dynamic webPage = new MockPost(new string[] { "Delete", "y", "z" }, null);
+        dynamic webPage = new MockPost(new string[] { "Mock", "Delete", "y", "z" }, null);
         dynamic controller = new MockController();
         Mvc.Run(webPage, controller);
         Assert.AreEqual("y/z", controller.Id);

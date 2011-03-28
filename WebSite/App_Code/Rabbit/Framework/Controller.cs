@@ -12,7 +12,7 @@ public class Controller
     {
         var viewHook = string.Format("GET_{0}_{1}_{2}_View", ModuleName, ContentTypeName, view);
         var pageHook = string.Format("{0}_{1}_{2}", ModuleName, ContentTypeName, view);
-        var defaultView = string.Format("~/{0}/_{1}_{2}.cshtml", ModuleName, ContentTypeName, view);
+        var defaultView = string.Format("~/Views/{0}/_{1}_{2}.cshtml", ModuleName, ContentTypeName, view);
         dynamic ret = new ExpandoObject();
         ret.ViewHook = viewHook;
         ret.PageHook = pageHook;

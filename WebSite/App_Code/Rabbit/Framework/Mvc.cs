@@ -7,18 +7,21 @@ using System.Reflection;
 using System.Dynamic;
 using System.Collections.Specialized;
 using System.IO;
+using System.Web.Routing;
 
 public static class Mvc
 {
     static Dictionary<string, IList<RouteAttribute>> cache = new Dictionary<string, IList<RouteAttribute>>();
 
     [System.Diagnostics.DebuggerStepThrough]
-    public static void Run(dynamic page, dynamic controller)
+    public static void Run(dynamic page, object controller)
     {
         Assert.IsTrue(page != null);
 
         IList<string> urlData = page.UrlData;
-        var action = urlData[0].ToLower();
+        urlData = urlData.Where(s=>!string.IsNullOrWhiteSpace(s)).Skip(1).ToList();
+
+        var action = urlData.Count() > 0 ? urlData[0].ToLower() : "";
         
         var cacheKey = controller.ToString();
         IList<RouteAttribute> routes = null;
@@ -131,6 +134,10 @@ public static class Mvc
                 page.Page.Model = val.Model;
                 page.Page.Hook = val.PageHook;
                 page.Page.View = SiteEngine.RunHook(val.ViewHook, val.DefaultView) as string;
+                if (val.Model is ExpandoObject && ((ExpandoObject)val.Model).HasProperty("Title"))
+                {
+                    page.Page.Title = val.Model.Title;
+                }
             }
         }
     }
@@ -180,4 +187,26 @@ public class HandleError : Attribute
 [AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
 public class Authroize : Attribute
 {
+}
+
+// rabbit routing 
+public class MvcRouteHandler : IRouteHandler
+{
+    public IHttpHandler GetHttpHandler(RequestContext requestContext)
+    {
+        return new MvcHandler();
+    }
+}
+
+public class MvcHandler : IHttpHandler
+{
+    public bool IsReusable
+    {
+        get { return false; }
+    }
+
+    public void ProcessRequest(HttpContext context)
+    {
+        context.Server.TransferRequest("~/Default.cshtml" + context.Request.RawUrl, true);
+    }
 }

@@ -7,18 +7,18 @@ using System.Dynamic;
 /// <summary>
 /// Summary description for ControllerTest
 /// </summary>
-//[TestClass]
+[TestClass]
 public class ControllerTest
 {
     [TestMethod]
     public void RenderView_Should_Get_Calling_Function_Name_As_View()
     {
-        var webPage = new MockGet(new string[] { "List" });
+        var webPage = new MockGet(new string[] { "Test", "List" });
 
         var controller = new TestController();
         Mvc.Run(webPage, controller);
 
-        Assert.AreEqual("~//__List.cshtml", webPage.Page.View);
+        Assert.AreEqual("~/Views//__List.cshtml", webPage.Page.View);
 
         webPage.Verify();
     }

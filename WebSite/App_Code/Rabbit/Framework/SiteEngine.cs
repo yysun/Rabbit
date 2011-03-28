@@ -4,24 +4,29 @@ using System.Linq;
 using System.Web;
 using System.IO;
 using System.Reflection;
+using System.Web.Routing;
 
 //WebActivator dose not support web sites?
 //[assembly: WebActivator.PreApplicationStartMethod(typeof(SiteEngine), "Start")]
 
 public static class SiteEngine
 {
-
     public static void Start()
     {
+        InitModules();
+
+        RouteTable.Routes.Add(new
+            Route("{*pathInfo}", new MvcRouteHandler()));
+
         SiteEngine.RunHook("start");
     }
 
     private static List<KeyValuePair<string, Func<object, object>>> hooks;
 
-    static SiteEngine()
-    {
-        InitModules();
-    }
+    //static SiteEngine()
+    //{
+    //    InitModules();
+    //}
 
     public static void AddHook(string name, Func<object, object> action)
     {

@@ -12,10 +12,16 @@ using System.Collections.Specialized;
 public static class Pages
 {
     private static string[] HomePages = new string[]{
-        "~/pages", 
-        "~/pages/", 
-        "~/pages/default", 
-        "~/pages.cshtml"};
+        "/pages", 
+        "/pages/", 
+        "/pages/default", 
+        "/pages/default/"};
+
+    [Hook]
+    public static dynamic get_pages_controller(object data)
+    {
+        return new PageController();
+    }
     
     [Hook]
     public static dynamic get_homepage(object data)
@@ -49,7 +55,7 @@ public static class Pages
     [Hook]
     public static object IsHomePage(object data)
     {
-        string path = HttpContext.Current.Request.AppRelativeCurrentExecutionFilePath.ToLower();
+        string path = HttpContext.Current.Request.RawUrl.ToLower();
         return HomePages.Any(s => s == path);
     }
 
