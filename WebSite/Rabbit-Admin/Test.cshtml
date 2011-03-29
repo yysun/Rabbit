@@ -1,6 +1,7 @@
 ﻿@using System.Dynamic
 @{  
     Layout = SiteEngine.RunHook("get_layout") as string;
+    Page.Title = "Unit Test";
     dynamic tests = SiteEngine.RunHook("get_tests");
     var testc = UrlData[0];
     if (testc.IsEmpty()) {testc = "";}

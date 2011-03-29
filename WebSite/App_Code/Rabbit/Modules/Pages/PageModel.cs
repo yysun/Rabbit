@@ -12,8 +12,6 @@ using System.Collections.Specialized;
 /// </summary>
 public class PageModel : Model
 {
-    public dynamic Repository { get; set; }
-
     public PageModel()
     {
         Value = new ExpandoObject();

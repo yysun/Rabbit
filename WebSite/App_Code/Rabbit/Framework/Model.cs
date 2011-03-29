@@ -12,6 +12,8 @@ using System.Linq.Expressions;
 /// </summary>
 public abstract class Model
 {
+    public dynamic Repository { get; set; }
+
     public dynamic Value { get; protected set; }
 
     private Dictionary<string, object> errors;

@@ -70,4 +70,11 @@ public static class Testing
         }
         return data;
     }
+
+    [Hook]
+    public static object get_module_admin_menu(object data)
+    {
+        ((IList<string>)data).Add("Unit Test|~/Rabbit-Admin/Test");
+        return data;
+    }
 }
