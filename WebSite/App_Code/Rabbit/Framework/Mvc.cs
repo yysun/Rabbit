@@ -119,15 +119,13 @@ public static class Mvc
 
         if (val is string)
         {
-            page.Write(val);
-            page.Response.Close();
+            page.Page.Text = val;
         }
         else if (val is ExpandoObject)
         {
             if (((ExpandoObject)val).HasProperty("Redirect"))
             {
                 page.Page.Redirect = val.Redirect;
-                page.Response.Redirect(val.Redirect, false);
             }
             else
             {

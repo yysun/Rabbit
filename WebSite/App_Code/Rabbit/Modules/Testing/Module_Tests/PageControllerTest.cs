@@ -38,18 +38,16 @@ public class PageControllerTest
     public void Edit_No_Id_Shoud_Goto_Create()
     {
         dynamic page = new MockGet(new string[] { "Pages", "Edit" });
-        page.Response.Setup("Redirect", new object[] { "~/Pages/Create", false });
         Mvc.Run(page, new PageController());
-        page.Response.Verify(); // verify redirect 
+        Assert.AreEqual("~/Pages/Create", page.Page.Redirect);
     }
 
     [TestMethod]
     public void Edit_Wrong_Id_Shoud_Goto_Create()
     {
         dynamic page = new MockGet(new string[] { "Pages", "Edit", "id" });
-        page.Response.Setup("Redirect", new object[] { "~/Pages/Create", false });
         Mvc.Run(page, new PageController());
-        page.Response.Verify(); // verify redirect 
+        Assert.AreEqual("~/Pages/Create", page.Page.Redirect);
     }
 
     [TestMethod]
@@ -163,13 +161,11 @@ public class PageControllerTest
         form["Id"] = "new-id";
 
         dynamic page = new MockPost(new string[] { "Pages", "Edit", "id" }, form);
-        page.Response.Setup("Redirect", new object[] { "~/Pages/new-id", false });
-
         var controller = new PageController();
         controller.Model = model;
 
         Mvc.Run(page, controller);
-        page.Response.Verify(); // verify redirect 
+        Assert.AreEqual("~/Pages/new-id", page.Page.Redirect);
     }
 
     [TestMethod]
@@ -226,14 +222,12 @@ public class PageControllerTest
         form["title"] = "new page";
 
         dynamic page = new MockPost(new string[] { "Pages", "Create" }, form);
-        page.Response.Setup("Redirect", new object[] { "~/Pages/new-page", false });
-
         var controller = new PageController();
         controller.Model = model;
 
         Mvc.Run(page, controller);
 
-        page.Response.Verify(); // redirect 
+        Assert.AreEqual("~/Pages/new-page", page.Page.Redirect);
         model.Verify();
     }
 
@@ -277,12 +271,11 @@ public class PageControllerTest
         dynamic model = new Mock();
         model.Setup("Delete", new object[] { It.Is<dynamic>(item => item.Id == "id") }, null);
         dynamic page = new MockPost(new string[] { "Pages", "Delete", "id" }, null); //get id from url
-        page.Response.Setup("Redirect", new object[] { "~/Pages/List", false });
         var controller = new PageController();
         controller.Model = model;
         Mvc.Run(page, controller);
         model.Verify();
-        page.Response.Verify(); // verify redirect 
+        Assert.AreEqual("~/Pages/List", page.Page.Redirect);
     }
 }
 

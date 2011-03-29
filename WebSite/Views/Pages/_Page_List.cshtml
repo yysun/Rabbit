@@ -31,15 +31,20 @@ else
 <script type="text/javascript">
     $(function () {
         $('.delete-link').click(function () {
-
             var lnkobj = $(this);
 
             if (confirm("Are you sure?")) {
-
-                $.post(lnkobj[0].href, function () { 
-                    lnkobj.closest("tr").hide();
+                $.ajax({
+                    type: "POST",
+                    url:lnkobj[0].href,
+                    dataType: "json",
+                    success: function (data, status) {
+                        lnkobj.closest("tr").hide();
+                    },
+                    error: function (xhr) {
+                        alert('Error!  Status = ' + xhr.status);
+                    }
                 });
-
             }
             return false;
         });

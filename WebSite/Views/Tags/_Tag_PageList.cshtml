@@ -1,0 +1,9 @@
+﻿@{
+
+}
+<ul>
+@foreach (dynamic page in Page.Model.List)
+{
+    <li class="article-title"><a href="/Pages/@page.Id">@page.Title</a></li>
+}   
+</ul>

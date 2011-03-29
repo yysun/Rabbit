@@ -11,7 +11,7 @@
         @for (int i = 0; i < Page.Tags.Length; i++)
         {
             string tag = Page.Tags[i];
-            <a href="/Tag/@tag">@tag</a>if (i < Page.Tags.Length - 1) {<text>,</text>}
+            <a href="/Tags/@tag">@tag</a>if (i < Page.Tags.Length - 1) {<text>,</text>}
         }
         </span>
     }

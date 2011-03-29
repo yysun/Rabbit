@@ -10,15 +10,21 @@ using System.IO;
 public static class Tags
 {
     [Hook]
+    public static dynamic get_tags_controller(dynamic data)
+    {
+        return new TagController();
+    }
+
+    [Hook]
     public static dynamic get_pages_page_detail_view(dynamic data)
     {
-        return "~/Tags/_Page_Detail.cshtml";
+        return "~/Views/Tags/_Page_Detail.cshtml";
     }
 
     [Hook]
     public static dynamic get_pages_page_edit_view(dynamic data)
     {
-        return "~/Tags/_Page_Edit.cshtml";
+        return "~/Views/Tags/_Page_Edit.cshtml";
     }
 
     [Hook]
@@ -33,8 +39,8 @@ public static class Tags
     [Hook]
     public static dynamic pages_page_detail_aside(dynamic data)
     {
-        data.Add("~/Tags/_Page_List_Related.cshtml");
-        data.Add("~/Tags/_Tags_Cloud.cshtml");
+        data.Add("~/Views/Tags/_Page_List_Related.cshtml");
+        data.Add("~/Views/Tags/_Tag_Cloud.cshtml");
 
         return data;
     }
@@ -42,7 +48,7 @@ public static class Tags
     [Hook]
     public static dynamic pages_page_detail_home_aside(dynamic data)
     {
-        data.Add("~/Tags/_Page_List_Home_Aside.cshtml");
+        data.Add("~/Views/Tags/_Page_List_Home_Aside.cshtml");
         return data;
     }
 

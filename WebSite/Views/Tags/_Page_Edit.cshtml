@@ -9,7 +9,7 @@
         background-color:rgba(250, 250, 200, 0.3);
     }    
 </style>
-
+<div class="message"></div>
 <article>
     <div class="article-title"><h2 class="editable" id="article-title">@Page.Title</h2></div>
     <div class="article-content editable" id="article-content">@Html.Raw(Page.Content)</div>
@@ -27,16 +27,10 @@
 </article>
 
 <a href="/Pages/@Page.Id">stop editing</a>
-<form method="post" action="/Pages/Edit" id="editform">
-@Html.Hidden("OldId", @Page.Id)
-@Html.Hidden("Id", @Page.Id)
-@Html.Hidden("Content", "")
-@Html.Hidden("Title", "")
-@Html.Hidden("Tags", "")
-</form>
-
 <script type="text/javascript">
     $(function () {
+
+        $(".message").hide();
 
         var editing = false;
         var editing_id;
@@ -54,10 +48,26 @@
 
                     if (confirm("Do you want to save the change?")) {
 
-                        $("#Title").val($("#article-title").text());
-                        $("#Content").val($("#article-content").html());
-                        $("#Tags").val($("#article-tags").text());
-                        $("#editform")[0].submit();
+                        page = {
+                            Id: "@Page.Id",
+                            OldId: "@Page.Id",
+                            Title: $("#article-title").text(),
+                            Content: $("#article-content").html(),
+                            Tags: $("#article-tags").text()
+                        };
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/Pages/Edit",
+                            data: page,
+                            dataType: "json",
+                            success: function (data, status) {
+                                $(".message").text("page saved").fadeIn().delay(1000).fadeOut();
+                            },
+                            error: function (xhr) {
+                                alert('Error!  Status = ' + xhr.status);
+                            }
+                        });
 
                         return false;
                     }
