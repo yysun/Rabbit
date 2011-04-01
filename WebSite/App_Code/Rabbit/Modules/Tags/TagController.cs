@@ -12,7 +12,7 @@ public class TagController : Controller
     public TagController()
     {
         this.ModuleName = "Tags";
-        this.ContentTypeName = "Tag";
+        this.ContentType = "Tag";
     }
 
     [Get("/")]

@@ -1,7 +1,8 @@
 ﻿@using System.IO
 @{
     CodeGen.ModuleDirectory = Server.MapPath("~/App_Code/Rabbit/Modules/");
-    CodeGen.TestDirectory = Server.MapPath("~/App_Code/Rabbit/Tests/");
+    CodeGen.TestDirectory   = Server.MapPath("~/App_Code/Rabbit/Tests/");
+    CodeGen.ViewDirectory   = Server.MapPath("~/Views/");
 
     //if Request.Host is not localhost -- should die
     Layout = SiteEngine.RunHook("get_layout") as string;
@@ -13,9 +14,16 @@
     if (IsPost)
     {
         if (!Request["createModule"].IsEmpty())
-        { 
+        {
             CodeGen.CreateModule(module, contentType);
-            <meta http-equiv="refresh" content="0;url=/Rabbit-Admin" />
+            if (!Request["enableModule"].IsEmpty())
+            {
+                var modules = SiteEngine.GetModules();
+                if (!modules.Contains(module + "\r\n"))
+                {
+                    SiteEngine.SetModules(modules + "\r\n" + module);
+                }
+            }
         }
         else if (!Request["createUnitTest"].IsEmpty())
         {
@@ -29,12 +37,34 @@
 <p>Note: Don't run this page in production.This is a tool only for development. </p>
 <h2>Create New Module</h2>
     Module: <input type="text" name="module-name" value="@module" />
-    Content Type: <input type="text" name="content-type" value="@contentType"/>
+    Controller: <input type="text" name="content-type" value="@contentType"/>
     <input type="submit" name="createModule" value="Create" />
-<p>Use <a href="/Rabbit-Admin">Rabbit Framework Admin</a> to enable the module.</p>
+<p><input type="checkbox" name="enableModule" checked /> Enable this module</p>
+
+<p>Use <a href="/Rabbit-Admin">Rabbit Framework Admin</a> to enable/disable the module.</p>
 <hr />
 <h2>Create Unit Test</h2>
     Test Class: <input type="text" name="test-class" value="@testClass"/>
     <input type="submit" name="createUnitTest" value="Create" />
-<p>Use <a href="/Rabbit-Admin/Test/@testClass">Unit Test</a> to run test.</p>
+    <p>Use <a href="/Rabbit-Admin/Test/@testClass">Unit Test</a> to run tests.</p>
 </form>
+
+@section aside
+{
+    @if (!contentType.IsEmpty())
+    { 
+        <h2>Controller Actions</h2>        
+        <ul>
+            <li><a href="/@contentType">@contentType/</a></li>
+            <li><a href="/@contentType/List">@contentType/List</a></li>
+            <li><a href="/@contentType/Edit">@contentType/Edit</a></li>
+            <li><a href="/@contentType/Create">@contentType/Create</a></li>
+            <li><a href="/@contentType/Admin">@contentType/Admin</a></li>
+        </ul>
+        
+        <h2>Controller Tests</h2>        
+        <ul>
+            <li><a href="/Rabbit-Admin/Test/@(contentType+"ControllerTest")">@(contentType+"ControllerTest")</a></li>
+        </ul>        
+    }
+}

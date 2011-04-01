@@ -15,8 +15,9 @@ public class PageController : Controller
 {
     public PageController()
     {
+        this.Name = "Pages";
         this.ModuleName = "Pages";
-        this.ContentTypeName = "Page";
+        this.ContentType = "Page";
         this.Model = new PageModel();
     }
 
@@ -119,7 +120,7 @@ public class PageController : Controller
         //check access
         dynamic newitem = new ExpandoObject();
         newitem.Id = null as string;
-        newitem.Title = string.Format("[New {0}]", this.ContentTypeName);
+        newitem.Title = string.Format("[New {0}]", this.ContentType);
         newitem = SiteEngine.RunHook(NEW_ITEM, newitem);
         return RenderView((ExpandoObject)newitem);
     }

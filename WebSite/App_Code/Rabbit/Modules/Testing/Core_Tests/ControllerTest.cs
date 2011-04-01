@@ -7,7 +7,7 @@ using System.Dynamic;
 /// <summary>
 /// Summary description for ControllerTest
 /// </summary>
-[TestClass]
+//[TestClass]
 public class ControllerTest
 {
     [TestMethod]
