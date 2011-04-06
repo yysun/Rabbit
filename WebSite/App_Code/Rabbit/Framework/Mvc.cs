@@ -11,6 +11,27 @@ using System.Web.Routing;
 
 public static class Mvc
 {
+    private static Route mvcRoute = new Route("{*pathInfo}", new MvcRouteHandler());
+
+    public static bool Enabled
+    {
+        get
+        {
+            return RouteTable.Routes.Contains(mvcRoute);
+        }
+        set
+        {
+            if (value && !RouteTable.Routes.Contains(mvcRoute))
+            {
+                RouteTable.Routes.Add(mvcRoute);
+            }
+            else if (value && !RouteTable.Routes.Contains(mvcRoute))
+            {
+                RouteTable.Routes.Remove(mvcRoute);
+            }
+        }
+    }
+
     static Dictionary<string, IList<RouteAttribute>> cache = new Dictionary<string, IList<RouteAttribute>>();
 
     [System.Diagnostics.DebuggerStepThrough]

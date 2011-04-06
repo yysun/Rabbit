@@ -14,23 +14,16 @@ public static class SiteEngine
     public static void Start()
     {
         InitModules();
-
-        RouteTable.Routes.Add(new
-            Route("{*pathInfo}", new MvcRouteHandler()));
-
+        Mvc.Enabled = true;
         SiteEngine.RunHook("start");
     }
 
     private static List<KeyValuePair<string, Func<object, object>>> hooks;
 
-    //static SiteEngine()
-    //{
-    //    InitModules();
-    //}
-
     public static void AddHook(string name, Func<object, object> action)
     {
         if (string.IsNullOrWhiteSpace(name)) return;
+        //if (hooks == null) Start();
 
         Log.Write("SiteEngine: \tAddHook {0}", name);
 
@@ -41,6 +34,7 @@ public static class SiteEngine
     public static dynamic RunHook(string name, object data = null)
     {
         if (string.IsNullOrWhiteSpace(name)) return data;
+        //if (hooks == null) Start();
 
         var foundhooks = hooks.Where(a => string.Compare(a.Key, name, true) == 0)
                .Select(a => a.Value)
@@ -54,6 +48,9 @@ public static class SiteEngine
 
     public static void ClearHook(string name)
     {
+        if (string.IsNullOrWhiteSpace(name)) return;
+        //if (hooks == null) Start();
+
         var foundhooks = hooks.Where(a => string.Compare(a.Key, name, true) == 0)
                 .ToList();
 
@@ -97,7 +94,7 @@ public static class SiteEngine
             {
                 Log.Write("SiteEngine: Start Loading Module {0}", module);
 
-                Type moduleType = Type.GetType(module);
+                Type moduleType = Type.GetType(module, true);
 
                 //Init function is obsolete
                 var initMmethod = moduleType.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
@@ -137,6 +134,13 @@ public static class SiteEngine
     public static string SetModules(string list)
     {
         var modules = list.Replace("\r", "").Split('\n');
+        
+        var folder = Path.GetDirectoryName(configFileName);
+        if (!Directory.Exists(folder))
+        {
+            Directory.CreateDirectory(folder);
+        }
+
         File.WriteAllText(configFileName, MergeModules(modules));
         InitModules();
         return GetModules();
