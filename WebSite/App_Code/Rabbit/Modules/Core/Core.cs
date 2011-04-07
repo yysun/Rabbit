@@ -13,11 +13,11 @@ public static class Core
     [Hook]
     public static object Get_Site_Settings(object data)
     {
-        var settings = (ExpandoObject)data;
+        var settings = (ExpandoObject)data ?? new ExpandoObject();
         settings.EnsureProperty("Name", "[Your Site Name]");
         settings.EnsureProperty("Author", "");
         settings.EnsureProperty("Template", "Default");
-        return data;
+        return settings;
     }
 
     [Hook]

@@ -94,14 +94,14 @@ please visit <a href="http://rabbit.codeplex.com">Rabbit Framework</a>.</p>
        <li>@Html.Label("Author")    @Html.TextBox("Author", Page.Settings.Author)</li>
        <li>@Html.Label("Template") @Site.Templates(Page.Settings.Template)</li>
     </ol>
-<p><input type="checkbox" name="EnableLog" @Html.Raw(Log.Enabled?"checked=\"checked\"":"") /> Enable Logging
-when &lt;compilation debug="true"&gt; is set in web.config</p>
+<p><input type="checkbox" name="EnableLog" @Html.Raw(Log.Enabled?"checked=\"checked\"":"") /> Enable Logging, it also
+requires &lt;compilation debug="true"&gt; is set in web.config</p>
 
 <h2>Modules</h2>
 <p>Listed below are all available Rabbit modules. To disable a module, put a # in front of it.
 The modules will be loaded using the order they appear in the list.</p>
 <textarea name="modules" rows="6" cols="40">@Page.Modules</textarea> 
-<p>Note: In order to use modules, backup your root Default.cshtml file and copy _Home_Default.cshtml to the root folder.</p>
+<p>Note: In order to use modules, backup your root Default.cshtml file and replace it with _Home_Default.cshtml in the root folder.</p>
 <input type="submit" value="Save" /> <input type="checkbox" name="gohome" /> Go <a href="/"> Home Page</a> when saved.
 </form>
 </div>

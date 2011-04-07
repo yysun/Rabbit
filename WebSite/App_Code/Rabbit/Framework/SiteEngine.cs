@@ -14,8 +14,6 @@ public static class SiteEngine
     public static void Start()
     {
         InitModules();
-        Mvc.Enabled = true;
-        SiteEngine.RunHook("start");
     }
 
     private static List<KeyValuePair<string, Func<object, object>>> hooks;
