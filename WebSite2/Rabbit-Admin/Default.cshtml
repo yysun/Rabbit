@@ -1,0 +1,119 @@
+﻿@using Rabbit
+@{
+    
+    Page.Settings = IsPost ?
+        SiteSettings.New(Request.Form).Save().Value :
+        SiteSettings.Load().Value;
+
+    var adminmenu = SiteEngine.RunHook("get_module_admin_menu", new List<string>()) as List<string>;    
+    
+    //maybe somebody can provide a prettier view?
+    var view = SiteEngine.RunHook("get_rabbit_setup_view", "") as string;
+}
+
+@if (!view.IsEmpty())
+{
+    @RenderPage(view, Page)
+}
+else
+{
+    if (IsPost)
+    {
+        App.Site = SiteSettings.Load().Value;
+        if (!Request.Form["gohome"].IsEmpty())
+        {
+            Response.Redirect("~/");
+        }
+    }
+<!DOCTYPE html>
+<html>
+<head>
+<title>Rabbit Setup</title>
+<style type="text/css">
+body {
+    font-size: 14px;
+    font-family: "Trebuchet MS", Verdana, Helvetica, Sans-Serif;
+    color: #696969;
+    padding:10px 50px;
+} 
+a:link, a:visited
+{
+    color: #333;
+    text-decoration: none;
+}
+
+a:hover
+{
+    color: #333;
+    text-decoration: underline;
+}
+h1, h2
+{
+    margin-bottom: -5px;
+}    
+ol
+{
+    padding: 0;
+    list-style: none;
+}
+
+ol li
+{
+    padding-bottom: 5px;
+}
+label 
+{
+    display:block;
+    margin:8px 0px 2px 0px;
+}
+input[type=text]
+{
+    width:300px;
+}   
+select
+{
+    width:310px;
+    height:26px;
+}
+.admin-menu:before {
+        content: "» ";
+    }
+</style>
+</head>
+<body>
+<h1>Setup Your Rabbit Site</h1>
+<p>A rabbit site is a web site that supports modules, plug-ins and templates. For more information, 
+please visit <a href="http://rabbit.codeplex.com">Rabbit Framework</a>.</p>
+<div style="float:left;width:50%">
+<h2>Site Information</h2>
+<form method="post" action="">
+    <ol>
+       <li>@Html.Label("Site Name") @Html.TextBox("Name", Page.Settings.Name)</li>
+       <li>@Html.Label("Author")    @Html.TextBox("Author", Page.Settings.Author)</li>
+       <li>@Html.Label("Template") @Site.Templates(Page.Settings.Template)</li>
+    </ol>
+<br />
+<input type="submit" value="Save" /> <input type="checkbox" name="gohome" /> Go <a href="/"> Home Page</a> when saved.
+</form>
+</div>
+
+<div style="float:right;width:50%">
+<h2>Module Admin</h2>
+
+@if (adminmenu.Count() > 0)
+{ 
+<ol>
+@foreach(var menu in adminmenu)
+{
+    if(menu.Contains('|'))
+    {
+        var ss = menu.Split('|');
+        <li class="admin-menu"><a href="@Href(ss[1])">@ss[0]</a></li>
+    }
+}
+</ol>   
+}
+</div> 
+</body>
+</html>
+}

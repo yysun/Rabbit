@@ -1,0 +1,268 @@
+﻿body
+{
+    font-size: .85em;
+    font-family: "Trebuchet MS" , Verdana, Helvetica, Sans-Serif;
+}
+
+a:link, a:visited
+{
+    color: #64681c;
+    text-decoration: none;
+}
+
+a:hover
+{
+    color: #64681c;
+    text-decoration: underline;
+}
+
+/* HEADINGS   
+----------------------------------------------------------*/
+h1
+{
+    float: left;
+    font-weight: bold;
+    line-height: 2em;
+    font-size: 20px; 
+    text-shadow: 1px 1px 2px #111;
+    margin-top:40px;
+    margin-left:30px;
+}
+h2
+{
+    font-size: 1.5em;
+    font-weight: 200;   
+}
+h3
+{
+    font-size: 1.2em;
+}
+
+h4
+{
+    font-size: 1.1em;
+}
+
+h5, h6
+{
+    font-size: 1em;
+}
+
+/* PRIMARY LAYOUT ELEMENTS   
+----------------------------------------------------------*/
+#page
+{
+    background-color:#fff;
+    margin-top:5px;
+}
+#header
+{
+    margin-top:0px;
+}
+#content
+{   
+    margin-top:15px;
+    min-height:350px;  
+    margin-left:-5px;  
+}
+#footer
+{
+    border-top:1px solid #999;
+    text-align: left;
+    font-size: .9em;
+    height:50px;
+    padding-top:10px;
+}
+
+/* Login Display  
+----------------------------------------------------------*/
+#login
+{
+    text-align: right;
+}
+
+#login li
+{
+    margin: 0;
+    display: inline;
+    list-style: none;
+    padding-left: 8px;
+}
+#login a
+{
+    color:#64681c;
+}
+
+/* Menu   
+----------------------------------------------------------*/
+ul#menu
+{
+    margin-top: 10px;
+}
+
+ul#menu li
+{
+    width:170px;
+    list-style: none;
+    margin-left:-10px;
+}
+
+ul#menu li a
+{
+    display:block;
+    padding: 0px 0px 0px 20px;
+    text-decoration: none;
+    line-height: 2em;
+    color: #64681c;
+}
+
+ul#menu li a:hover
+{
+    background-color: #f0f2cd;
+    text-decoration: none;
+}
+
+ul#menu li a:active
+{
+    background-color: #f0f2cd;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+ul#menu li.selected a
+{
+    background-color: #eef2fc;
+    font-weight: bold;    
+    color: #64681c;    
+}
+
+/* forms   
+----------------------------------------------------------*/
+fieldset
+{
+    margin: 1em 0;
+    padding: 1em;
+    border: 1px solid #CCC;
+}
+
+fieldset legend
+{
+    font-size: 1.1em;
+    font-weight: bold;
+    padding: 2px 4px 8px 4px;
+}
+
+fieldset ol
+{
+    padding: 0;
+    list-style: none;
+}
+
+fieldset ol li
+{
+    padding-bottom: 5px;
+}
+
+fieldset label
+{
+    display: block;
+}
+
+fieldset label.checkbox
+{
+    display: inline;
+}
+
+fieldset input[type="text"], input[type="password"]
+{
+    border: 1px solid #ccc;
+    padding: 2px;
+    font-size: 1.2em;
+    color: #444;
+    width: 300px;
+}
+
+fieldset input[type="submit"]
+{
+    font-size: 1.2em;
+    padding: 5px;
+}
+
+/* Information and errors  
+----------------------------------------------------------*/
+.message
+{
+    clear: both;
+    border: 1px solid;
+    margin: 10px 0px;
+    padding: 15px 15px; /*CSS3 properties*/
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    box-shadow: 2px 2px 5px #888;
+    -webkit-box-shadow: 2px 2px 5px #888;
+    -moz-box-shadow: 2px 2px 5px #888;
+}
+
+.info
+{
+    background: #bde5f8;
+    color: #00529b;
+}
+
+.error
+{
+    background: #ffe4e4;
+    color: #be3e16;
+}
+
+.success
+{
+    background: #dff2bf;
+    color: #4f8a10;
+}
+
+input[type="text"].error-field, input[type="password"].error-field
+{
+    border: solid 1px #be3e16;
+    background-color: #ffe4e4;
+}
+#color-block
+{
+    height:200px;
+    background-color:#f0f2cd;
+    border-radius: 4px;
+}
+#main
+{
+    margin-top:20px;
+}
+aside
+{
+    margin-top:20px;
+}
+footer
+{
+    padding-right:40px;
+}
+#nav
+{
+    margin-top:5px;
+    clear:left;
+}
+.article-title
+{
+    height:40px;
+    margin-top:-10px;   
+}
+.article-title h2
+{
+    color:#64681c;
+    margin-left:20px;
+    padding-top:5px;
+}
+
+.article-content
+{
+    padding:20px;
+}
