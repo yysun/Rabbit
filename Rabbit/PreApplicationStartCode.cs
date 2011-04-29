@@ -19,14 +19,7 @@ namespace Rabbit
 
             ApplicationPart.Register(appPart);
 
-            SiteEngine.Start();
-
-            //to use Rabbit with ASP.ENT MVC project, we can disable Rabbit MVC Routing in web.config
-            //var disableRouting = ConfigurationManager.AppSettings["Rabbit_DisableRouting"];
-            //if (string.IsNullOrWhiteSpace(disableRouting) || disableRouting.ToLower() != "true")
-            //{
-            //    RouteTable.Routes.Add(new Route("{*pathInfo}", new MvcRouteHandler()));
-            //}
+            //SiteEngine.Start();
         }
     }
 }

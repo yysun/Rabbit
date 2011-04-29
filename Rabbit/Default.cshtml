@@ -4,11 +4,10 @@
     
     ((IList<Tuple<string, string>>)PageData["BreadCrumbs"])
         .Add(Tuple.Create<string, string>("Rabbit Admin", "/_Admin/Rabbit"));
-    
+/*    
     if (IsPost)
     {
         Page.Modules = SiteEngine.SetModules(Request.Form["modules"]);
-        Log.Enabled = !Request.Form["EnableLog"].IsEmpty();
     }
     else 
     {
@@ -16,6 +15,7 @@
     }
 
     var adminmenu = SiteEngine.RunHook("get_module_admin_menu", new List<string>()) as List<string>;   
+*/
 }
 
 <style type="text/css">
@@ -31,11 +31,7 @@ please visit <a href="http://rabbit.codeplex.com">Rabbit Framework</a>.</p>
 <h2>Modules</h2>
 <p>Listed below are all available Rabbit modules. To disable a module, put a # in front of it.
 The modules will be loaded using the order they appear in the list.</p>
-<textarea name="modules" rows="10" cols="40">@Page.Modules</textarea> 
-
-<p><input type="checkbox" name="EnableLog" @Html.Raw(Log.Enabled?"checked=\"checked\"":"") /> Enable Logging<br />
-It also requires &lt;compilation debug="true"&gt; is set in web.config</p>
-
+<p><textarea name="modules" rows="10" cols="40">@Page.Modules</textarea> </p>
 <br /><br />
 <input type="submit" value="Save" /> 
 </form>
@@ -45,8 +41,9 @@ It also requires &lt;compilation debug="true"&gt; is set in web.config</p>
 <h2>Module Admin</h2>
 <p>Administrative links from modules.</p>
     <ol>
-    <a href="/_Admin/Rabbit/Test">Unit Test</a>
-@if (adminmenu.Count() > 0)
+    <li><a href="/_Admin/Rabbit/Test">Unit Test</a></li>
+
+@*if (adminmenu.Count() > 0)
 { 
 
     foreach(var menu in adminmenu)
@@ -58,8 +55,7 @@ It also requires &lt;compilation debug="true"&gt; is set in web.config</p>
         }
     }
   
-}
+}*@
     </ol> 
-
 </div> 
 

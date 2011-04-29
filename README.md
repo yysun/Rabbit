@@ -1,26 +1,25 @@
-Rabbit Framework for WebMatrix
+Rabbit Framework
 ==============================
 
 Introduction
 ------------
 
-Rabbit is lightweight framework for building web sites using WebMatrix (ASP.NET Web Pages with Razor Syntax). 
+Rabbit is a framework for building web sites using ASP.NET Web Pages. 
 
 Features
 --------
-* Easy to build sites with Modules, Plug-ins and Templates
-* Sinatra style MVC
-* Monadic method chain
-* Use .NET dynamic
+* Unobtrusive Web Forms
+* MVC
 * Built-in Unite Testing Framework
-* Support WebMatrix, works with any existing web sites 
+* Integrates with ASP.NET Web Pages Administration Page
+* Support WebMatrix
+* Support all editions of Visual Studio (include Visual Studio Express)
 * Distributed as NuGet Package 
 
 Installation
 ------------
 * Install it from "ASP.NET Web Pages Administration | Package Manager" (http://<Your Site>/_Admin)
-* Merger Rabbit_AppStart.cshtml into your _AppStart.cshtml
-* Replace your Default.cshtml with Rabbit_Default.cshtml
+* Configure the integrated admin page Rabbit Framework from http://<Your Site>/_Admin/Rabbit
 
 Project Site
 ------------
@@ -32,6 +31,7 @@ http://github.com/yysun/Rabbit
 
 Change log
 ----------
+* V 0.5.0 Added Web Forms and Integrated Admin, remove hook, module and templates
 * V 0.4.0 Added code generating module, hook based section rendering
 * V 0.3.0 Change ContentStore to Repository, Push data to actions
 * V 0.2.1 Added testing module for unit testing and mock testing

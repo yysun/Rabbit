@@ -1,10 +1,11 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web.WebPages;
-using System.Reflection;
+using System.Diagnostics;
 using System.Dynamic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Web.WebPages;
 
 namespace Rabbit
 {
@@ -63,7 +64,7 @@ namespace Rabbit
 
                 if (route != null && route.Method != null)
                 {
-                    Log.Write("Controller: Run Action {0} -> {1}", action, route.Action);
+                    Trace.WriteLine(string.Format("Controller: Run Action {0} -> {1}", action, route.Action));
 
                     page.InvokeMethod(route.Method.Name);
 

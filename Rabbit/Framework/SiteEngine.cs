@@ -1,12 +1,15 @@
-﻿using System;
+﻿/*
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using System.Diagnostics;
 
 namespace Rabbit
 {
+
     public static class SiteEngine
     {
         public static void Start()
@@ -23,7 +26,7 @@ namespace Rabbit
             
             if (hooks == null) InitModules();
 
-            Log.Write("SiteEngine: \tAddHook {0}", name);
+            Trace.WriteLine(string.Format("SiteEngine: \tAddHook {0}", name));
 
             hooks.Add(new KeyValuePair<string, Func<object, object>>(name, action));
         }
@@ -39,7 +42,7 @@ namespace Rabbit
                    .Select(a => a.Value)
                    .ToList();
 
-            Log.Write("SiteEngine: RunHook {0} -> {1} Hook", name, foundhooks.Count());
+            Trace.WriteLine(string.Format("SiteEngine: RunHook {0} -> {1} Hook", name, foundhooks.Count()));
 
             foundhooks.ForEach(f => data = f(data));
             return data;
@@ -54,7 +57,7 @@ namespace Rabbit
             var foundhooks = hooks.Where(a => string.Compare(a.Key, name, true) == 0)
                     .ToList();
 
-            Log.Write("SiteEngine: ClearHook {0} -> {1} Hook", name, foundhooks.Count());
+            Trace.WriteLine(string.Format("SiteEngine: ClearHook {0} -> {1} Hook", name, foundhooks.Count()));
 
             foundhooks.ForEach(h => hooks.Remove(h));
         }
@@ -97,13 +100,13 @@ namespace Rabbit
             {
                 try
                 {
-                    Log.Write("SiteEngine: Start Loading Module {0}", module);
+                    Trace.WriteLine(string.Format("SiteEngine: Start Loading Module {0}", module));
 
                     Type moduleType = GetType(assemblies, module);
 
                     if (module == null)
                     {
-                        Log.Write("SiteEngine: Failed Loading Module: {0}: Error: class {0} not found\r\n", module );
+                        Trace.WriteLine(string.Format("SiteEngine: Failed Loading Module: {0}: Error: class {0} not found\r\n", module));
                     }
                     else
                     {
@@ -120,12 +123,12 @@ namespace Rabbit
                             }
                         }
 
-                        Log.Write("SiteEngine: Done Loading Module {0}\r\n", module);
+                        Trace.WriteLine(string.Format("SiteEngine: Done Loading Module {0}\r\n", module));
                     }
                 }
                 catch (Exception ex)
                 {
-                    Log.Write("SiteEngine: Failed Loading Module: {0}: Error: {1}\r\n", module, ex.Message);
+                    Trace.WriteLine(string.Format("SiteEngine: Failed Loading Module: {0}: Error: {1}\r\n", module, ex.Message));
                 }
             });
         }
@@ -195,3 +198,4 @@ namespace Rabbit
         }
     }
 }
+*/

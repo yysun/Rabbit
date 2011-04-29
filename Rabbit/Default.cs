@@ -60,11 +60,10 @@ WriteLiteral("\r\n");
     
     ((IList<Tuple<string, string>>)PageData["BreadCrumbs"])
         .Add(Tuple.Create<string, string>("Rabbit Admin", "/_Admin/Rabbit"));
-    
+/*    
     if (IsPost)
     {
         Page.Modules = SiteEngine.SetModules(Request.Form["modules"]);
-        Log.Enabled = !Request.Form["EnableLog"].IsEmpty();
     }
     else 
     {
@@ -72,6 +71,7 @@ WriteLiteral("\r\n");
     }
 
     var adminmenu = SiteEngine.RunHook("get_module_admin_menu", new List<string>()) as List<string>;   
+*/
 
 
 WriteLiteral(@"
@@ -88,19 +88,12 @@ please visit <a href=""http://rabbit.codeplex.com"">Rabbit Framework</a>.</p>
 <h2>Modules</h2>
 <p>Listed below are all available Rabbit modules. To disable a module, put a # in front of it.
 The modules will be loaded using the order they appear in the list.</p>
-<textarea name=""modules"" rows=""10"" cols=""40"">");
+<p><textarea name=""modules"" rows=""10"" cols=""40"">");
 
 
-                                        Write(Page.Modules);
+                                           Write(Page.Modules);
 
-WriteLiteral("</textarea> \r\n\r\n<p><input type=\"checkbox\" name=\"EnableLog\" ");
-
-
-                                      Write(Html.Raw(Log.Enabled?"checked=\"checked\"":""));
-
-WriteLiteral(@" /> Enable Logging<br />
-It also requires &lt;compilation debug=""true""&gt; is set in web.config</p>
-
+WriteLiteral(@"</textarea> </p>
 <br /><br />
 <input type=""submit"" value=""Save"" /> 
 </form>
@@ -110,38 +103,13 @@ It also requires &lt;compilation debug=""true""&gt; is set in web.config</p>
 <h2>Module Admin</h2>
 <p>Administrative links from modules.</p>
     <ol>
-    <a href=""/_Admin/Rabbit/Test"">Unit Test</a>
+    <li><a href=""/_Admin/Rabbit/Test"">Unit Test</a></li>
+
 ");
 
 
- if (adminmenu.Count() > 0)
-{ 
 
-    foreach(var menu in adminmenu)
-    {
-        if(menu.Contains('|'))
-        {
-            var ss = menu.Split('|');
-
-WriteLiteral("            <li class=\"admin-menu\"><a href=\"");
-
-
-                                       Write(Href(ss[1]));
-
-WriteLiteral("\">");
-
-
-                                                     Write(ss[0]);
-
-WriteLiteral("</a></li>\r\n");
-
-
-        }
-    }
-  
-}
-
-WriteLiteral("    </ol> \r\n\r\n</div> \r\n\r\n");
+WriteLiteral("\r\n    </ol> \r\n</div> \r\n\r\n");
 
 
         }
