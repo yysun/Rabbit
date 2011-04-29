@@ -9,12 +9,14 @@ namespace Rabbit
 {
     public static class Testing
     {
-        private static Type GetType(IEnumerable<string> files, string module)
+        private static Type GetType(string typeName)
         {
-            foreach (var file in files)
+            var assemblies = Directory.EnumerateFiles(AppDomain.CurrentDomain.DynamicDirectory, "*.dll");
+            foreach (var file in assemblies)
             {
+                if (File.Exists(Path.Combine(AppDomain.CurrentDomain.DynamicDirectory, file + ".delete"))) continue;
                 var assembly = Assembly.LoadFrom(file);
-                var type = assembly.GetType(module, false);
+                var type = assembly.GetType(typeName, false);
                 if (type != null) return type;
             }
             return null;
@@ -27,6 +29,7 @@ namespace Rabbit
             var assemblies = Directory.EnumerateFiles(AppDomain.CurrentDomain.DynamicDirectory, "*.dll");
             foreach (var file in assemblies)
             {
+                if (File.Exists(Path.Combine(AppDomain.CurrentDomain.DynamicDirectory, file + ".delete"))) continue;
                 var assembly = Assembly.LoadFrom(file);
                 var types = from t in assembly.GetTypes()
                             where t.GetCustomAttributes(typeof(TestClassAttribute), true).Length > 0
@@ -60,9 +63,15 @@ namespace Rabbit
         //[Hook]
         public static object Run_Test(dynamic data)
         {
+            Type type = GetType(data.ClassName);
+            if (type == null)
+            {
+                throw new ArgumentException("Cannot load test class");
+            }
+            
             try
             {
-                Type type = Assembly.GetExecutingAssembly().GetType(data.ClassName);
+                
                 var test = Activator.CreateInstance(type);
                 type.InvokeMember(data.MethodName, BindingFlags.InvokeMethod, null, test, new object[0]);
 
@@ -82,9 +91,8 @@ namespace Rabbit
             catch (Exception ex)
             {
                 data.HasPassed = "false";
-                data.Message = ex.Message;
+                data.Message = ex.InnerException;
 
-                Type type = Assembly.GetExecutingAssembly().GetType(data.ClassName);
                 if (type != null)
                 {
                     //Ensure the exception is expected

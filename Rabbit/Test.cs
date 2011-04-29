@@ -61,7 +61,7 @@ WriteLiteral("\r\n");
     
 
     ((IList<Tuple<string, string>>)PageData["BreadCrumbs"]).Add(Tuple.Create<string, string>("Rabbit Admin", "/_Admin/Rabbit"));
-    ((IList<Tuple<string, string>>)PageData["BreadCrumbs"]).Add(Tuple.Create<string, string>("Unit Testing", "/_Admin/Test"));
+    ((IList<Tuple<string, string>>)PageData["BreadCrumbs"]).Add(Tuple.Create<string, string>("Unit Testing", "/_Admin/Rabbit/Test"));
     
     dynamic tests = Testing.Get_Tests(null) as dynamic; //SiteEngine.RunHook("get_tests");
     var testc = UrlData[0];
@@ -79,27 +79,28 @@ WriteLiteral(@"
     <style type=""text/css"">
         ul.tests, ul.tests ul, ul.tests ul li{margin-left:10px;}
         ul.tests ul li:before {content: ""» "";}
-    ");
+    </style>
+");
 
 
 });
 
-WriteLiteral("\r\n    </style>\r\n}\r\n\r\n<div style=\"float:right;width:30%;padding-left:10px;\">\r\n    " +
-"<h2>Tests Found</h2>\r\n    <p>Select test to run</p>\r\n    <ul class=\"tests\">\r\n");
+WriteLiteral("\r\n\r\n<div style=\"float:right;width:30%;padding-left:10px;\">\r\n    <h2>Tests Found</" +
+"h2>\r\n    <p>Select test to run</p>\r\n    <ul class=\"tests\">\r\n");
 
 
      foreach (var testclass in tests)
     { 
 
-WriteLiteral("        <li><a href=\"Test/");
+WriteLiteral("        <li><a href=\"/_Admin/Rabbit/Test/");
 
 
-                     Write(testclass.Key);
+                                    Write(testclass.Key);
 
 WriteLiteral("\">");
 
 
-                                     Write(testclass.Key);
+                                                    Write(testclass.Key);
 
 WriteLiteral("</a></li>\r\n");
 
@@ -111,20 +112,20 @@ WriteLiteral("        <ul>\r\n");
          foreach (var test in testclass.Value)
         {
 
-WriteLiteral("            <li><a href=\"Test/");
+WriteLiteral("            <li><a href=\"/_Admin/Rabbit/Test/");
 
 
-                         Write(testclass.Key);
+                                        Write(testclass.Key);
 
 WriteLiteral("/");
 
 
-                                        Write(test);
+                                                       Write(test);
 
 WriteLiteral("\">");
 
 
-                                               Write(test);
+                                                              Write(test);
 
 WriteLiteral("</a></li>\r\n");
 
@@ -137,7 +138,7 @@ WriteLiteral("        </ul>   \r\n");
     }
 
 WriteLiteral(@"    </ul>
-    <a href=""Test/All"">Run all tests</a>
+    <a href=""/_Admin/Rabbit/Test/All"">Run all tests</a>
 </div>
 
 <div style=""float:left;width:68%"">   
