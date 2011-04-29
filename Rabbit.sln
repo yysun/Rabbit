@@ -47,27 +47,6 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "localhost", "http://localho
 		DefaultWebSiteLanguage = "Visual C#"
 	EndProjectSection
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "localhost", "http://localhost:1392", "{9F6BBD61-29AA-410E-8F79-5238658AFD95}"
-	ProjectSection(WebsiteProperties) = preProject
-		UseIISExpress = "true"
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
-		Debug.AspNetCompiler.VirtualPath = "/WebForm"
-		Debug.AspNetCompiler.PhysicalPath = "WebForm\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\WebForm\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/WebForm"
-		Release.AspNetCompiler.PhysicalPath = "WebForm\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\WebForm\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		SlnRelativePath = "WebForm\"
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -86,10 +65,6 @@ Global
 		{2FDAAF13-2E21-471D-9C08-F94E31F9D703}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2FDAAF13-2E21-471D-9C08-F94E31F9D703}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{2FDAAF13-2E21-471D-9C08-F94E31F9D703}.Release|Any CPU.Build.0 = Debug|Any CPU
-		{9F6BBD61-29AA-410E-8F79-5238658AFD95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9F6BBD61-29AA-410E-8F79-5238658AFD95}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9F6BBD61-29AA-410E-8F79-5238658AFD95}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{9F6BBD61-29AA-410E-8F79-5238658AFD95}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

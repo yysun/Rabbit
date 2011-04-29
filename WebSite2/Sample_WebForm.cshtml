@@ -1,0 +1,67 @@
+﻿@{  
+    Layout = "~/_SiteLayout.cshtml";
+    Rabbit.WebForm.Run(this);
+    
+}
+
+@functions {
+    string name = ""; //view state
+    void button_click(string name) // match html input
+    {
+        this.name = name;
+    }
+}
+
+<script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.4.4.min.js" type="text/javascript"></script>
+<script src="@Href("~/WebForms.js")" type="text/javascript"></script>
+
+<h2>Rabbit Web Form Sample</h2>
+<br />
+
+<form method="post" action="">
+    Enter something: <input type="text" name="name" value="@name"/><br /><br />
+
+    <button id="button" value="test" 
+            data-runat="server">Run Default Server Side Event</button>
+
+    <button id="button2" value="test" 
+            data-runat="server"
+            data-server-event="button_click">Run Server Side Event</button>
+
+    <button id="button3" value="test" 
+            data-runat="server"
+            data-server-event="button_click"
+            data-server-event-arg="foo">Run Server Side Event With Argument</button>
+</form>
+<br />
+
+<div id="msg">@name</div>
+
+<script type="text/javascript">
+    $(function () {
+        webForm.init();
+    });
+</script> 
+
+@if (IsPost)
+{ 
+    <text>   
+    <link rel="stylesheet" href="http://code.jquery.com/qunit/git/qunit.css" type="text/css" media="screen">  
+    <script type="text/javascript" src="http://code.jquery.com/qunit/git/qunit.js"></script>  
+    
+    <h2>Test Results</h2>
+    <div id="qunit-testrunner-toolbar"></div>
+    <ol id="qunit-tests"></ol>
+    <div id="qunit-fixture"></div>
+
+    <script type="text/javascript">
+        $(function () {
+            test("verify result after post", function () {
+                var v1 = $("#msg").text();
+                var v2 = $("input[name='name']").val();
+                equals(v1, v2);
+            });
+        });
+    </script> 
+    </text>   
+}

@@ -1,6 +1,10 @@
 ﻿@* Generator: WebPage *@
 @using Rabbit
 @{
+    
+    ((IList<Tuple<string, string>>)PageData["BreadCrumbs"])
+        .Add(Tuple.Create<string, string>("Rabbit Admin", "/_Admin/Rabbit"));
+    
     if (IsPost)
     {
         Page.Modules = SiteEngine.SetModules(Request.Form["modules"]);
@@ -13,6 +17,7 @@
 
     var adminmenu = SiteEngine.RunHook("get_module_admin_menu", new List<string>()) as List<string>;   
 }
+
 <style type="text/css">
     h2{margin-top:30px}
 </style>
@@ -36,13 +41,15 @@ It also requires &lt;compilation debug="true"&gt; is set in web.config</p>
 </form>
 </div>
 
-<div style="float:right;width:50%">
+<div style="float:left;padding-left:10px;">
 <h2>Module Admin</h2>
-
+<p>Administrative links from modules.</p>
+    <ol>
+    <a href="/_Admin/Rabbit/Test">Unit Test</a>
 @if (adminmenu.Count() > 0)
 { 
-    <ol>
-    @foreach(var menu in adminmenu)
+
+    foreach(var menu in adminmenu)
     {
         if(menu.Contains('|'))
         {
@@ -50,7 +57,9 @@ It also requires &lt;compilation debug="true"&gt; is set in web.config</p>
             <li class="admin-menu"><a href="@Href(ss[1])">@ss[0]</a></li>
         }
     }
-    </ol>   
+  
 }
+    </ol> 
+
 </div> 
 

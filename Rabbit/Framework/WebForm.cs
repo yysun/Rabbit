@@ -1,74 +1,44 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.WebPages;
 using System.Reflection;
+using System.Web.WebPages;
 
-public static class WebForm
+namespace Rabbit
 {
-    //cache
-   
-    public static void Run(this WebPage page)
+    public static class WebForm
     {
-        try
+        public static void Run(this WebPage page)
         {
-            // run Page_Load
-            // run events
-            // run Page_Unload
-
-            RunMethod(page, "Page_Load");
-
-            var eventSource = page.Request["__event_source"];
-
-            if (!string.IsNullOrWhiteSpace(eventSource))
+            try
             {
-                var eventTarget = page.Request["__event_target"];
+                page.InvokeMethod("Page_Load");
 
-                if (string.IsNullOrWhiteSpace(eventTarget))
+                var eventSource = page.Request["__event_source"];
+                if (!string.IsNullOrWhiteSpace(eventSource))
                 {
-                    eventTarget = eventSource + "_click";
+                    var eventTarget = page.Request["__event_target"];
+                    if (string.IsNullOrWhiteSpace(eventTarget))
+                    {
+                        eventTarget = eventSource + "_click";
+                    }
+
+                    page.InvokeMethod(eventTarget);
                 }
 
-                RunMethod(page, eventTarget);
-            }
+                page.InvokeMethod("Page_Unload");
 
-            RunMethod(page, "Page_Unload");
+                //TODO: Emit JavaScript with scroll position?
+            }
+            catch (Exception ex)
+            {
+                //TODO: yellow page of death
+                throw;
+            }
         }
-        catch (Exception ex)
+
+        public static void Run_WebForm(this WebPage webpage)
         {
-            // yellow page of death
-            throw;
+            Run(webpage);
         }
     }
-
-    private static void RunMethod(object page, string name)
-    {
-        //cache
-        var methods = page.GetType().GetMethods(
-            BindingFlags.Public | BindingFlags.NonPublic |
-            BindingFlags.Instance);
-
-        var method = methods.Where(m => string.Compare(m.Name, name, true) == 0).FirstOrDefault();
-        if (method != null)
-        {
-            var parameters = method.GetParameters();
-            if (parameters == null || parameters.Length == 0)
-            {
-                method.Invoke(page, null);
-            }
-            else
-            {
-                var objects = new object[parameters.Length];
-                //method.Invoke(page, objects);
-            }
-        }
-
-    }
-
-
-	public static void Run_WebForm(this WebPage webpage)
-	{
-        Run(webpage);
-	}
 }

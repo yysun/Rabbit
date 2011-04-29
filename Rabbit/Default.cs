@@ -57,6 +57,10 @@ WriteLiteral("\r\n");
 
 
   
+    
+    ((IList<Tuple<string, string>>)PageData["BreadCrumbs"])
+        .Add(Tuple.Create<string, string>("Rabbit Admin", "/_Admin/Rabbit"));
+    
     if (IsPost)
     {
         Page.Modules = SiteEngine.SetModules(Request.Form["modules"]);
@@ -70,7 +74,8 @@ WriteLiteral("\r\n");
     var adminmenu = SiteEngine.RunHook("get_module_admin_menu", new List<string>()) as List<string>;   
 
 
-WriteLiteral(@"<style type=""text/css"">
+WriteLiteral(@"
+<style type=""text/css"">
     h2{margin-top:30px}
 </style>
 <h1>Rabbit Framework Administration</h1>
@@ -93,18 +98,26 @@ WriteLiteral("</textarea> \r\n\r\n<p><input type=\"checkbox\" name=\"EnableLog\"
 
                                       Write(Html.Raw(Log.Enabled?"checked=\"checked\"":""));
 
-WriteLiteral(" /> Enable Logging<br />\r\nIt also requires &lt;compilation debug=\"true\"&gt; is se" +
-"t in web.config</p>\r\n\r\n<br /><br />\r\n<input type=\"submit\" value=\"Save\" /> \r\n</fo" +
-"rm>\r\n</div>\r\n\r\n<div style=\"float:right;width:50%\">\r\n<h2>Module Admin</h2>\r\n\r\n");
+WriteLiteral(@" /> Enable Logging<br />
+It also requires &lt;compilation debug=""true""&gt; is set in web.config</p>
+
+<br /><br />
+<input type=""submit"" value=""Save"" /> 
+</form>
+</div>
+
+<div style=""float:left;padding-left:10px;"">
+<h2>Module Admin</h2>
+<p>Administrative links from modules.</p>
+    <ol>
+    <a href=""/_Admin/Rabbit/Test"">Unit Test</a>
+");
 
 
  if (adminmenu.Count() > 0)
 { 
 
-WriteLiteral("    <ol>\r\n");
-
-
-     foreach(var menu in adminmenu)
+    foreach(var menu in adminmenu)
     {
         if(menu.Contains('|'))
         {
@@ -125,13 +138,10 @@ WriteLiteral("</a></li>\r\n");
 
         }
     }
-
-WriteLiteral("    </ol>   \r\n");
-
-
+  
 }
 
-WriteLiteral("</div> \r\n\r\n");
+WriteLiteral("    </ol> \r\n\r\n</div> \r\n\r\n");
 
 
         }
