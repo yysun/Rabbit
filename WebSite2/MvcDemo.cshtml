@@ -1,0 +1,41 @@
+@using Rabbit
+@using System.Collections.Specialized
+@{
+    Rabbit.Mvc.Run(this);
+}
+@functions {
+   
+    
+    [Get("/")]
+    void Default(){
+    }
+
+    [Post("/")]
+    void Default(NameValueCollection form){
+    }
+
+    [Get("/Create")]
+    void Create(){
+    }
+
+    [Post("/Create")]
+    void Create(NameValueCollection form){
+    }
+
+    [Get("/Edit")]
+    void Edit(){
+    }
+
+    [Post("/Edit")]
+    void Edit(NameValueCollection form){
+    }
+
+    [Get("/Delete")]
+    void Delete(){
+    }
+
+    [Post("/Delete")]
+    void Delete(NameValueCollection form){
+    }
+
+}

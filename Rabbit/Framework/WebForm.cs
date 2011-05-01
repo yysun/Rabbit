@@ -11,6 +11,8 @@ namespace Rabbit
         {
             try
             {
+                page.ParseForm();
+
                 page.InvokeMethod("Page_Load");
 
                 var eventSource = page.Request["__event_source"];

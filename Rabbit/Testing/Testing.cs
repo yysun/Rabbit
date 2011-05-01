@@ -91,7 +91,7 @@ namespace Rabbit
             catch (Exception ex)
             {
                 data.HasPassed = "false";
-                data.Message = ex.InnerException;
+                data.Message = ex.InnerException.Message;
 
                 if (type != null)
                 {

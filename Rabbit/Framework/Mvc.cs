@@ -19,6 +19,8 @@ namespace Rabbit
             try
             {
                 Assert.IsTrue(page != null);
+                
+                page.ParseForm();
 
                 IList<string> urlData = page.UrlData;
                 urlData = urlData.Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
@@ -79,11 +81,11 @@ namespace Rabbit
                     {
                         page.Response.Redirect(actionResult.Redirect, false);
                     }
-                    else if (actionResult.View != null)
+                    else
                     {
-                        var view = string.Format("~/Views/{0}/{1}", 
-                            Path.GetFileNameWithoutExtension(page.Request.AppRelativeCurrentExecutionFilePath),
-                            route.Method.Name);
+                        var controller = Path.GetFileNameWithoutExtension(page.Request.Path.Split('/')[1]);
+                        var view = actionResult.View ?? route.Method.Name;                          
+                        view = string.Format("~/Views/{0}/{1}.cshtml", controller, view);
                         page.Write(page.RenderPage(view, actionResult.Model));
                     }
                 }

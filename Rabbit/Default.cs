@@ -77,6 +77,7 @@ WriteLiteral("\r\n");
 WriteLiteral(@"
 <style type=""text/css"">
     h2{margin-top:30px}
+    ul.adminmenu, ul.adminmenu li{margin-left:10px;}
 </style>
 <h1>Rabbit Framework Administration</h1>
 <p>Rabbit Framework supports modules, plug-ins and templates. For more information, 
@@ -102,14 +103,14 @@ WriteLiteral(@"</textarea> </p>
 <div style=""float:left;padding-left:10px;"">
 <h2>Module Admin</h2>
 <p>Administrative links from modules.</p>
-    <ol>
+    <ul class=""adminmenu"">
     <li><a href=""/_Admin/Rabbit/Test"">Unit Test</a></li>
-
+    <li><a href=""/_Admin/Rabbit/CodeGen"">Generate Code</a></li>
 ");
 
 
 
-WriteLiteral("\r\n    </ol> \r\n</div> \r\n\r\n");
+WriteLiteral("\r\n    </ul> \r\n</div> \r\n\r\n");
 
 
         }

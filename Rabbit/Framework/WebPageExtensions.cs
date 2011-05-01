@@ -17,7 +17,21 @@ namespace Rabbit
 
         public static object InvokeMethod(this WebPage page, string name)
         {
-            MethodInfo[] methods = GetMethods(page);
+            MethodInfo[] methods;
+
+            var cacheKey = page.GetType().FullName;
+            if (enableCache && cache.ContainsKey(cacheKey))
+            {
+                methods = cache[cacheKey] as MethodInfo[];
+            }
+            else
+            {
+                methods = page.GetType().GetMethods(
+                    BindingFlags.Public | BindingFlags.NonPublic |
+                    BindingFlags.Instance);
+
+                cache[cacheKey] = methods;
+            }
 
             var method = methods.Where(m => string.Compare(m.Name, name, true) == 0).FirstOrDefault();
             if (method != null)
@@ -35,27 +49,6 @@ namespace Rabbit
             }
 
             return null;
-        }
-
-        private static MethodInfo[] GetMethods(object page)
-        {
-            MethodInfo[] methods;
-
-            var cacheKey = page.GetType().FullName;
-            if (enableCache && cache.ContainsKey(cacheKey))
-            {
-                methods = cache[cacheKey] as MethodInfo[];
-            }
-            else
-            {
-                methods = page.GetType().GetMethods(
-                    BindingFlags.Public | BindingFlags.NonPublic |
-                    BindingFlags.Instance);
-
-                cache[cacheKey] = methods;
-            }
-
-            return methods;
         }
 
         private static object[] CreateMethodParameters(WebPage page, ParameterInfo[] parameters)
@@ -96,6 +89,22 @@ namespace Rabbit
                 }
             }
             return objects;
+        }
+
+        public static void ParseForm(this WebPage page)
+        {
+            var fields = page.GetType().GetFields(
+                BindingFlags.Public | BindingFlags.NonPublic |
+                BindingFlags.Instance).Where(f => f.FieldType.Equals(typeof(string)));
+
+            foreach (var field in fields)
+            {
+                var value = page.Request.Form[field.Name];
+                if (value != null)
+                {
+                    field.SetValue(page, value);
+                }
+            }
         }
     }
 }

@@ -47,11 +47,17 @@
     <Reference Include="WebMatrix.WebData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeGen.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CodeGen.cshtml</DependentUpon>
+    </Compile>
     <Compile Include="Default.cs">
       <DependentUpon>Default.cshtml</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Framework\CodeGen.cs" />
     <Compile Include="Framework\Extensions.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -76,6 +82,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="CodeGen.cshtml">
+      <Generator>RazorGenerator</Generator>
+      <LastGenOutput>CodeGen.cs</LastGenOutput>
+    </None>
     <None Include="Default.cshtml">
       <Generator>RazorGenerator</Generator>
       <LastGenOutput>Default.cs</LastGenOutput>
@@ -86,7 +96,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="WebForms.js" />
+    <EmbeddedResource Include="WebForms.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

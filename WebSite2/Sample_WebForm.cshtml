@@ -5,10 +5,14 @@
 }
 
 @functions {
-    string name = ""; //view state
-    void button_click(string name) // match html input
+    string name = "", code_type = "";
+    void button_click(string name)
     {
         this.name = name;
+    }
+    void code_type_click() 
+    {
+        this.name = code_type;
     }
 }
 
@@ -21,6 +25,7 @@
 <form method="post" action="">
     Enter something: <input type="text" name="name" value="@name"/><br /><br />
 
+    Run at server tests: 
     <button id="button" value="test" 
             data-runat="server">Run Default Server Side Event</button>
 
@@ -32,14 +37,24 @@
             data-runat="server"
             data-server-event="button_click"
             data-server-event-arg="foo">Run Server Side Event With Argument</button>
+
+    <br /><br />
+    Auto post back test:     
+    <select id="code_type" name="code_type" data-autopostback="true">
+    <option>Web Form</option>
+    <option>MVC</option>
+    <option>Unit Test</option>
+    </select>
+
 </form>
 <br />
 
-<div id="msg">@name</div>
+Result: <div id="msg">@name</div>
 
 <script type="text/javascript">
     $(function () {
         webForm.init();
+        $("#code_type").val('@code_type');
     });
 </script> 
 
