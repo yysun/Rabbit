@@ -9,8 +9,16 @@
         form.append($('<input/>').attr('type', 'hidden').attr('name', '__event_source').val(es))
                 .append($('<input/>').attr('type', 'hidden').attr('name', '__event_target').val(et))
                 .append($('<input/>').attr('type', 'hidden').attr('name', '__event_argument').val(er))
-                .submit();
+                .append($('<input/>').attr('type', 'hidden').attr('name', '__scroll_x').val(window.pageXOffset))
+                .append($('<input/>').attr('type', 'hidden').attr('name', '__scroll_y').val(window.pageYOffset));
 
+        for (var item in this) {
+            if (typeof (this[item]) != 'function') {
+                form.append($('<input/>').attr('type', 'hidden').attr('name', "@" + item).val(JSON.stringify(this[item])));
+            }
+        }
+
+        form.submit();
         obj.attr('disabled', 'disabled');
     },
 

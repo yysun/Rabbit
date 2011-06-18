@@ -1,23 +1,24 @@
 ﻿@{  
     Layout = "~/_SiteLayout.cshtml";
-    Rabbit.WebForm.Run(this);
     
 }
-
+@Rabbit.WebForm.Run(this)
 @functions {
-    string name = "", code_type = "";
+    string name = "", code_type = "", astring = "";
+    int aint = 0;
     void button_click(string name)
     {
         this.name = name;
     }
-    void code_type_click() 
+    void code_type_click()
     {
         this.name = code_type;
     }
 }
 
+@section Head {
 <script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.4.4.min.js" type="text/javascript"></script>
-<script src="@Href("~/WebForms.js")" type="text/javascript"></script>
+}
 
 <h2>Rabbit Web Form Sample</h2>
 <br />
@@ -45,16 +46,33 @@
     <option>MVC</option>
     <option>Unit Test</option>
     </select>
-
+   
+    <br /><br />    
+    <a id="button4" href="#">what is webForm.astring? </a><br />
+    <a id="button5" href="#">what is aint? @aint</a>
 </form>
+
 <br />
 
 Result: <div id="msg">@name</div>
 
 <script type="text/javascript">
+
     $(function () {
-        webForm.init();
+
+        $("#button4").click(function () {
+            webForm.astring = 'this is a string';
+            webForm.postback($(this));
+        });
+
+        $("#button5").click(function () {
+            webForm.aint = 12345;
+            webForm.postback($(this));
+        });
+
         $("#code_type").val('@code_type');
+
+        $("#button4").text(webForm.astring);
     });
 </script> 
 

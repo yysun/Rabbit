@@ -95,14 +95,15 @@ namespace Rabbit
         {
             var fields = page.GetType().GetFields(
                 BindingFlags.Public | BindingFlags.NonPublic |
-                BindingFlags.Instance).Where(f => f.FieldType.Equals(typeof(string)));
+                BindingFlags.Instance).Where(f => f.FieldType.Equals(typeof(string)) || f.FieldType.Equals(typeof(bool)) ||
+                    f.FieldType.Equals(typeof(int)) || f.FieldType.Equals(typeof(decimal)));
 
             foreach (var field in fields)
             {
-                var value = page.Request.Form[field.Name];
+                var value = page.Request.Form[field.Name] ?? page.Request.Form["@" + field.Name];
                 if (value != null)
                 {
-                    field.SetValue(page, value);
+                    field.SetValue(page, Convert.ChangeType(value, field.FieldType));
                 }
             }
         }

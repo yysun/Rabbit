@@ -1,5 +1,4 @@
-﻿/*
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,7 +13,8 @@ namespace Rabbit
     {
         public static void Start()
         {
-            InitModules();
+            hooks = new List<KeyValuePair<string, Func<object, object>>>();
+            //InitModules();
             SiteEngine.RunHook("start");
         }
 
@@ -24,7 +24,7 @@ namespace Rabbit
         {
             if (string.IsNullOrWhiteSpace(name)) return;
             
-            if (hooks == null) InitModules();
+            //if (hooks == null) InitModules();
 
             Trace.WriteLine(string.Format("SiteEngine: \tAddHook {0}", name));
 
@@ -36,7 +36,7 @@ namespace Rabbit
         {
             if (string.IsNullOrWhiteSpace(name)) return data;
             
-            if (hooks == null) InitModules();
+            //if (hooks == null) InitModules();
 
             var foundhooks = hooks.Where(a => string.Compare(a.Key, name, true) == 0)
                    .Select(a => a.Value)
@@ -52,7 +52,7 @@ namespace Rabbit
         {
             if (string.IsNullOrWhiteSpace(name)) return;
 
-            if (hooks == null) InitModules();
+            //if (hooks == null) InitModules();
 
             var foundhooks = hooks.Where(a => string.Compare(a.Key, name, true) == 0)
                     .ToList();
@@ -61,7 +61,7 @@ namespace Rabbit
 
             foundhooks.ForEach(h => hooks.Remove(h));
         }
-
+/*
         private static string configFileName
         {
             get
@@ -178,6 +178,7 @@ namespace Rabbit
 
             return string.Join("\r\n", list1.Union(list2));
         }
+ */ 
     }
 
     [AttributeUsage(AttributeTargets.Method)]
@@ -198,4 +199,3 @@ namespace Rabbit
         }
     }
 }
-*/
