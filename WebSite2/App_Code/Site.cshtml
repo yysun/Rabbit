@@ -1,0 +1,26 @@
+﻿@helper Name() {
+    <text>Sample Rabbit Site</text>
+}
+
+@helper Author() {
+    <text>Yiyi Sun</text>
+}
+
+@helper MainMenu() {
+    
+}
+
+@helper RenderSection(string sectionName)
+{  
+} 
+
+
+@functions{
+
+[Rabbit.Hook]
+public static object TestHook(object s = null)
+{
+    return "hi";
+}
+
+}

@@ -91,21 +91,21 @@ namespace Rabbit
             return objects;
         }
 
-        public static void ParseForm(this WebPage page)
-        {
-            var fields = page.GetType().GetFields(
-                BindingFlags.Public | BindingFlags.NonPublic |
-                BindingFlags.Instance).Where(f => f.FieldType.Equals(typeof(string)) || f.FieldType.Equals(typeof(bool)) ||
-                    f.FieldType.Equals(typeof(int)) || f.FieldType.Equals(typeof(decimal)));
+        //public static void ParseForm(this WebPage page)
+        //{
+        //    var fields = page.GetType().GetFields(
+        //        BindingFlags.Public | BindingFlags.NonPublic |
+        //        BindingFlags.Instance).Where(f => f.FieldType.Equals(typeof(string)) || f.FieldType.Equals(typeof(bool)) ||
+        //            f.FieldType.Equals(typeof(int)) || f.FieldType.Equals(typeof(decimal)));
 
-            foreach (var field in fields)
-            {
-                var value = page.Request.Form[field.Name] ?? page.Request.Form["@" + field.Name];
-                if (value != null)
-                {
-                    field.SetValue(page, Convert.ChangeType(value, field.FieldType));
-                }
-            }
-        }
+        //    foreach (var field in fields)
+        //    {
+        //        var value = page.Request.Form[field.Name] ?? page.Request.Form["@" + field.Name];
+        //        if (value != null)
+        //        {
+        //            field.SetValue(page, Convert.ChangeType(value, field.FieldType));
+        //        }
+        //    }
+        //}
     }
 }

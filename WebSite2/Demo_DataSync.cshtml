@@ -1,0 +1,55 @@
+@using Rabbit
+@{
+    Layout = SiteEngine.RunHook("get_layout"); // dynamic layout
+}
+@*make this page a rabbit web form*@
+@WebForm.Run(this)
+
+@functions{
+
+    public int i = 10;
+    public string s = "test string";
+    public bool b = true;
+    public decimal n = 45.6m;
+    public object o = new { id = 1, name = "object" };
+}
+
+<h2>Test data synchronization</h2>
+<ol>
+<li>Public C# fields are serialized to JSON and accessible in JavaScript through webForm object.</li>
+<li>All C# fields are populated by values Request.Form or values from webForm object.<br />
+E.g. The button triggers a post and sends the textbox context to C# field s. After the post, the value of s is serialized to webForm.s.</li>
+</ol>
+<form method="post" action="">
+
+    Enter new string: <input type="text" name="s" value="@s"/> <button id="button" value="test" data-runat="server">Save</button>
+
+</form>
+<br />
+<link rel="stylesheet" href="http://code.jquery.com/qunit/git/qunit.css" type="text/css" media="screen">
+<script type="text/javascript" src="http://code.jquery.com/qunit/git/qunit.js"></script>
+
+<div id="qunit-testrunner-toolbar"></div>
+<ol id="qunit-tests"></ol>
+<div id="qunit-fixture"></div>
+<script type="text/javascript">
+    $(function () {
+        test("verify js webForm fields equal C# fields", function () {
+            equals(webForm.i, @i);
+            equals(webForm.n, @n);
+            equals(webForm.b, true);
+            equals(webForm.s, "@s");
+            equals(webForm.o.id, 1);
+            equals(webForm.o.name, "object");
+        });
+
+        @if(IsPost){
+        <text>
+        test("verify webForm.s equals the textbox and the C# field s", function () {
+            equals(webForm.s, "@s");    
+        });
+        </text>
+        }
+
+    });
+</script>

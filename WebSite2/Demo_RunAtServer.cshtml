@@ -1,0 +1,98 @@
+﻿@using Rabbit
+@{
+    Layout = SiteEngine.RunHook("get_layout"); // dynamic layout
+}
+@*make this page a rabbit web form*@
+@WebForm.Run(this)
+
+@functions {
+    public string name = "";
+    string code_type = "";
+
+    void button_click(string name)
+    {
+        this.name = name;
+    }
+    void code_type_click()
+    {
+        this.name = code_type;
+    }
+}
+
+<h2>Test Web Form Post</h2>
+<ol>
+<li>Attribute data-runat="server" triggers default server side event {element id}_click() upon element's onclick event.</li>
+<li>Attribute data-runat="server-auto" triggers default server side event {element id}_click() upon element's onchange event.</li>
+<li>Attribute data-server-event="button_click" defines server side event name.</li>
+<li>Attribute data-server-event-arg="foo" passes parameter to server side event.</li>
+<li>Post back can be triggered in JavaScript: webForm.postback(element), where the element's closest form will be posted. </li>
+</ol>
+
+<form method="post" action="">
+    Enter something: <input type="text" name="name" value="@name"/><br />
+    Result: <b><span id="msg">@name</span></b><br /><br />
+    Button tests:
+    <button id="button" value="test" 
+            data-runat="server">Run Default Event</button>
+
+    <button id="button2" value="test" 
+            data-runat="server"
+            data-server-event="button_click">Run Event Defined</button>
+
+    <button id="button3" value="test" 
+            data-runat="server"
+            data-server-event="button_click"
+            data-server-event-arg="foo">Run Event With Argument</button>
+
+    <br /><br />
+    Auto post back test:     
+    <select id="code_type" name="code_type" data-runat="server-auto">
+    <option>Web Form</option>
+    <option>MVC</option>
+    <option>Unit Test</option>
+    </select>
+    <br /><br />
+    JavaScript post back test:
+    <a id="button4" href="#">Click to post back</a><br />
+</form>
+
+<br />
+
+<script type="text/javascript">
+
+    $(function () {
+
+        $("#button4").click(function () {
+            webForm.name = $("input[name='name']").val();
+            webForm.postback($(this));
+        });
+
+        $("#code_type").val('@code_type');
+
+    });
+
+</script> 
+
+@if (IsPost)
+{ 
+    <text>   
+    <link rel="stylesheet" href="http://code.jquery.com/qunit/git/qunit.css" type="text/css" media="screen">  
+    <script type="text/javascript" src="http://code.jquery.com/qunit/git/qunit.js"></script>  
+    
+    <h2>Test Results</h2>
+    <div id="qunit-testrunner-toolbar"></div>
+    <ol id="qunit-tests"></ol>
+    <div id="qunit-fixture"></div>
+
+    <script type="text/javascript">
+        $(function () {
+            test("verify result after post", function () {
+                var v1 = $("#msg").text();
+                var v2 = $("input[name='name']").val();
+                equals(v1, v2);
+                equal(webForm.name, v1);
+            });
+        });
+    </script> 
+    </text>   
+}

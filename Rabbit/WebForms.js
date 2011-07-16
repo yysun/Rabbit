@@ -29,7 +29,7 @@
             webForm.postback($(this));
         });
 
-        $('*[data-autopostback="true"]').change(function (e) {
+        $('*[data-runat="server-auto"]').change(function (e) {
             e.preventDefault();
             webForm.postback($(this));
         });

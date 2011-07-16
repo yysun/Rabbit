@@ -4,49 +4,25 @@
     
     ((IList<Tuple<string, string>>)PageData["BreadCrumbs"])
         .Add(Tuple.Create<string, string>("Rabbit Admin", "/_Admin/Rabbit"));
-/*    
-    if (IsPost)
-    {
-        Page.Modules = SiteEngine.SetModules(Request.Form["modules"]);
-    }
-    else 
-    {
-        Page.Modules = SiteEngine.GetModules();
-    }
 
-    var adminmenu = SiteEngine.RunHook("get_module_admin_menu", new List<string>()) as List<string>;   
-*/
+    var adminmenu = SiteEngine.RunHook("get_admin_menu", new List<string>()) as List<string>;   
 }
 
 <style type="text/css">
-    h2{margin-top:30px}
-    ul.adminmenu, ul.adminmenu li{margin-left:10px;}
+    h2{margin-top:30px; margin-bottom:20px;}
+    ul.adminmenu, ul.adminmenu li{margin-left:10px;margin-bottom:10px;}
 </style>
 <h1>Rabbit Framework Administration</h1>
 <p>Rabbit Framework supports modules, plug-ins and templates. For more information, 
 please visit <a href="http://rabbit.codeplex.com">Rabbit Framework</a>.</p>
-<div style="float:left;width:50%">
-
-<form method="post" action="">
-
-<h2>Modules</h2>
-<p>Listed below are all available Rabbit modules. To disable a module, put a # in front of it.
-The modules will be loaded using the order they appear in the list.</p>
-<p><textarea name="modules" rows="10" cols="40">@Page.Modules</textarea> </p>
-<br /><br />
-<input type="submit" value="Save" /> 
-</form>
-</div>
 
 <div style="float:left;padding-left:10px;">
-<h2>Module Admin</h2>
-<p>Administrative links from modules.</p>
+<h2>Admin Links</h2>
     <ul class="adminmenu">
     <li><a href="/_Admin/Rabbit/Test">Unit Test</a></li>
     <li><a href="/_Admin/Rabbit/CodeGen">Generate Code</a></li>
-@*if (adminmenu.Count() > 0)
+@if (adminmenu.Count() > 0)
 { 
-
     foreach(var menu in adminmenu)
     {
         if(menu.Contains('|'))
@@ -54,9 +30,8 @@ The modules will be loaded using the order they appear in the list.</p>
             var ss = menu.Split('|');
             <li class="admin-menu"><a href="@Href(ss[1])">@ss[0]</a></li>
         }
-    }
-  
-}*@
+    } 
+}
     </ul> 
 </div> 
 

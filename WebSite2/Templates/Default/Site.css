@@ -1,0 +1,244 @@
+﻿body
+{
+    font-size: .85em;
+    font-family: "Trebuchet MS" , Verdana, Helvetica, Sans-Serif;
+    color: #696969;
+    background-color:#999999;
+}
+
+a:link, a:visited
+{
+    color: #33a;
+    text-decoration: none;
+}
+
+a:hover
+{
+    color: #a33;
+    text-decoration: underline;
+}
+
+/* HEADINGS   
+----------------------------------------------------------*/
+h1
+{
+    float: left;
+    font-weight: bold;
+    line-height: 2em;
+    font-size: 22px; 
+    text-shadow: 1px 1px 2px #111;
+    margin-left:15px;
+}
+h2
+{
+    font-size: 1.5em;
+    color: #696969;
+    font-variant: small-caps;
+    text-transform: none;
+    font-weight: 200;
+    margin-bottom: 20px;
+}
+h3
+{
+    font-size: 1.2em;
+}
+
+h4
+{
+    font-size: 1.1em;
+}
+
+h5, h6
+{
+    font-size: 1em;
+}
+
+/* PRIMARY LAYOUT ELEMENTS   
+----------------------------------------------------------*/
+#page
+{
+    background-color:#fff;
+    padding: 0px 20px; 
+}
+#header
+{
+    margin-top:20px;
+}
+#content
+{   
+    border-top:1px solid #999;
+    margin-top:-3px;
+    padding-top:10px;
+    min-height:500px;    
+}
+#footer
+{
+    border-top:1px solid #999;
+    text-align: center;
+    font-size: .9em;
+    height:50px;
+    padding-top:10px;
+}
+
+/* Login Display  
+----------------------------------------------------------*/
+#login
+{
+    float: right;
+    display: block;
+    text-align: right;
+    color: #000;
+    margin-top:20px;
+}
+
+#login li
+{
+    margin: 0;
+    display: inline;
+    list-style: none;
+    padding-left: 5px;
+}
+
+
+/* Menu   
+----------------------------------------------------------*/
+ul#menu
+{
+    clear: both;
+    padding: 0 0 2px;
+    position: relative;
+    margin: 0;
+}
+
+ul#menu li
+{
+    display: inline;
+    list-style: none;
+}
+
+ul#menu li a
+{
+    padding: 10px 20px;
+    font-weight: bold;
+    text-decoration: none;
+    line-height: 2.8em;
+    background-color: #fff;
+    color: #666; /*CSS3 properties*/
+    border-radius: 4px 4px 0 0;
+    -webkit-border-radius: 4px 4px 0 0;
+    -moz-border-radius: 4px 4px 0 0;
+}
+
+ul#menu li a:hover
+{
+    background-color: #eee;
+    text-decoration: none;
+}
+
+ul#menu li a:active
+{
+    background-color: #999;
+    text-decoration: none;
+    color: #fff;
+}
+
+ul#menu li.selected a
+{
+    background-color: #999;
+    color: #fff;
+}
+
+/* forms   
+----------------------------------------------------------*/
+fieldset
+{
+    margin: 1em 0;
+    padding: 1em;
+    border: 1px solid #CCC;
+}
+
+fieldset legend
+{
+    font-size: 1.1em;
+    font-weight: bold;
+    padding: 2px 4px 8px 4px;
+}
+
+fieldset ol
+{
+    padding: 0;
+    list-style: none;
+}
+
+fieldset ol li
+{
+    padding-bottom: 5px;
+}
+
+fieldset label
+{
+    display: block;
+}
+
+fieldset label.checkbox
+{
+    display: inline;
+}
+
+fieldset input[type="text"], input[type="password"]
+{
+    border: 1px solid #ccc;
+    padding: 2px;
+    font-size: 1.2em;
+    color: #444;
+    width: 300px;
+}
+
+fieldset input[type="submit"]
+{
+    font-size: 1.2em;
+    padding: 5px;
+}
+
+/* Information and errors  
+----------------------------------------------------------*/
+.message
+{
+    clear: both;
+    border: 1px solid;
+    margin: 10px 0px;
+    padding: 15px 15px; /*CSS3 properties*/
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    box-shadow: 2px 2px 5px #888;
+    -webkit-box-shadow: 2px 2px 5px #888;
+    -moz-box-shadow: 2px 2px 5px #888;
+}
+
+.info
+{
+    background: #bde5f8;
+    color: #00529b;
+}
+
+.error
+{
+    background: #ffe4e4;
+    color: #be3e16;
+}
+
+.success
+{
+    background: #dff2bf;
+    color: #4f8a10;
+}
+
+input[type="text"].error-field, input[type="password"].error-field
+{
+    border: solid 1px #be3e16;
+    background-color: #ffe4e4;
+}
+article
+{padding:20px;
+}

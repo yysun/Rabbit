@@ -1,20 +1,11 @@
+@using Rabbit
 @{
-    Layout = "~/_SiteLayout.cshtml";
-    Rabbit.WebForm.Run(this);
-}
-@functions {
-    void page_load(){
-    }
+    Layout = SiteEngine.RunHook("get_layout"); // dynamic layout
 }
 
-<script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.4.4.min.js" type="text/javascript"></script>
-<script type="text/javascript" src="@Href("~/WebForms.js")"></script>
+@WebForm.Run(this)
 
 <h1>Hello Web Form</h1>
 <form method="post" action="">
+
 </form>
-<script type="text/javascript">
-    $(function () {
-        webForm.init();      
-    });
-</script>

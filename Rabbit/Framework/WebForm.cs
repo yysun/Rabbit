@@ -1,20 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Web.WebPages;
 using System.Text;
-using System.Web.WebPages.Html;
 using System.Web;
+using System.Web.WebPages;
+using Newtonsoft.Json;
 
 namespace Rabbit
 {
     public static class WebForm
     {
+
         public static IHtmlString Run(WebPage page)
         {
             try
             {
-                page.ParseForm();
+                var fields = ParseForm(page);
 
                 page.InvokeMethod("Page_Load");
 
@@ -27,10 +30,11 @@ namespace Rabbit
                 }
    
                 page.InvokeMethod(eventTarget);
-                
+
                 page.InvokeMethod("Page_Unload");
 
-                return GenerateScript(page);
+                var script = GenerateScript(page, fields);
+                return page.Html.Raw(script);
 
             }
             catch (Exception ex)
@@ -40,22 +44,42 @@ namespace Rabbit
             }
         }
 
-        internal static IHtmlString GenerateScript(WebPage page)
+        internal static IEnumerable<FieldInfo> ParseForm(WebPage page)
         {
-            var sb = new StringBuilder();
-            var js = page.Href("~/WebForms.js");
-            sb.AppendFormat("<script src=\"{0}\" type=\"text/javascript\"></script>\r\n", js);
-
-            sb.Append("<script type=\"text/javascript\">\r\n $(function () {");
-            sb.Append("webForm.init();");
-
-            foreach (var key in page.Request.Form.AllKeys)
+            var fields = page.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            foreach (var field in fields)
             {
-                if (key.StartsWith("@"))
+                var value = page.Request.Form[field.Name];
+                if (value != null)
                 {
-                    sb.AppendFormat("webForm['{0}']={1};", key.Substring(1), page.Request.Form[key]);
+                    field.SetValue(page, Convert.ChangeType(value, field.FieldType));
+                }
+                else
+                {
+                    value = page.Request.Form["@" + field.Name];
+                    if (value != null) field.SetValue(page, JsonConvert.DeserializeObject(value, field.FieldType));
                 }
             }
+
+            return fields;
+        }
+
+        internal static string GenerateScript(WebPage page, IEnumerable<FieldInfo> fields)
+        {
+            var sb = new StringBuilder();
+            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Rabbit.WebForms.js"))
+            {
+                var webformjs = new StreamReader(stream).ReadToEnd();
+                sb.Append("<script type=\"text/javascript\">\r\n" + webformjs);
+            }
+            sb.Append("\r\n$(function () { webForm.init();");           
+
+            foreach (var field in fields)
+            {
+                if(field.IsPublic)
+                    sb.AppendFormat("webForm['{0}']={1};", field.Name, JsonConvert.SerializeObject(field.GetValue(page)));
+            }
+
             var x = page.Request["__scroll_x"];
             var y = page.Request["__scroll_y"];
             if (!string.IsNullOrWhiteSpace(x) && !string.IsNullOrWhiteSpace(y))
@@ -64,7 +88,7 @@ namespace Rabbit
             }
             sb.Append("}); \r\n</script>");
 
-            return page.Html.Raw(sb.ToString());
+            return sb.ToString();
         }
     }
 }

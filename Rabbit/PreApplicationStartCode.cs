@@ -19,7 +19,7 @@ namespace Rabbit
 
             ApplicationPart.Register(appPart);
 
-            //SiteEngine.Start();
+            SiteEngine.Start();
         }
     }
 }

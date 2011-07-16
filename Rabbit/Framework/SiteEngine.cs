@@ -8,35 +8,30 @@ using System.Diagnostics;
 
 namespace Rabbit
 {
-
     public static class SiteEngine
     {
+        private static List<KeyValuePair<string, Func<object, object>>> hooks = 
+            new List<KeyValuePair<string, Func<object, object>>>();
+
         public static void Start()
         {
-            hooks = new List<KeyValuePair<string, Func<object, object>>>();
-            //InitModules();
-            SiteEngine.RunHook("start");
+            Trace.WriteLine("Start SiteEngine ...");
+            InitModules();
         }
-
-        private static List<KeyValuePair<string, Func<object, object>>> hooks;
 
         public static void AddHook(string name, Func<object, object> action)
         {
             if (string.IsNullOrWhiteSpace(name)) return;
-            
-            //if (hooks == null) InitModules();
 
             Trace.WriteLine(string.Format("SiteEngine: \tAddHook {0}", name));
 
             hooks.Add(new KeyValuePair<string, Func<object, object>>(name, action));
         }
 
-        [System.Diagnostics.DebuggerStepThrough]
+        //[System.Diagnostics.DebuggerStepThrough]
         public static dynamic RunHook(string name, object data = null)
         {
             if (string.IsNullOrWhiteSpace(name)) return data;
-            
-            //if (hooks == null) InitModules();
 
             var foundhooks = hooks.Where(a => string.Compare(a.Key, name, true) == 0)
                    .Select(a => a.Value)
@@ -52,8 +47,6 @@ namespace Rabbit
         {
             if (string.IsNullOrWhiteSpace(name)) return;
 
-            //if (hooks == null) InitModules();
-
             var foundhooks = hooks.Where(a => string.Compare(a.Key, name, true) == 0)
                     .ToList();
 
@@ -61,76 +54,50 @@ namespace Rabbit
 
             foundhooks.ForEach(h => hooks.Remove(h));
         }
-/*
-        private static string configFileName
-        {
-            get
-            {
-                return HttpContext.Current == null ?
-                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data/Rabbit/Modules") :
-                    HttpContext.Current.Server.MapPath("~/App_Data/Rabbit/Modules");
-            }
-        }
-
-        private static IEnumerable<string> GetActivatedModules()
-        {
-            return File.Exists(configFileName) ?
-                   File.ReadAllLines(configFileName)
-                       .Where(s => !string.IsNullOrWhiteSpace(s) && !s.StartsWith("#"))
-                   : new string[] { };
-        }
-
-        private static IEnumerable<string> GetGetDeployedModules()
-        {
-            var deployPath = HttpContext.Current.Server.MapPath("~/App_Code/Rabbit/Modules");
-            return Directory.Exists(deployPath) ?
-                   from d in Directory.EnumerateDirectories(deployPath)
-                   select Path.GetFileName(d)
-                   : new string[] { };
-        }
 
         private static void InitModules()
         {
-            hooks = new List<KeyValuePair<string, Func<object, object>>>();
-            var modules = GetActivatedModules().ToList();
-
             var assemblies = Directory.EnumerateFiles(AppDomain.CurrentDomain.DynamicDirectory, "*.dll");
 
-            modules.ForEach(module =>
+            foreach (var file in assemblies)
             {
                 try
                 {
-                    Trace.WriteLine(string.Format("SiteEngine: Start Loading Module {0}", module));
+                    var assembly = Assembly.LoadFrom(file);
+                    Trace.WriteLine(string.Format("SiteEngine: Start Loading Assembly {0}", file));
 
-                    Type moduleType = GetType(assemblies, module);
+                    var types = assembly.GetTypes();
 
-                    if (module == null)
-                    {
-                        Trace.WriteLine(string.Format("SiteEngine: Failed Loading Module: {0}: Error: class {0} not found\r\n", module));
-                    }
-                    else
+                    foreach(Type moduleType in types)
                     {
                         //Use Hook attribute
-                        var methods = moduleType.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
-                                      .Where(m => m.GetCustomAttributes(typeof(HookAttribute), true).Count() > 0);
+                        var methods = moduleType.GetMethods(BindingFlags.Public | BindingFlags.Static)
+                                      .Where(m => m.GetCustomAttributes(typeof(HookAttribute), true).Count() > 0).ToList();
 
                         foreach (var method in methods)
                         {
                             foreach (var attr in method.GetCustomAttributes(typeof(HookAttribute), true))
                             {
-                                var func = Delegate.CreateDelegate(typeof(Func<object, object>), method) as Func<object, object>;
-                                SiteEngine.AddHook(((HookAttribute)attr).Name ?? method.Name, func);
+                                var hookName = ((HookAttribute)attr).Name ?? method.Name;
+                                try
+                                {
+                                    var func = Delegate.CreateDelegate(typeof(Func<object, object>), method) as Func<object, object>;
+                                    SiteEngine.AddHook(hookName, func);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Trace.WriteLine(string.Format("SiteEngine: Failed Binding Hook: {0}: Error: {1}\r\n", hookName, ex.Message));
+                                }
                             }
                         }
-
-                        Trace.WriteLine(string.Format("SiteEngine: Done Loading Module {0}\r\n", module));
+                        Trace.WriteLine(string.Format("SiteEngine: Done Loading Assembly {0}\r\n", file));
                     }
                 }
                 catch (Exception ex)
                 {
-                    Trace.WriteLine(string.Format("SiteEngine: Failed Loading Module: {0}: Error: {1}\r\n", module, ex.Message));
+                    Trace.WriteLine(string.Format("SiteEngine: Failed Loading Assembly: {0}: Error: {1}\r\n", file, ex.Message));
                 }
-            });
+            }
         }
 
         private static Type GetType(IEnumerable<string> files, string module)
@@ -143,42 +110,6 @@ namespace Rabbit
             }
             return null;
         }
-
-        public static string GetModules()
-        {
-            return MergeModules(GetActivatedModules());
-        }
-
-        public static string SetModules(string list)
-        {
-            var modules = list.Replace("\r", "").Split('\n');
-
-            var folder = Path.GetDirectoryName(configFileName);
-            if (!Directory.Exists(folder))
-            {
-                Directory.CreateDirectory(folder);
-            }
-
-            File.WriteAllText(configFileName, MergeModules(modules));
-            InitModules();
-            return GetModules();
-        }
-
-        private static string MergeModules(IEnumerable<string> modules)
-        {
-            var list1 = from a in modules
-                        join b in GetGetDeployedModules() on a equals b
-                        select a;
-
-            var list2 = from a in GetGetDeployedModules()
-                        join b in modules on a equals b into cc
-                        from c in cc.DefaultIfEmpty()
-                        where c == null
-                        select "# " + a;
-
-            return string.Join("\r\n", list1.Union(list2));
-        }
- */ 
     }
 
     [AttributeUsage(AttributeTargets.Method)]

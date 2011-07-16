@@ -1,7 +1,23 @@
-﻿@{  
-    Layout = "~/_SiteLayout.cshtml";
+﻿@using Rabbit
+@{  
+    Layout = SiteEngine.RunHook("get_layout");
     Page.Title = "Welcome to my Web Site!";
+
+    var test = SiteEngine.RunHook("TestHook");
+   
+}
+
+@functions{
+    
+    [Hook]
+    public static object TestFuncInDefaultPage(object o = null)
+    {
+        return "aaa";
+    }
 }
 <p>
-    ASP.NET Web Pages make it easy to build powerful .NET based applications for the web.
+    This page loads layout through get_layout hook.
+</p>
+<p>
+   @test
 </p>
