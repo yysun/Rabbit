@@ -1,8 +1,7 @@
 ﻿@using Rabbit
 @{
-    Layout = SiteEngine.RunHook("get_layout"); // dynamic layout
+    Page.Title = "Web Form Demo";
 }
-@*make this page a rabbit web form*@
 @WebForm.Run(this)
 
 @functions {

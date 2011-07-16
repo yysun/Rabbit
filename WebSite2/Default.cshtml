@@ -1,23 +1,32 @@
 ﻿@using Rabbit
 @{  
     Layout = SiteEngine.RunHook("get_layout");
-    Page.Title = "Welcome to my Web Site!";
-
-    var test = SiteEngine.RunHook("TestHook");
-   
-}
-
-@functions{
-    
-    [Hook]
-    public static object TestFuncInDefaultPage(object o = null)
-    {
-        return "aaa";
-    }
+    Page.Title = "Welcome to my Web Site!";  
 }
 <p>
-    This page loads layout through get_layout hook.
+Rabbit Framework is a new lightweight framework for building web sites using ASP.NET Web Pages / WebMatrix. 
+This site demonstrates features of Rabbit Framework.
 </p>
-<p>
-   @test
+
+<h2>Hooks</h2>
+<p>Rabbit Framework has a site engine that implements loosely coupled event publication and subscription. 
+From anywhere of the site, we can run a hook (like fire a event). If there is a hook implementation registered, 
+it will be invoked. See the <a href="Demo_Hooks.cshtml">Hook Demo Page.</a></p>
+
+<h2>Web Forms</h2>
+<p>Rabbit Framework introduces a new web forms engine. It uses HTML 5 data attributes and unobtrusive JavaScript. 
+No messed up Ids. No view state. It supports multiple forms on a page.
+See the <a href="Demo_RunAtServer.cshtml">Web Forms Demo Page.</a> The data are synchronized between C# code and JavaScript
+code, see the <a href="Demo_DataSync.cshtml">Data Sync Demo Page</a>.
 </p>
+
+<h2>Unit Test</h2>
+<p>The Rabbit Framework introduced a Testing Module for unit testing within the web site. It provides a familiar way of 
+writing unit tests. See the App_Code\TestClass.cs and App_Code\MockTest.cs and Run the <a href="_Admin/Rabbit/Test">Unit Test Page</a>.</p>
+
+<h2>Admin Page</h2>
+<p>The Rabbit Site Admin functions, such as <a href="_Admin/Rabbit/Test">unit test</a> and 
+<a href="_Admin/Rabbit/CodeGen">code generating</a> are integrated with ASP.NET Web Pages' administration page. </p>
+
+<br /><br />
+<p>For more information, please visit <a href="http://rabbit.codeplex.com">Rabbit Framework project site</a>.</p>

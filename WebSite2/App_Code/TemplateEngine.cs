@@ -19,7 +19,7 @@ public class TemplateManager
     [Hook]
     public static object Get_Layout(object data)
     {
-        var template = "Sample1";
+        var template = "Default";
         return string.Format("~/Templates/{0}/_SiteLayout.cshtml", template ?? "Default");
     }
 }

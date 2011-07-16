@@ -1,8 +1,8 @@
 @using Rabbit
 @{
-    Layout = SiteEngine.RunHook("get_layout"); // dynamic layout
+    Page.Title = "Data Sync Demo";
 }
-@*make this page a rabbit web form*@
+
 @WebForm.Run(this)
 
 @functions{
@@ -17,7 +17,7 @@
 <h2>Test data synchronization</h2>
 <ol>
 <li>Public C# fields are serialized to JSON and accessible in JavaScript through webForm object.</li>
-<li>All C# fields are populated by values Request.Form or values from webForm object.<br />
+<li>All C# fields are populated by values posted through HTTP Form or by the values from the webForm object.<br />
 E.g. The button triggers a post and sends the textbox context to C# field s. After the post, the value of s is serialized to webForm.s.</li>
 </ol>
 <form method="post" action="">
@@ -46,7 +46,7 @@ E.g. The button triggers a post and sends the textbox context to C# field s. Aft
         @if(IsPost){
         <text>
         test("verify webForm.s equals the textbox and the C# field s", function () {
-            equals(webForm.s, "@s");    
+            equals(webForm.s, $("input[name='s']").val());    
         });
         </text>
         }

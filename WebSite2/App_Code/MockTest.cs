@@ -7,7 +7,7 @@ using Microsoft.CSharp.RuntimeBinder;
 using System.Reflection;
 using Rabbit;
 
-//[TestClass]
+[TestClass]
 public class MockTest
 {
     [TestMethod]
