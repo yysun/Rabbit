@@ -57,6 +57,8 @@ namespace Rabbit
 
         private static void InitModules()
         {
+            hooks.Clear();
+
             var assemblies = Directory.EnumerateFiles(AppDomain.CurrentDomain.DynamicDirectory, "*.dll");
 
             foreach (var file in assemblies)
