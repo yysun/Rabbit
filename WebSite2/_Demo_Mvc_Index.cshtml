@@ -1,0 +1,44 @@
+﻿@{
+    Page.Title = "MVC Demo";
+}
+
+    <p>
+        Thanks to ASP.NET Web Pages’ built-in
+        <a href="http://www.asp.net/webmatrix/tutorials/18-customizing-site-wide-behavior">
+        magic routing</a>,a request like
+        <a href="http://…/a/b/c/d/e">http://…/controller/a/b/c/d</a> is routed to /controller.cshtml. 
+        So, controller.cshtml is a <b>controller</b>, if made if inherit from Rabbit.MvcController.
+    </p>
+
+ <pre style="font-family: Consolas; font-size: 11px; color: black; background: white;"><span 
+        style="background: yellow;">@@</span><span style="color:blue;">using</span>&nbsp;Rabbit
+<span style="background: yellow;">@@inherits&nbsp;</span><span style="color:#2b91af;">MvcController</span>
+ 
+<span style="background: yellow;">@@functions&nbsp;{</span>&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;[<span style="color:#2b91af;">Get</span>(<span style="color:#a31515;">&quot;/&quot;</span>)]
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue;">void</span>&nbsp;Index()&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green;">//&nbsp;default&nbsp;view&nbsp;name&nbsp;_{controller}_{action}.cshtml</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;View(<span style="color:blue;">new</span>&nbsp;{&nbsp;Data&nbsp;=&nbsp;1,&nbsp;Message&nbsp;=&nbsp;<span 
+        style="color:#a31515;">&quot;Get&nbsp;action&nbsp;of&nbsp;demo&nbsp;MVC&nbsp;controller&quot;</span>});&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;}
+ 
+&nbsp;&nbsp;&nbsp;&nbsp;[<span style="color:#2b91af;">Post</span>(<span style="color:#a31515;">&quot;/&quot;</span>)]
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue;">void</span>&nbsp;Index_Post()
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;View(<span style="color:blue;">new</span>&nbsp;{&nbsp;Data&nbsp;=&nbsp;2,&nbsp;Message&nbsp;=&nbsp;<span 
+        style="color:#a31515;">&quot;Post&nbsp;action&nbsp;of&nbsp;demo&nbsp;MVC&nbsp;controller&quot;</span>&nbsp;},&nbsp;<span 
+        style="color:#a31515;">&quot;_Demo_Mvc_Index.cshtml&quot;</span>);
+&nbsp;&nbsp;&nbsp;&nbsp;}
+ 
+<span style="background: yellow;">}</span>
+</pre>
+
+<div>
+    @Page.Data
+    @Page.Message
+</div>
+<form action="" method="post">
+<button>Post</button>
+</form>

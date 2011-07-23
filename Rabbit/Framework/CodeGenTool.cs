@@ -10,11 +10,13 @@ namespace Rabbit
         #region templates
 
         public const string WebFormTemplate = @"@using Rabbit
+@inherits WebForm
 @{
     Layout = SiteEngine.RunHook(""get_layout""); // dynamic layout
 }
 
-@WebForm.Run(this)
+@functions {
+}
 
 <h1>Hello Web Form</h1>
 <form method=""post"" action="""">
@@ -22,29 +24,26 @@ namespace Rabbit
 </form>
 ";
 
-        public const string MvcControllerTemplate =@"@using Rabbit
-@using System.Collections.Specialized
-@{
-    Rabbit.Mvc.Run(this);
-}
-@functions {
-   
+        public const string MvcControllerTemplate = @"@using Rabbit
+@inherits MvcController
+
+@functions {  
     {0}
 }
 ";
         public const string MvcActionTemplate = @"
     [Get(""/{0}"")]
-    void {0}(){
+    void {0}() {
+        View(new { Model = """" }, ""~/_{1}_{0}.cshtml"");
     }
 
     [Post(""/{0}"")]
-    void {0}(NameValueCollection form){
+    void {0}_Post() {
     }
 ";
 
         public const string MvcViewTemplate = @"@{
-    Page.Title = ""{0} {1} View"";
-    Layout = ""~/_SiteLayout.cshtml"";
+    Page.Title = ""{0} {1}"";
 }
 <h2>@Page.Model</h2>
 ";
@@ -64,7 +63,7 @@ public class {0}
 
         public static Dictionary<string, string[]> Templates = new Dictionary<string, string[]>() {
             {"Web Form",  new string[] { WebFormTemplate, "~/WebForm.cshtml"} },
-            //{"MVC",       new string[] { MvcControllerTemplate, "~/MvcDemo.cshtml"} },
+            {"MVC",       new string[] { MvcControllerTemplate, "~/Controller.cshtml"} },
             {"Unit Test", new string[] { TestTemplate, "~/App_Code/TestClass.cs"} }
         };
 
@@ -76,6 +75,7 @@ public class {0}
         public static string GetTemplate(string code_type, string fileName, string actions)
         {          
             var code = Templates[code_type][0];
+            var controller = Path.GetFileNameWithoutExtension(fileName);
 
             if (code_type == "MVC")
             {
@@ -84,8 +84,8 @@ public class {0}
                 foreach (var s in ss)
                 {
                     var action = s.Trim();                   
-                    var tmp = MvcActionTemplate.Replace("{0}", action);
-                    if (action.ToLower() == "default") // default page, could be home, index etc.
+                    var tmp = MvcActionTemplate.Replace("{0}", action).Replace("{1}", controller);
+                    if (action.ToLower() == "index") // default page, could be home, index etc.
                     {
                         tmp = tmp.Replace("/" + action, "/");
                     }
@@ -111,13 +111,12 @@ public class {0}
                     var controller = Path.GetFileNameWithoutExtension(fileName);
                     fileName = Path.Combine(folder, controller + ".cshtml");
                     File.WriteAllText(fileName, ncode);
-                    folder = Path.Combine(folder, string.Format("Views/{0}", controller));
-                    if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
-
-                    foreach (var s in actions.Split(','))
+                    //folder = Path.Combine(folder, string.Format("View/{0}", controller));
+                    //if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+            foreach (var s in actions.Split(','))
                     {
                         var action = s.Trim();
-                        fileName = Path.Combine(folder, action + ".cshtml");
+                        fileName = Path.Combine(folder, "_" + controller + "_" + action + ".cshtml");
                         File.WriteAllText(fileName, MvcViewTemplate.Replace("{0}", controller).Replace("{1}", action));    
                     }
                     break;

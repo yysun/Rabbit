@@ -1,9 +1,9 @@
 @using Rabbit
+@inherits WebForm
 @{
     Layout = SiteEngine.RunHook("get_layout"); // dynamic layout
 }
 
-@WebForm.Run(this)
 
 <h1>Hello Web Form</h1>
 <form method="post" action="">

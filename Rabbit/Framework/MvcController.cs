@@ -6,28 +6,37 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web.WebPages;
+using Newtonsoft.Json;
 
 namespace Rabbit
 {
-    public static class Mvc
+    public class MvcController : WebPage
     {
+        public override void ExecutePageHierarchy()
+        {
+            Run();
+            base.ExecutePageHierarchy();
+        }
+
+        public override void Execute()
+        {
+        }
+
         static Dictionary<string, IList<RouteAttribute>> cache = new Dictionary<string, IList<RouteAttribute>>();
         
-        //[System.Diagnostics.DebuggerStepThrough]
-        public static void Run(this WebPage page)
+        protected virtual void Run()
         {
             try
             {
-                Assert.IsTrue(page != null);
                 
-                page.ParseForm();
+                this.ParseForm();
 
-                IList<string> urlData = page.UrlData;
+                IList<string> urlData = this.UrlData;
                 urlData = urlData.Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
 
                 var action = urlData.Count() > 0 ? urlData[0].ToLower() : "";
 
-                var cacheKey = page.ToString();
+                var cacheKey = this.GetType().FullName;
                 IList<RouteAttribute> routes = null;
 
                 if (cache.ContainsKey(cacheKey))
@@ -37,7 +46,7 @@ namespace Rabbit
                 else
                 {
                     routes = new List<RouteAttribute>();
-                    var methods = page.GetType().GetMethods(
+                    var methods = this.GetType().GetMethods(
                         BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
                     foreach (var method in methods)
                     {
@@ -50,7 +59,7 @@ namespace Rabbit
 
                     //not to cache, if web.config says debug=true
                     //if (!HttpContext.Current.IsDebuggingEnabled) cache[cacheKey] = routes;
-                    if (!page.Context.IsDebuggingEnabled) cache[cacheKey] = routes;
+                    if (!this.Context.IsDebuggingEnabled) cache[cacheKey] = routes;
                 }
 
                 var rs = routes.Where(r => string.Compare(r.Action, action, true) == 0);
@@ -62,32 +71,16 @@ namespace Rabbit
                         routes.Where(r => r.Action == "/*");
                 }
 
-                var route = rs.Where(r => r.IsPost == page.IsPost).FirstOrDefault();
+                var route = rs.Where(r => r.IsPost == this.IsPost).FirstOrDefault();
 
                 if (route != null && route.Method != null)
                 {
                     Trace.WriteLine(string.Format("Controller: Run Action {0} -> {1}", action, route.Action));
 
-                    page.InvokeMethod(route.Method.Name);
+                    this.InvokeMethod(route.Method.Name);
 
-                    dynamic actionResult = page.Page;
-                    if (page.Request.AcceptTypes.Contains("application/json"))
-                    {
-                        var json = actionResult.Model == null ? "{\"d\":[]}" :
-                            "{\"d\":[" + ((ExpandoObject)actionResult.Model).ToJson() + "]}";
-                        page.Response.Write(json);
-                    }
-                    else if (actionResult.Redirect != null)
-                    {
-                        page.Response.Redirect(actionResult.Redirect, false);
-                    }
-                    else
-                    {
-                        var controller = Path.GetFileNameWithoutExtension(page.Request.Path.Split('/')[1]);
-                        var view = actionResult.View ?? route.Method.Name;                          
-                        view = string.Format("~/Views/{0}/{1}.cshtml", controller, view);
-                        page.Write(page.RenderPage(view, actionResult.Model));
-                    }
+                    lastAction = route.Method.Name;
+                   
                 }
                 else
                 {
@@ -101,10 +94,34 @@ namespace Rabbit
             }
         }
 
-        public static void Run_Mvc(this WebPage webpage)
+        protected string lastAction;
+
+        protected virtual void View(object model, string viewName = null)
         {
-            Run(webpage);
+            if (model == null)
+            {
+                Response.StatusCode = 404;
+                return;
+            }
+
+            if (Request.AcceptTypes.Contains("application/json"))
+            {
+                dynamic json = model is ExpandoObject ? ((ExpandoObject)model).ToJson() :
+                        JsonConvert.SerializeObject(model);
+                Response.Write(json);
+            }
+
+            if (string.IsNullOrWhiteSpace(viewName))
+            {
+                viewName = lastAction ?? "Index";
+
+                var controller = Path.GetFileNameWithoutExtension(this.Request.Path.Split('/')[1]);
+                viewName = string.Format("~/_{0}_{1}.cshtml", controller, viewName);
+            }
+
+            Write(RenderPage(viewName, model));
         }
+
     }
 
     #region Attributes

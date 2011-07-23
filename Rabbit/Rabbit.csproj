@@ -64,6 +64,7 @@
     <Compile Include="Framework\DynamicExtensions.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Framework\MvcController.cs" />
     <Compile Include="Framework\SiteEngine.cs">
       <SubType>Code</SubType>
     </Compile>

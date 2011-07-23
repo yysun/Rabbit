@@ -1,13 +1,13 @@
-@using Rabbit
+@inherits Rabbit.WebForm
+
 @{
     Page.Title = "Data Sync Demo";
+    i = 100; // changed value during page execution
 }
-
-@WebForm.Run(this)
 
 @functions{
 
-    public int i = 10;
+    public int i = 10; // initial value
     public string s = "test string";
     public bool b = true;
     public decimal n = 45.6m;
@@ -32,6 +32,7 @@ E.g. The button triggers a post and sends the textbox context to C# field s. Aft
 <div id="qunit-testrunner-toolbar"></div>
 <ol id="qunit-tests"></ol>
 <div id="qunit-fixture"></div>
+
 <script type="text/javascript">
     $(function () {
         test("verify js webForm fields equal C# fields", function () {
@@ -53,3 +54,4 @@ E.g. The button triggers a post and sends the textbox context to C# field s. Aft
 
     });
 </script>
+

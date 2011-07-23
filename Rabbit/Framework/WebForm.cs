@@ -10,32 +10,38 @@ using Newtonsoft.Json;
 
 namespace Rabbit
 {
-    public static class WebForm
+    public class WebForm : WebPage
     {
+        public override void ExecutePageHierarchy()
+        {
+            Run();
+            base.ExecutePageHierarchy();
+            GenerateScript();
+        }
 
-        public static IHtmlString Run(WebPage page)
+        public override void Execute()
+        {
+        }
+
+        protected virtual void Run()
         {
             try
             {
-                var fields = ParseForm(page);
+                this.ParseForm();
 
-                page.InvokeMethod("Page_Load");
+                this.InvokeMethod("Page_Load");
 
-                var eventSource = page.Request["__event_source"];
-                var eventTarget = page.Request["__event_target"];
+                var eventSource = Request["__event_source"];
+                var eventTarget = Request["__event_target"];
 
                 if (string.IsNullOrWhiteSpace(eventTarget) && !string.IsNullOrWhiteSpace(eventSource))
                 {
                     eventTarget = eventSource + "_click";
                 }
    
-                page.InvokeMethod(eventTarget);
+                this.InvokeMethod(eventTarget);
 
-                page.InvokeMethod("Page_Unload");
-
-                var script = GenerateScript(page, fields);
-                return page.Html.Raw(script);
-
+                this.InvokeMethod("Page_Unload");
             }
             catch (Exception ex)
             {
@@ -44,51 +50,37 @@ namespace Rabbit
             }
         }
 
-        internal static IEnumerable<FieldInfo> ParseForm(WebPage page)
-        {
-            var fields = page.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-            foreach (var field in fields)
-            {
-                var value = page.Request.Form[field.Name];
-                if (value != null)
-                {
-                    field.SetValue(page, Convert.ChangeType(value, field.FieldType));
-                }
-                else
-                {
-                    value = page.Request.Form["@" + field.Name];
-                    if (value != null) field.SetValue(page, JsonConvert.DeserializeObject(value, field.FieldType));
-                }
-            }
-
-            return fields;
-        }
-
-        internal static string GenerateScript(WebPage page, IEnumerable<FieldInfo> fields)
+        protected virtual void GenerateScript()
         {
             var sb = new StringBuilder();
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Rabbit.WebForms.js"))
             {
                 var webformjs = new StreamReader(stream).ReadToEnd();
+#if(!DEBUG)
+                webformjs = webformjs.Replace("\r", "").Replace("\n", "");
+#endif
                 sb.Append("<script type=\"text/javascript\">\r\n" + webformjs);
             }
-            sb.Append("\r\n$(function () { webForm.init();");           
+            sb.Append("\r\n$(function () { webForm.init();");
+
+            var fields = this.GetType().GetFields(BindingFlags.Public| BindingFlags.Instance);
 
             foreach (var field in fields)
             {
                 if(field.IsPublic)
-                    sb.AppendFormat("webForm['{0}']={1};", field.Name, JsonConvert.SerializeObject(field.GetValue(page)));
+                    sb.AppendFormat("webForm['{0}']={1};", field.Name, JsonConvert.SerializeObject(field.GetValue(this)));
             }
 
-            var x = page.Request["__scroll_x"];
-            var y = page.Request["__scroll_y"];
+            var x = this.Request["__scroll_x"];
+            var y = this.Request["__scroll_y"];
             if (!string.IsNullOrWhiteSpace(x) && !string.IsNullOrWhiteSpace(y))
             {
                 sb.AppendFormat("window.scrollTo({0},{1});", x, y);
             }
             sb.Append("}); \r\n</script>");
 
-            return sb.ToString();
+            var script =  sb.ToString();
+            this.Write(this.Html.Raw(script));
         }
     }
 }

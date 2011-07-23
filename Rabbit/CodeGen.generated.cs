@@ -26,21 +26,12 @@ namespace Rabbit
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("RazorGenerator", "1.1.0.0")]
     [System.Web.WebPages.PageVirtualPathAttribute("~/CodeGen.cshtml")]
-    public class CodeGen : System.Web.WebPages.WebPage
+    public class CodeGen : Rabbit.WebForm
     {
         
-        #line 10 "E:\Users\Public\My Projects\Rabbit\Src\Rabbit\CodeGen.cshtml"
+        #line 14 "E:\Users\Public\My Projects\Rabbit\Src\Rabbit\CodeGen.cshtml"
 
-    string code_type = "Web Form", code = "", file_name = "", msg = "";
-    
-    void Page_Load()
-    {
-        code = Rabbit.CodeGenTool.GetTemplate(code_type, file_name, null);
-        if (!IsPost)
-        {
-            file_name = Rabbit.CodeGenTool.GetDefaultFileName(code_type);
-        }
-    }
+    string code_type = "Web Form", code = "", actions = "Index,Edit,Create,Delete,View", file_name = "", msg = "";
     
     void code_type_click()
     {
@@ -61,7 +52,7 @@ namespace Rabbit
                 var fileName = Server.MapPath(file_name);
                 var ncode = Request.Unvalidated("ncode");  
                 code = ncode;
-                Rabbit.CodeGenTool.SaveCode(code_type, Server.MapPath("~/"), fileName, ncode, null);
+                Rabbit.CodeGenTool.SaveCode(code_type, Server.MapPath("~/"), fileName, ncode, actions);
                 msg = "File saved.";
             }
             catch (Exception ex)
@@ -90,28 +81,24 @@ namespace Rabbit
 WriteLiteral("\r\n");
 
 
+
             
-            #line 2 "E:\Users\Public\My Projects\Rabbit\Src\Rabbit\CodeGen.cshtml"
+            #line 3 "E:\Users\Public\My Projects\Rabbit\Src\Rabbit\CodeGen.cshtml"
   
     
     ((IList<Tuple<string, string>>)PageData["BreadCrumbs"]).Add(Tuple.Create<string, string>("Rabbit Admin", "/_Admin/Rabbit"));
     ((IList<Tuple<string, string>>)PageData["BreadCrumbs"]).Add(Tuple.Create<string, string>("Generate Code", "/_Admin/Rabbit/CodeGen"));  
+    
+    code = Rabbit.CodeGenTool.GetTemplate(code_type, file_name, actions);
+    if(string.IsNullOrWhiteSpace(file_name)) {
+        file_name = Rabbit.CodeGenTool.GetDefaultFileName(code_type);
+    }
 
 
             
             #line default
             #line hidden
 WriteLiteral("\r\n");
-
-
-            
-            #line 8 "E:\Users\Public\My Projects\Rabbit\Src\Rabbit\CodeGen.cshtml"
-Write(Rabbit.WebForm.Run(this));
-
-            
-            #line default
-            #line hidden
-WriteLiteral("\r\n\r\n");
 
 
 WriteLiteral("\r\n");
@@ -135,28 +122,106 @@ WriteLiteral(@"
     Select a code type: 
     <select id=""code_type"" name=""code_type"" data-runat=""server-auto"">
     <option>Web Form</option>
+    <option>MVC</option>
     <option>Unit Test</option>
     </select>
 </div>
  
-<div style=""float:left;margin-left:10px;"">
-    File Name: <input type=""text"" name=""file_name"" value=""");
+");
 
 
             
-            #line 71 "E:\Users\Public\My Projects\Rabbit\Src\Rabbit\CodeGen.cshtml"
+            #line 66 "E:\Users\Public\My Projects\Rabbit\Src\Rabbit\CodeGen.cshtml"
+ if (code_type == "MVC")
+{ 
+
+            
+            #line default
+            #line hidden
+WriteLiteral("<div style=\"float:left;margin-left:10px;\">\r\n    Controller: <input type=\"text\" na" +
+"me=\"file_name\" value=\"");
+
+
+            
+            #line 69 "E:\Users\Public\My Projects\Rabbit\Src\Rabbit\CodeGen.cshtml"
+                                                      Write(file_name);
+
+            
+            #line default
+            #line hidden
+WriteLiteral("\" />\r\n    Actions: <input type=\"text\" name=\"actions\" value=\"");
+
+
+            
+            #line 70 "E:\Users\Public\My Projects\Rabbit\Src\Rabbit\CodeGen.cshtml"
+                                                 Write(actions);
+
+            
+            #line default
+            #line hidden
+WriteLiteral("\" />\r\n    <input id=\"refresh\" type=\"submit\" value=\"Refresh\" data-runat=\"server\"/>" +
+"\r\n</div>\r\n");
+
+
+            
+            #line 73 "E:\Users\Public\My Projects\Rabbit\Src\Rabbit\CodeGen.cshtml"
+}
+else if (code_type == "Unit Test")
+{
+
+            
+            #line default
+            #line hidden
+WriteLiteral("<div style=\"float:left;margin-left:10px\">\r\n    Test Name: <input type=\"text\" name" +
+"=\"file_name\" value=\"");
+
+
+            
+            #line 77 "E:\Users\Public\My Projects\Rabbit\Src\Rabbit\CodeGen.cshtml"
                                                      Write(file_name);
 
             
             #line default
             #line hidden
-WriteLiteral("\" />\r\n</div>\r\n\r\n<div style=\"float:left;margin-left:10px;margin-bottom:10px;\">\r\n  " +
-" <input id=\"save\" type=\"submit\" value=\"Save\" data-runat=\"server\"/>\r\n  <div id=\"m" +
-"sg\">");
+WriteLiteral("\" />\r\n</div>\r\n");
 
 
             
-            #line 76 "E:\Users\Public\My Projects\Rabbit\Src\Rabbit\CodeGen.cshtml"
+            #line 79 "E:\Users\Public\My Projects\Rabbit\Src\Rabbit\CodeGen.cshtml"
+}
+else
+{ 
+
+            
+            #line default
+            #line hidden
+WriteLiteral("<div style=\"float:left;margin-left:10px;\">\r\n    Web Form File Name: <input type=\"" +
+"text\" name=\"file_name\" value=\"");
+
+
+            
+            #line 83 "E:\Users\Public\My Projects\Rabbit\Src\Rabbit\CodeGen.cshtml"
+                                                              Write(file_name);
+
+            
+            #line default
+            #line hidden
+WriteLiteral("\" />\r\n</div>\r\n");
+
+
+            
+            #line 85 "E:\Users\Public\My Projects\Rabbit\Src\Rabbit\CodeGen.cshtml"
+}
+
+            
+            #line default
+            #line hidden
+WriteLiteral("\r\n<div style=\"float:left;margin-left:10px;margin-bottom:10px;\">\r\n   <input id=\"sa" +
+"ve\" type=\"submit\" value=\"Save\" data-runat=\"server\"/>\r\n  <div id=\"msg\">");
+
+
+            
+            #line 89 "E:\Users\Public\My Projects\Rabbit\Src\Rabbit\CodeGen.cshtml"
            Write(msg);
 
             
@@ -167,7 +232,7 @@ WriteLiteral("</div>\r\n</div>\r\n<textarea name=\"ncode\" style=\"width:100%; b
 
 
             
-            #line 78 "E:\Users\Public\My Projects\Rabbit\Src\Rabbit\CodeGen.cshtml"
+            #line 91 "E:\Users\Public\My Projects\Rabbit\Src\Rabbit\CodeGen.cshtml"
                                                                            Write(code);
 
             
@@ -178,7 +243,7 @@ WriteLiteral("</textarea>\r\n\r\n</form>\r\n\r\n<script type=\"text/javascript\"
 
 
             
-            #line 84 "E:\Users\Public\My Projects\Rabbit\Src\Rabbit\CodeGen.cshtml"
+            #line 97 "E:\Users\Public\My Projects\Rabbit\Src\Rabbit\CodeGen.cshtml"
                         Write(code_type);
 
             

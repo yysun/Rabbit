@@ -1,23 +1,18 @@
 ﻿@* Generator: WebPage *@
+@inherits Rabbit.WebForm
 @{
     
     ((IList<Tuple<string, string>>)PageData["BreadCrumbs"]).Add(Tuple.Create<string, string>("Rabbit Admin", "/_Admin/Rabbit"));
     ((IList<Tuple<string, string>>)PageData["BreadCrumbs"]).Add(Tuple.Create<string, string>("Generate Code", "/_Admin/Rabbit/CodeGen"));  
+    
+    code = Rabbit.CodeGenTool.GetTemplate(code_type, file_name, actions);
+    if(string.IsNullOrWhiteSpace(file_name)) {
+        file_name = Rabbit.CodeGenTool.GetDefaultFileName(code_type);
+    }
 }
 
-@Rabbit.WebForm.Run(this)
-
 @functions{
-    string code_type = "Web Form", code = "", file_name = "", msg = "";
-    
-    void Page_Load()
-    {
-        code = Rabbit.CodeGenTool.GetTemplate(code_type, file_name, null);
-        if (!IsPost)
-        {
-            file_name = Rabbit.CodeGenTool.GetDefaultFileName(code_type);
-        }
-    }
+    string code_type = "Web Form", code = "", actions = "Index,Edit,Create,Delete,View", file_name = "", msg = "";
     
     void code_type_click()
     {
@@ -38,7 +33,7 @@
                 var fileName = Server.MapPath(file_name);
                 var ncode = Request.Unvalidated("ncode");  
                 code = ncode;
-                Rabbit.CodeGenTool.SaveCode(code_type, Server.MapPath("~/"), fileName, ncode, null);
+                Rabbit.CodeGenTool.SaveCode(code_type, Server.MapPath("~/"), fileName, ncode, actions);
                 msg = "File saved.";
             }
             catch (Exception ex)
@@ -63,13 +58,31 @@
     Select a code type: 
     <select id="code_type" name="code_type" data-runat="server-auto">
     <option>Web Form</option>
+    <option>MVC</option>
     <option>Unit Test</option>
     </select>
 </div>
  
+@if (code_type == "MVC")
+{ 
 <div style="float:left;margin-left:10px;">
-    File Name: <input type="text" name="file_name" value="@file_name" />
+    Controller: <input type="text" name="file_name" value="@file_name" />
+    Actions: <input type="text" name="actions" value="@actions" />
+    <input id="refresh" type="submit" value="Refresh" data-runat="server"/>
 </div>
+}
+else if (code_type == "Unit Test")
+{
+<div style="float:left;margin-left:10px">
+    Test Name: <input type="text" name="file_name" value="@file_name" />
+</div>
+}
+else
+{ 
+<div style="float:left;margin-left:10px;">
+    Web Form File Name: <input type="text" name="file_name" value="@file_name" />
+</div>
+}
 
 <div style="float:left;margin-left:10px;margin-bottom:10px;">
    <input id="save" type="submit" value="Save" data-runat="server"/>

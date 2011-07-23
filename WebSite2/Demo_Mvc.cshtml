@@ -1,0 +1,19 @@
+@using Rabbit
+@inherits MvcController
+
+@functions {  
+    
+    [Get("/")]
+    void Index() {
+        
+        // default view name _{controller}_{action}.cshtml
+        View(new { Data = 1, Message = "Get action of demo MVC controller"}); 
+    }
+
+    [Post("/")]
+    void Index_Post()
+    {
+        View(new { Data = 2, Message = "Post action of demo MVC controller" }, "_Demo_Mvc_Index.cshtml");
+    }
+
+}

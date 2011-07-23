@@ -6,6 +6,7 @@ using System.Dynamic;
 using System.Text;
 using System.Web.Script.Serialization;
 using WebMatrix.Data;
+using Newtonsoft.Json;
 
 namespace Rabbit
 {
@@ -77,11 +78,11 @@ namespace Rabbit
             return sb.ToString();
         }
 
-        public static ExpandoObject ToDynamic(this string text)
+        public static dynamic ToDynamic(this string text)
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             var dictionary = serializer.Deserialize<IDictionary<string, object>>(text);
-            return dictionary.ToExpando();
+            return dictionary.ToDynamic();
         }
 
         /// <summary>
@@ -89,7 +90,7 @@ namespace Rabbit
         /// </summary>
         /// <param name="dictionary"></param>
         /// <returns></returns>
-        public static ExpandoObject ToExpando(this IDictionary<string, object> dictionary)
+        public static dynamic ToDynamic(this IDictionary<string, object> dictionary)
         {
             var expando = new ExpandoObject();
             var expandoDic = (IDictionary<string, object>)expando;
@@ -98,7 +99,7 @@ namespace Rabbit
                 bool alreadyProcessed = false;
                 if (item.Value is IDictionary<string, object>)
                 {
-                    expandoDic.Add(item.Key, ToExpando((IDictionary<string, object>)item.Value));
+                    expandoDic.Add(item.Key, ToDynamic((IDictionary<string, object>)item.Value));
                     alreadyProcessed = true;
                 }
                 else if (item.Value is ICollection)
@@ -107,7 +108,7 @@ namespace Rabbit
                     foreach (var item2 in (ICollection)item.Value)
                     {
                         if (item2 is IDictionary<string, object>)
-                            itemList.Add(ToExpando((IDictionary<string, object>)item2));
+                            itemList.Add(ToDynamic((IDictionary<string, object>)item2));
                         else
                         {
                             //itemList.Add(ToExpando(new Dictionary<string, object> { { "Unknown", item2 } }));
@@ -130,6 +131,12 @@ namespace Rabbit
                 if (!alreadyProcessed) expandoDic.Add(item);
             }
             return expando;
+        }
+
+        public static dynamic ToDynamic(this object anything)
+        {
+            return anything == null ? null :
+                JsonConvert.SerializeObject(anything).ToDynamic();
         }
     }
 }
