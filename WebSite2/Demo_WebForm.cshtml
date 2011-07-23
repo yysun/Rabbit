@@ -17,7 +17,45 @@
     }
 }
 
-<h2>Test Web Form Post</h2>
+<h2>Web Form</h2>
+<p>By inheriting from Rabbit.WebForm, web page becomes web form.</p>
+
+<pre style="font-family: Consolas; font-size: 11px; color: black; background: white;"><span 
+        style="background: yellow;">@@inherits&nbsp;</span>Rabbit.<span 
+        style="color:#2b91af;">WebForm</span>
+<span style="background: yellow;">@@{</span>
+&nbsp;&nbsp;&nbsp;&nbsp;Page.Title&nbsp;=&nbsp;<span style="color:#a31515;">&quot;Web&nbsp;Form&nbsp;Demo&quot;</span>;
+<span style="background: yellow;">}</span>
+ 
+<span style="background: yellow;">@@functions&nbsp;{</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue;">public</span>&nbsp;<span style="color:blue;">string</span>&nbsp;name&nbsp;=&nbsp;<span 
+        style="color:#a31515;">&quot;&quot;</span>;
+
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue;">void</span>&nbsp;button_click()
+&nbsp;&nbsp;&nbsp;&nbsp;{
+
+&nbsp;&nbsp;&nbsp;&nbsp;}
+<span style="background: yellow;">}</span></pre>
+<pre style="font-family: Consolas; font-size: 11px; color: black; background: white;"><span 
+        style="color:blue;">&lt;</span><span style="color:maroon;">form</span>&nbsp;<span 
+        style="color:red;">method</span><span style="color:blue;">=&quot;post&quot;</span>&nbsp;<span 
+        style="color:red;">action</span><span style="color:blue;">=&quot;&quot;&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;Enter&nbsp;something:&nbsp;<span style="color:blue;">&lt;</span><span style="color:maroon;">input</span>&nbsp;<span 
+        style="color:red;">type</span><span style="color:blue;">=&quot;text&quot;</span>&nbsp;<span 
+        style="color:red;">name</span><span style="color:blue;">=&quot;name&quot;</span>&nbsp;<span 
+        style="color:red;">value</span><span style="color:blue;">=&quot;</span><span 
+        style="background: yellow;">@@</span><span style="color:blue;">name&quot;/&gt;&lt;</span><span 
+        style="color:maroon;">br</span>&nbsp;<span style="color:blue;">/&gt;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:blue;">&lt;</span><span style="color:maroon;">button</span>&nbsp;<span 
+        style="color:red;">id</span><span style="color:blue;">=&quot;button&quot;</span>&nbsp;<span 
+        style="color:red;">value</span><span style="color:blue;">=&quot;test&quot;</span>&nbsp;<span 
+        style="color:red;">data-runat</span><span style="color:blue;">=&quot;server&quot;&gt;&lt;/</span><span 
+        style="color:maroon;">button</span><span style="color:blue;">&gt;</span>
+<span style="color:blue;">&lt;/</span><span style="color:maroon;">form</span><span 
+        style="color:blue;">&gt;</span></pre>
+
+<h2>Test Web Form</h2>
+<p>See how does it work from Demo_WebForm.cshtml.</p>
 <ol>
 <li>Attribute data-runat="server" triggers default server side event {element id}_click() upon element's onclick event.</li>
 <li>Attribute data-runat="server-auto" triggers default server side event {element id}_click() upon element's onchange event.</li>

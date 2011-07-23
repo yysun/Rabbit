@@ -56,9 +56,7 @@ namespace Rabbit
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Rabbit.WebForms.js"))
             {
                 var webformjs = new StreamReader(stream).ReadToEnd();
-#if(!DEBUG)
                 webformjs = webformjs.Replace("\r", "").Replace("\n", "");
-#endif
                 sb.Append("<script type=\"text/javascript\">\r\n" + webformjs);
             }
             sb.Append("\r\n$(function () { webForm.init();");

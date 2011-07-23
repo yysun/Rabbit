@@ -14,11 +14,22 @@
     public object o = new { id = 1, name = "object" };
 }
 
-<h2>Test data synchronization</h2>
-<ol>
+<h2>Data Synchronization</h2>
+<p>Rabbit Web Form synchronizes data between C#, JavaScript and HTML markup.</p>
+
+<ul>
 <li>Public C# fields are serialized to JSON and accessible in JavaScript through webForm object.</li>
-<li>All C# fields are populated by values posted through HTTP Form or by the values from the webForm object.<br />
-E.g. The button triggers a post and sends the textbox context to C# field s. After the post, the value of s is serialized to webForm.s.</li>
+<li>JavaScript can modified webForm properties. webForm properties are pushed into C# fields during HTTP post.</li>
+<li>HTML form inputs' are pushed into C# fields during form post.</li>
+</ul>
+
+
+<h2>Test data synchronization</h2>
+<p>See how does it work from DemoDataSync.cshtml.</p>
+<ol>
+<li>C# assigned value 10 to public field i as public int i = 10;. JavaScript can get it as webForm.i</li>
+<li>If JavaScript modified webForm.i = 20; In C# i will be set to 20 during post.</li>
+<li>Value of HTML text input (name=s) will be pushed to C# field s during post. </li>
 </ol>
 <form method="post" action="">
 

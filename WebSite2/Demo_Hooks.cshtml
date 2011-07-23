@@ -15,9 +15,9 @@
 <h2>Hooks</h2>
 <p>Rabbit Framework has a site engine that implements loosely coupled event publication and subscription through hooks. 
 Hooks are public static functions with Hook attribute. They can be defined in App_Code\*.cs files, cshtml files and DLLs. 
-Rabbit Framework site engine loads all hooks upon application starting up.
+Rabbit Framework site engine loads all hooks upon application starting up. The following <b>Get_Layout</b> Hook is defined in App_Code\TemplateEngine.cs.
 </p>
-<pre style="font-family: Consolas; font-size: 13; color: black; background: white;">[Rabbit.<span 
+<pre style="font-family: Consolas; font-size: 11px; color: black; background: white;">[Rabbit.<span 
         style="color:#2b91af;">Hook</span>]
 <span style="color:blue;">public</span>&nbsp;<span style="color:blue;">static</span>&nbsp;<span 
         style="color:blue;">object</span>&nbsp;Get_Layout(<span style="color:blue;">object</span>&nbsp;s&nbsp;=&nbsp;<span 
@@ -30,17 +30,20 @@ Rabbit Framework site engine loads all hooks upon application starting up.
 }</pre>
 
 <p>To invoke a hook, call the SiteEngine.RunHook function, e.g.</p>
-<pre style="font-family: Consolas; font-size: 13; color: black; background: white;">Layout&nbsp;=&nbsp;<span 
+<pre style="font-family: Consolas; font-size: 11px; color: black; background: white;">Layout&nbsp;=&nbsp;<span 
         style="color:#2b91af;">SiteEngine</span>.RunHook(<span 
         style="color:#a31515;">&quot;get_layout&quot;</span>);
 </pre>
 
-<h2>On this page</h2>
+<h2>Test Hooks</h2>
+<p>See how does it work from Demo_Hooks.cshtml.</p>
 <ol>
-<li>This page loads layout through get_layout hook, which is defined in App_Code\TemplateEngine.cs.</li>
+<li>This page loads layout through get_layout hook.</li>
 <li>The TestHook is defined in App_Code\site.cshtml, <b>@SiteEngine.RunHook("TestHook")</b>.</li>
 <li>The TestHook2 is defined in this page, <b>@SiteEngine.RunHook("TestHook2")</b>.</li>
 </ol>
+
+
 
 <link rel="stylesheet" href="http://code.jquery.com/qunit/git/qunit.css" type="text/css" media="screen">
 <script type="text/javascript" src="http://code.jquery.com/qunit/git/qunit.js"></script>
@@ -50,7 +53,7 @@ Rabbit Framework site engine loads all hooks upon application starting up.
 <div id="qunit-fixture"></div>
 <script type="text/javascript">
     $(function () {
-        test("verify js webForm fields equal C# fields", function () {
+        test("verify hooks returned expected results", function () {
             equals("hi hook", "@SiteEngine.RunHook("TestHook")");
             equals("hi hook 2", "@SiteEngine.RunHook("TestHook2")");
         });
